@@ -3,9 +3,10 @@ Human Augmented Recognition of LLPS Ensembles in Yeast
 
 # Quick Start for Users
 
-1. Download the latest version for Windows or Mac OS in the _releases folder of this repositroy and launch it on your machine.
+
+1. Download the latest version for Windows or Mac OS and demo data: https://drive.google.com/drive/folders/1G9lOVfcQwahqiYS3pKJ0UdHJ7_YmvG0A?usp=sharing and launch the program.
 2. Using any browser navigate to http://localhost:1234 which is the local server started by the application.
-3. Use the data files in _demo to explore software with different fluorescence data.
+3. Use the demo data to explore software with different fluorescence datasets.
 
 Please watch the introductionary videos on how to use the software:
 
