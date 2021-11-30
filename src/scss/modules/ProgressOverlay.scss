@@ -1,0 +1,35 @@
+@import "../global/variables";
+@import "../global/mixins";
+
+.progress-overlay{
+	z-index: 9;
+	@include fix-to($fix-all);
+	top:$topBarHeight;
+	left: $sideMenuWidthClosed;
+	&--with-sidebar{
+		left: $sideMenuWidthClosed + $parameterBarWidth;
+	}
+	background-color: transparent;
+	transition: background-color 0.5s;
+	pointer-events: none;
+	&__content{
+		flex-grow: 1;
+		width: 100%;
+		transition: all 0.5s;
+		transform: translateY(-100px);
+		opacity: 0;
+	}
+
+
+	//Short delay when opening
+	&--open{
+		pointer-events: all;
+		transition: all 0.5s;
+		background-color: $colWhite;
+		.progress-overlay__content{
+			transition: all 0.5s;
+			transform: none;
+			opacity: 1;
+		}
+	}
+}

@@ -1,0 +1,11 @@
+
+#SETTINGS FOR EEL
+EEL_PORT = 1234
+EEL_HOST = 'localhost'
+EEL_PATH = 'http://%s:%d/' % (EEL_HOST, EEL_PORT)
+
+#SETTINGS FOR REACT
+REACT_DEV_PATH = 'http://localhost:3000/'
+
+#OTHER SETTINGS
+TMP_FOLDER = 'tmp'

@@ -1,0 +1,31 @@
+.header{
+
+	@include fix-to($fix-top);
+	left: $sideMenuWidthClosed;
+	height: $topBarHeight;
+	transition: all 0.5s;
+	z-index: 10;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	line-height: 1;
+	color: $colWhite;
+	background: $colBGMedium;
+
+	&__batch-num{
+		position: absolute;
+		left: 20px;
+		opacity: 0.5;
+		font-weight: bold;
+		line-height: 1;
+		top:50%;
+		transform: translateY(-50%);
+		font-size: 12px;
+	}
+
+	&__title{
+		//font-weight: bold;
+		//text-transform: uppercase;
+	}
+}

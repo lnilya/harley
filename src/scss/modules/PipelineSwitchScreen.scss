@@ -1,0 +1,28 @@
+.pipeline-switch-screen{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	.pipeline-list-entry{
+		max-width: 700px;
+		border-radius: 4px;
+		overflow: hidden;
+		.MuiButton-label{
+			color: $colWhite;
+			line-height: 1;
+			padding: 5px 10px;
+		}
+		&__text{
+			h2{
+				margin-top: 0;
+			}
+			height: auto;
+			display: flex;
+			flex-direction: column;
+		}
+		&__thumb{
+			min-width: 250px;
+			line-height: 0;
+		}
+	}
+}

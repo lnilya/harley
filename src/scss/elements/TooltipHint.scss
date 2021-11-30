@@ -1,0 +1,15 @@
+.error-hint{
+	&--success{
+		background-color: $colSuccess;
+		color: $colWhite;
+	}
+	&--error{
+		background-color: $colError;
+		color: $colWhite;
+	}
+	&__title{
+		padding: 10px;
+		cursor: pointer;
+	}
+	border-radius: 4px;
+}

@@ -1,0 +1,77 @@
+@import '../../../../scss/global/variables';
+@import '../../../../scss/global/mixins';
+
+.cell-counter{
+	.is-loading{
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	.rel{
+		display: inline-flex;
+
+	}
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	.view-btn{
+		align-self: center;
+		margin-left: 10px;
+	}
+
+	.MuiTextField-root{
+		padding: 0;
+		width: 100%;
+	}
+	textarea{
+		font-size: 14px;
+		border: 1px solid $colGray;
+		border-radius:4px;
+		padding: 10px;
+		color: $colWhite;
+		&::placeholder{
+			color: $colGray;
+		}
+	}
+
+	.smallhint{
+		font-size: 12px;
+		font-weight: bold;
+		color: $colGray;
+	}
+	img{
+		line-height: 0;
+		width: 350px;
+		pointer-events: none;
+		user-select: none;
+	}
+	&.hide-all{
+		.polygon-cloud{
+			display: none;
+		}
+
+	}
+	.polygon-cloud{
+		&.all-show{
+			polygon{
+				fill: #6b972cbb !important;
+			}
+		}
+		@include stick-to($fix-all);
+		svg{
+			transform-origin: top;
+			polygon{
+				transform: translate(0.5px,0.5px);
+			}
+		}
+	}
+	.hint{
+		font-size: 12px;
+		border: 1px solid $colGray;
+		border-radius: 4px;
+
+		line-height: 2;
+		color: $colGray
+	}
+}

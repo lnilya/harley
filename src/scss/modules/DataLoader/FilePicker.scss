@@ -1,0 +1,12 @@
+.file-picker{
+	&__table{
+		background-color: $colBGLight;
+	}
+	&__error{
+		color: $colError
+	}
+	&__separator{
+		height: 1px;
+		background-color: $colWhite;
+	}
+}

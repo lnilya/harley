@@ -1,0 +1,14 @@
+.export-step {
+
+	&__label{
+		display: inline-block;
+		white-space: nowrap;
+	}
+	&__btn-container{
+		.MuiButton-label{
+			color: $colWhite;
+			line-height: 1;
+			padding: 5px 10px;
+		}
+	}
+}

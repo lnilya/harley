@@ -1,0 +1,8 @@
+@import '../../../../scss/global/variables';
+
+.labeling{
+	background-color: black;
+	box-sizing: border-box;
+	min-height: calc(100vh - #{$topBarHeight});
+}
+@import "InfoDisplay";

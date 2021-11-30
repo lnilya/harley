@@ -1,0 +1,19 @@
+.help-dialogue {
+	.tut-step {
+		line-height: 1.5;
+		margin-bottom: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: stretch;
+		width: 100%;
+		flex-grow: 1;
+		img{
+			max-width: 200px;
+		}
+		> div {
+			text-align: left;
+		}
+
+	}
+}

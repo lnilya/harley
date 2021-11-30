@@ -1,0 +1,22 @@
+@import "../../global/variables";
+@import "../../global/mixins";
+
+
+.aggregator-step {
+
+	&__label{
+		display: inline-block;
+		white-space: nowrap;
+	}
+	&__info{
+		font-weight: bold;
+		font-size: 12px;
+	}
+	&__btn-container{
+		//.MuiButton-label{
+		//	color: $colWhite;
+		//	line-height: 1;
+		//	padding: 5px 10px;
+		//}
+	}
+}

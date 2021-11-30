@@ -1,0 +1,55 @@
+.param-slider {
+	&--inverted{
+		.MuiSlider-track{
+			background-color: $colMainLight;
+		}
+		.MuiSlider-rail{
+			opacity: 1;
+			background-color: $colMain;
+		}
+
+	}
+	&__direct{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		span{
+			color:$colGray;
+			padding-right: 10px;
+		}
+	}
+	&__slider{
+		.MuiSlider-root{
+			text-align: right;
+			padding-top: 20px;
+		}
+		&.is-single{
+			.MuiInput-root{
+				align-self: center;
+				min-width: 65px;
+			}
+			.MuiSlider-root{
+				margin-right: 10px;
+			}
+		}
+	}
+
+	&__postfix {
+		padding-top: 5px;
+		padding-left: 5px;
+		font-weight: bold;
+	}
+	.MuiInputBase-root {
+		padding: 5px;
+		border-radius: 2px;
+		input {
+			padding: 0;
+			color: $colMain;
+			font-size: 14px;
+
+			&::placeholder {
+				color: $colBlack;
+			}
+		}
+	}
+}

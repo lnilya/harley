@@ -1,0 +1,35 @@
+.mask-tightening {
+	.mask-img {
+		opacity: .3;
+	}
+	.img-cont{
+		display: inline-block;
+	}
+	.count{
+		z-index: 2;
+		position: absolute;
+		top:0;
+		left:0;
+		line-height: 1;
+		padding: 5px;
+		background: #FF7F50;
+		color: white;
+
+	}
+	&.hide-mask-all{
+		.polygon-cloud{
+			display: none;
+		}
+	}
+	&.hide-mask-orig .orig{
+		display: none;
+	}
+
+	.polygon-cloud {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+	}
+}

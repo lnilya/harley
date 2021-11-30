@@ -1,0 +1,84 @@
+@font-face {
+	src: url('Open_Sans/OpenSans-Regular.ttf');
+	font-family: 'OpenSans';
+	font-weight: normal;
+}
+
+@font-face {
+	src: url('Open_Sans/OpenSans-SemiBold.ttf');
+	font-family: 'OpenSans';
+	font-weight: bold;
+}
+
+
+@mixin addFont($fontFamily, $fontWeight, $size:'auto',$color:'auto',$letterSpacing: 'auto', $lineHeight: 'auto') {
+	font-family: unquote($fontFamily);
+	font-weight: $fontWeight;
+	@if $size != 'auto' {
+		font-size: $size;
+	}
+	@if $color != 'auto' {
+		color: $color;
+	}
+	@if $lineHeight != 'auto' {
+		line-height: $lineHeight;
+	}
+	@if $letterSpacing != 'auto' {
+		letter-spacing: $letterSpacing;
+	}
+}
+
+@mixin openSans($size:'auto',$color:'auto',$letterSpacing: 'auto', $lineHeight: 'auto') {
+	@include addFont('OpenSans, sans-serif', normal, $size, $color, $letterSpacing, $lineHeight);
+}
+
+@mixin openSansBold($size:'auto',$color:'auto',$letterSpacing: 'auto', $lineHeight: 'auto') {
+	@include addFont('OpenSans, sans-serif', bold, $size, $color, $letterSpacing, $lineHeight);
+}
+
+body {
+	h1 {
+		@include openSansBold(22px,$colBlack);
+	}
+
+	h2 {
+		@include openSansBold(20px,$colBlack);
+	}
+
+	h3 {
+		@include openSansBold(18px,$colBlack);
+		margin-bottom: 0;
+	}
+
+	h4 {
+		@include openSans(16px,$colBlack);
+		margin-bottom: 0;
+	}
+
+
+	@include openSans(14px,$colBlack);
+
+	.default-font {
+		@include openSans(14px,$colBlack);
+	}
+
+	.small-font {
+		@include openSans(12px,$colBlack);
+	}
+}
+
+.lh-0{
+	line-height: 0;
+}
+em{
+	color:$colMain;
+}
+.font-small{
+	font-size: 12px;
+}
+.text-underline{ text-decoration: underline;}
+.text-bold{ font-weight: bold;}
+.text-reg{ font-weight: normal !important;}
+.text-left{ text-align: left; }
+.text-center{ text-align: center; }
+.text-right{ text-align: right; }

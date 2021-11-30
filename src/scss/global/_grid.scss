@@ -1,0 +1,63 @@
+
+$gap: 20px;
+
+.grid{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-left: -$gap;
+	margin-right: -$gap;
+	flex-wrap: wrap;
+	>*{
+			margin: 0 $gap;
+			margin-bottom: $gap;
+			width: calc(100% - #{2 * $gap});
+			align-self: stretch;
+		}
+		@for $i from 2 through 12{
+			$k: 100% / $i;
+			&.cols-#{$i} > *{ width: calc(#{$k} - #{2 * $gap}); }
+		}
+	&.no-gap{
+		margin: 0;
+		>*{
+			margin: 0;
+			width: 100%;
+		}
+		@for $i from 2 through 12{
+			$k: 100% / $i;
+			&.cols-#{$i} > *{ width: calc(#{$k}); }
+		}
+	}
+	&.half-gap{
+		margin-left: -$gap/2;
+		margin-right: -$gap/2;
+		>*{
+			margin: 0 $gap/2;
+			margin-bottom: $gap/2;
+			width: calc(100% - #{$gap});
+			align-self: stretch;
+		}
+		@for $i from 2 through 12{
+			$k: 100% / $i;
+			&.cols-#{$i} > *{ width: calc(#{$k} - #{$gap}); }
+		}
+
+	}
+	&.quarter-gap{
+		margin-left: -$gap/4;
+		margin-right: -$gap/4;
+		>*{
+			margin: 0 $gap/4;
+			margin-bottom: $gap/4;
+			width: calc(100% - #{$gap/2});
+			align-self: stretch;
+		}
+		@for $i from 2 through 12{
+			$k: 100% / $i;
+			&.cols-#{$i} > *{ width: calc(#{$k} - #{$gap/2}); }
+		}
+
+	}
+}

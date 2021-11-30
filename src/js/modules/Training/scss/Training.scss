@@ -1,0 +1,17 @@
+@import '../../../../scss/global/variables';
+@import '../../../../scss/global/mixins';
+.training{
+
+	&__chart{
+		margin: auto;
+		max-width: 800px;
+		height: 400px;
+	}
+	.custom-tooltip{
+		background-color: $colBGMedium;
+		color: $colWhite;
+		padding:15px;
+		border-radius: 4px;
+	}
+}
+@import "StatDisplay";

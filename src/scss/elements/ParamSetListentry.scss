@@ -1,0 +1,35 @@
+@import "../global/variables";
+
+.param-set {
+	cursor: pointer;
+	transition: all 0.3s;
+
+	background-color: $colBGLight;
+	&:hover{
+		background-color: darken($colBGLight, 4);
+	}
+
+	&__desc {
+		opacity: 0.5;
+	}
+
+	&__title {
+		font-weight: bold;
+	}
+
+	&__date {
+		opacity: 0.5;
+	}
+	.delete-btn{
+		border-left: 1px solid rgba($colGray,.2);
+		color: $colError;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		&:hover{
+			border-left: 1px solid transparent;
+			background-color: $colError;
+			color: $colWhite;
+		}
+	}
+}

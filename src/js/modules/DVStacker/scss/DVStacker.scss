@@ -1,0 +1,19 @@
+.dv-stacker{
+
+	&__mainimg{
+		max-height: calc(100vh - 190px);
+	}
+	&__z-preview{
+		position: relative;
+		line-height: 0;
+		> div.bg-main{
+			z-index: 1;
+			line-height: 1;
+			position: absolute;
+			padding: 3px;
+			color: white;
+			bottom:0;
+			right: 0;
+		}
+	}
+}

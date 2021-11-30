@@ -1,0 +1,43 @@
+
+$defaultPadding:20px;
+
+
+////Create padding classes the form pad-hor .. pad-100-ver
+$padClasses: (0:($defaultPadding,0),
+		25: ($defaultPadding,.25),
+		50: ($defaultPadding,.5),
+		75: ($defaultPadding,.75),
+		100: ($defaultPadding,1),
+		200: ($defaultPadding,2),
+		300: ($defaultPadding,3));
+$dir: (hor:(left,right),right:(right),left:(left),ver:(top,bottom),top:(top),bottom:(bottom), exceptbottom:(top,right,left), excepttop:(bottom,right,left));
+@each $bp, $val in $padClasses{
+	@each $dir, $props in $dir{
+		.pad-#{$bp}{
+			padding:nth($val,1) * nth($val,2);
+			//generate pad-100-hor classes
+			&-#{$dir}{
+				@each $p in $props{
+					padding-#{$p}:nth($val,1) * nth($val,2);
+				}
+			}
+		}
+		.margin-#{$bp}{
+			margin:nth($val,1) * nth($val,2);
+			&-neg{
+				margin: -1 * nth($val,1) * nth($val,2);
+				&-#{$dir}{
+					@each $p in $props{
+						margin-#{$p}: -1 * nth($val,1) * nth($val,2);
+					}
+				}
+			}
+			//generate margin-100-hor classes
+			&-#{$dir}{
+				@each $p in $props{
+					margin-#{$p}:nth($val,1) * nth($val,2);
+				}
+			}
+		}
+	}
+}

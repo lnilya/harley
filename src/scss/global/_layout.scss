@@ -1,0 +1,198 @@
+//***************************************************************/
+//* GENERAL */
+//***************************************************************/
+
+body, html {
+	overscroll-behavior: none;
+	//WARNING: Overflow-x seems to break the wordpress block-editor-contextual bar... it cannto calculate heights correctly
+	//and floats off to the top as the user scrolls. Do not use it in here!
+	//overflow-x: hidden;
+
+	margin: 0;
+	max-width: 100vw;
+	min-height: 100vh;
+
+}
+
+html.popup-open {
+	body {
+		overflow: hidden;
+	}
+}
+
+//Class needs to be activated via JS after popup animation is complete. to prevent iOS weird form bug
+section.container.hidden {
+	pointer-events: none;
+	display: none;
+}
+
+
+//***************************************************************/
+//* SITE BLOCKS */
+//***************************************************************/
+
+
+/*Padded centered Section of a site,*/
+.site-block {
+	max-width: $maxContainerWidth;
+
+	&.narrow {
+		max-width: $maxContainerWidthNarrow;
+
+	}
+
+	box-sizing: border-box;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+//***************************************************************/
+//* DIMENSIONS */
+//***************************************************************/
+
+.full-w {
+	width: 100%;
+}
+
+.full-h {
+	height: 100%;
+}
+
+.full-wh {
+	width: 100%;
+	height: 100%;
+}
+
+//***************************************************************/
+//* POSITIONING */
+//***************************************************************/
+
+
+.rel {
+	position: relative;
+}
+
+.abs-full-dim {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+/*Only horizontal: Centers an element by giving it absolute positin and translating it*/
+.abs-centered-hor {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+/*Only vertical: Centers an element by giving it absolute positin and translating it*/
+.abs-centered-ver {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+/*Centers an element by giving it absolute positin and translating it*/
+.abs-centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.dibl{
+	display: inline-block;
+}
+.dbl{
+	display: block;
+}
+
+picture, img {
+	max-width: 100%;
+}
+
+//***************************************************************/
+//* Admin Bar */
+//***************************************************************/
+
+body.admin-bar {
+	//Do something here. Heights are 32 and 46px on mobile
+}
+
+.hide {
+	display: none !important;
+}
+
+
+.fl-wrap {
+	flex-wrap: wrap;
+}
+
+.fl-grow {
+	flex-grow: 1;
+}
+
+.fl-equal-size {
+	> * {
+		flex-grow: 1;
+		flex-basis: 0;
+	}
+}
+
+.fl-col {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.fl-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+
+	&-start {
+		@extend .fl-row;
+		justify-content: flex-start;
+	}
+
+	&-end {
+		@extend .fl-row;
+		justify-content: flex-end;
+	}
+
+	&-between {
+		@extend .fl-row;
+		justify-content: space-between;
+	}
+
+	&-around {
+		@extend .fl-row;
+		justify-content: space-around;
+	}
+
+	&-evenly {
+		@extend .fl-row;
+		justify-content: space-evenly;
+	}
+}
+
+.fl-align-center {
+	align-items: center;
+}
+
+.fl-align-start {
+	align-items: flex-start;
+}
+
+.fl-align-end {
+	align-items: flex-end;
+}
+
+.fl-centered {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+

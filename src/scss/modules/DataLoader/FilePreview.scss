@@ -1,0 +1,19 @@
+.file-preview{
+	&__error{
+		color: $colError
+	}
+	&__meta{
+		flex-wrap: wrap;
+		> div{
+			padding: 5px 10px;
+			border-radius: 2px;
+			color: $colWhite;
+			background-color: $colBGMedium;
+			margin-bottom: 5px;
+			margin-right: 5px;
+			strong{
+				padding-right: 5px;
+			}
+		}
+	}
+}

@@ -1,0 +1,6 @@
+@import '../../../../scss/global/variables';
+@import '../../../../scss/global/mixins';
+.foci-detection-model{
+	min-height: calc(100vh - #{$topBarHeight});
+}
+@import "CellResult";

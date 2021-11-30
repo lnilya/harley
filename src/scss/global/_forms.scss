@@ -1,0 +1,61 @@
+
+input{
+	padding: 5px !important;
+}
+input, textarea, button {
+	padding: 5px;
+	@include openSans();
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+	opacity: 1;
+}
+
+.MuiButton-containedPrimary{
+	color: $colWhite !important;
+}
+button {
+	cursor: pointer;
+	padding: 5px 20px;
+
+	&.disabled {
+		pointer-events: none;
+		opacity: .4;
+
+	}
+}
+
+.MuiTypography-root.MuiFormControlLabel-label {
+	@include openSans(14px);
+}
+
+.MuiButton-containedSecondary {
+	box-shadow: none !important;
+}
+.MuiButton-containedPrimary {
+	box-shadow: none !important;
+
+	&:hover {
+		background-color: darken($colMain, 6) !important;
+	}
+}
+
+//Number or TextInput
+.MuiInputBase-root {
+	background-color: rgba($colBGMedium, .1);
+	border-radius: 2px;
+
+	&:not(:last-child) {
+		margin-right: 5px;
+	}
+
+	select {
+		color: $colMain;
+		padding-left: 10px;
+	}
+
+	&:after, &:before {
+		display: none !important;
+	}
+}

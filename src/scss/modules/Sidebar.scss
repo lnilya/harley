@@ -1,0 +1,39 @@
+.sidebar {
+	z-index: 10;
+	@include fix-to($fix-left);
+	left: $sideMenuWidthClosed;
+	top: $topBarHeight;
+	width: $parameterBarWidth;
+	box-sizing: border-box;
+	overflow: hidden;
+	background: $colBGLight;
+	transition: all 0.3s;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	padding-top: 0;
+	overflow-y: scroll;
+	padding-bottom: $footerHeight;
+	&.blocked{
+
+	}
+	.param{
+		@extend .pad-100-hor;
+		@extend .pad-100-ver;
+		border-bottom: 1px solid rgba($colBGMedium,.2);
+		&.is-disabled{
+			opacity: 0.5;
+			pointer-events: none;
+		}
+		&__name{
+			padding-top: 7px;
+			line-height: 1;
+			white-space: nowrap;
+			margin-right: 10px;
+			font-weight: bold;
+			padding-bottom: 5px;
+		}
+	}
+	.param:nth-child(odd){
+	}
+}

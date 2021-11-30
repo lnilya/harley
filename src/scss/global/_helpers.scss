@@ -1,0 +1,21 @@
+
+
+$colClasses: (main:$colMain,
+		mainlight:$colMainLight, error:$colError,
+		bgdark:$colBGDark,
+		bgmain:$colBGMedium,
+		bgwhite:$colWhite,
+		bglight:$colBGLight, help:$colHelp);
+
+@each $slug,$col in $colClasses{
+	.col-#{$slug}{
+		color:$col;
+	}
+	.bg-#{$slug}{
+		background-color:$col;
+	}
+}
+
+.col-white{
+	color: $colWhite;
+}

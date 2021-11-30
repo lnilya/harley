@@ -1,0 +1,19 @@
+.param-dropdown{
+
+	.MuiFormControl-root{
+		margin-top: 10px;
+		width: 100%;
+		select{
+			@include openSans(14px);
+			padding-top: 1px;
+			padding-bottom: 3px;
+		}
+	}
+	.MuiNativeSelect-outlined:focus{
+		background-color: transparent !important;
+	}
+	.MuiInputBase-root {
+		padding: 5px;
+		border-radius: 2px;
+	}
+}

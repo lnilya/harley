@@ -1,0 +1,48 @@
+@import '../../../../scss/global/variables';
+@import '../../../../scss/global/mixins';
+.foci-candidates{
+	background-color: black;
+	text-align: center;
+	.cell-img{
+		cursor: pointer;
+		display: inline-block;
+		padding: 5px;
+		img{
+			transition: all 0.2s;
+		}
+		&:hover img{
+			transform: scale(1.1);
+		}
+		&.selected{
+			position: relative;
+			&:after{
+				content: ' ';
+				position: absolute;
+				width: 40px;
+				height: 4px;
+				background-color: $colMain;
+				border-radius: 3px;
+				left: 50%;
+				bottom: 1px;
+				transform: translateX(-50%);
+			}
+		}
+	}
+	&__all-cells{
+
+	}
+	&__demo-cell{
+		line-height: 0;
+		.polygon-cloud{
+			@include stick-to($fix-all)
+		}
+		display: inline-block;
+		margin: auto;
+		img{
+			width: 300px;
+			height: 300px;
+			object-fit: contain;
+		}
+	}
+
+}

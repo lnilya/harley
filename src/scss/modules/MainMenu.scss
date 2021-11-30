@@ -1,0 +1,40 @@
+@import "../global/variables";
+@import "../global/mixins";
+
+.main-menu {
+	z-index: 12;
+	@include fix-to($fix-left);
+	width: $sideMenuWidthClosed;
+	transition: width 0.3s;
+	overflow: hidden;
+	&__sep{
+		border-bottom: 1px solid rgba(white,0.2);
+	}
+	&__title{
+		height: $topBarHeight;
+		text-align: center;
+		color: $colWhite;
+		font-weight: bold;
+		line-height: $topBarHeight;
+		border-bottom: 1px solid $colGray;
+		margin-bottom: 10px;
+	}
+	&__content {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		padding-top: $topBarHeight;
+		height: 100%;
+		box-sizing: border-box;
+		.main-menu-button__content span{
+			opacity: 0;
+			transition: all 0.5s;
+		}
+	}
+	&.is-showing{
+		width: $sideMenuWidthOpen;
+		.main-menu-button__content span{
+			opacity: 1;
+		}
+	}
+}

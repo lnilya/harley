@@ -1,0 +1,31 @@
+.cell-detection{
+
+	.outer-container{
+		display: inline-block;
+		line-height: 0;
+	}
+	.blob-container{
+		position: absolute;
+		left:0;
+		right:0;
+		bottom:0;
+		top:0;
+		.blob{
+			position: absolute;
+			cursor: pointer;
+			//pointer-events: none;
+			filter: hue-rotate(135deg); //green
+			opacity: 0.5;
+			&:hover{
+				opacity: 1;
+				//filter: hue-rotate(225deg);
+			}
+			&.rejected {
+				filter: hue-rotate(225deg); //blue
+			}
+			&.border {
+				filter: hue-rotate(35deg);
+			}
+		}
+	}
+}

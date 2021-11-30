@@ -1,0 +1,47 @@
+@import "../global/variables";
+@import "../global/mixins";
+@import "../global/padding";
+
+.main-menu-button {
+	&.is-active{
+		background-color: $colBGLight;
+		.main-menu-button__content{
+			color: $colBGDark;
+			cursor: default;
+			&:hover{
+				background-color: $colBGLight !important;
+			}
+		}
+	}
+	&.is-disabled{
+		opacity: 0.5;
+		.main-menu-button__content{
+			cursor: help !important;
+			&:hover{
+				background-color: inherit !important;
+			}
+		}
+	}
+	&__content{
+		@extend .pad-50;
+
+		font-weight: bold;
+		cursor: pointer;
+		color: $colWhite;
+		line-height: 1;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+
+		span {
+			padding-left: 10px;
+			white-space: nowrap;
+		}
+
+		&:hover {
+			background-color: $colBGHover;
+		}
+
+	}
+}

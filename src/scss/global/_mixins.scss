@@ -1,0 +1,84 @@
+//***************************************************************/
+//* MAIN FILE FOR MIXINS AND SHARED FUNCTIONS */
+//***************************************************************/
+
+
+//***************************************************************/
+//* STICKS AND FIXES */
+//***************************************************************/
+
+$fix-top:    (top,right,left);
+$fix-top-right:    (top,right);
+$fix-top-left:    (top,left);
+$fix-bottom-left:    (bottom,left);
+$fix-bottom-right:    (bottom,right);
+$fix-bottom: (bottom,right,left);
+$fix-left:   (top,bottom,left);
+$fix-right:  (top,bottom,right);
+$fix-all:  (top,bottom,left,right);
+/**
+* Fixes the object to a certain part of the screen by setting its position to FIXED
+* and adjusting top,right,left,bottom properties. use the variables $fix-left/right... defined above.
+*/
+@mixin fix-to($fixArray, $withOffset:0){
+	position: fixed;
+	@each $prop in $fixArray {
+		@if(type-of($withOffset) == 'map'){
+			@if(map_has_key($withOffset,$prop)){
+				#{$prop}: map_get($withOffset,$prop);
+			}@else{
+				#{$prop}: 0;
+			}
+		}@else{
+			#{$prop}: $withOffset;
+		}
+	}
+}
+/**
+* Sticks an object to a certain part of the parent by setting its position to ABSOLUTE.
+* and adjusting top,right,left,bottom properties. use the variables $fix-left/right... defined above to define where to stick to
+* $withOffset can either be a pixel value or a map (top:20px, bottom:15px) to define the sticking more precisely.
+*/
+@mixin stick-to($fixArray, $withOffset:0){
+	position: absolute;
+	@each $prop in $fixArray {
+		@if(type-of($withOffset) == 'map'){
+			@if(map_has_key($withOffset,$prop)){
+				#{$prop}: map_get($withOffset,$prop);
+			}@else{
+				#{$prop}: 0;
+			}
+		}@else{
+			#{$prop}: $withOffset;
+		}
+	}
+}
+
+//***************************************************************/
+//* BG */
+//***************************************************************/
+
+@mixin addAfterImage($icon, $width, $height, $marginLeft:5px, $offY:0px,$offX:0px){
+	&:after{
+		content: ' ';
+		display: inline-block;
+		margin-left: $marginLeft;
+		background: url('../images/#{$icon}') center no-repeat;
+		background-size: 100%;
+		width: $width;
+		height: $height;
+		transform: translate($offX,$offY);
+	}
+}
+@mixin addBeforeImage($icon, $width, $height, $marginRight:5px, $offY:0px,$offX:0px){
+	&:before{
+		content: ' ';
+		display: inline-block;
+		margin-right: $marginRight;
+		background: url('../images/#{$icon}') center no-repeat;
+		background-size: 100%;
+		width: $width;
+		height: $height;
+		transform: translate($offX,$offY);
+	}
+}

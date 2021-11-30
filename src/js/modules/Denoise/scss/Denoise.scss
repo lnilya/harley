@@ -1,0 +1,18 @@
+.denoise{
+
+	.before-after-slider__second-photo-container img{
+		height: calc(100% - 5px);
+		object-fit: cover;
+		object-position: left;
+		line-height: 0;
+	}
+	.before-after-slider__delimer{
+		width: 1px;
+		border-right: 2px dashed #FF7F50;
+		background: transparent;
+	}
+	.before-after-slider__delimer-icon-wrapper > *{
+		transform: translateX(1px);
+		background: #FF7F50;
+	}
+}

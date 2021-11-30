@@ -1,0 +1,35 @@
+
+.file-table{
+	max-height: 500px;
+	overflow-y: scroll;
+	.folder,.file{
+		padding:5px 20px;
+		font-weight: bold;
+		background-color: $colBGLight;
+		color:$colBlack;
+		cursor: pointer;
+		&:hover{
+			color:$colWhite;
+			background-color: $colBGMedium;
+		}
+		span{
+			@extend .margin-50-left;
+			padding-top: 2px;
+		}
+	}
+	.folder{
+	}
+	.file{
+		span{
+			font-weight: normal;
+		}
+		&:hover{
+			color:$colWhite;
+			background-color: $colBGMedium;
+		}
+		&.is-selected{
+			color:$colWhite;
+			background-color: $colMain;
+		}
+	}
+}

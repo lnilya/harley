@@ -1,0 +1,27 @@
+.masks-over-image{
+	position: relative;
+	&.alg-running {
+		.mask-img{
+			display: none;
+		}
+	}
+	.original-img{
+		transition: all 0.3s;
+		&.disabled {
+			opacity: 0;
+		}
+	}
+	.mask-img{
+		@include stick-to($fix-all);
+
+		&.white {
+			filter: brightness(1000);
+		}
+		&.blue {
+			filter: hue-rotate(225deg);
+		}
+		&.black {
+			filter: brightness(0);
+		}
+	}
+}

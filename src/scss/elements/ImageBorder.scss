@@ -1,0 +1,12 @@
+.image-border{
+
+	z-index: 2;
+	position: absolute;
+	pointer-events: none;
+	border: 1px dashed $colMain;
+	transition: opacity 0s;
+	&.is-faded{
+		transition: opacity 1s;
+		opacity: 0;
+	}
+}

@@ -1,0 +1,38 @@
+.cell-fitting{
+
+	&.hide-mask{
+		.polygon-cloud{
+			display: none !important;
+		}
+	}
+
+	.img-cont{
+		line-height: 0;
+		display: inline-block;
+		.point-cloud,.ellipse-cloud,.polygon-cloud {
+			position: absolute;
+			left:0;
+			right:0;
+			top:0;
+			bottom:0;
+		}
+	}
+	.count{
+		z-index: 2;
+		position: absolute;
+		top:0;
+		left:0;
+		line-height: 1;
+		padding: 5px;
+		background: #FF7F50;
+		color: white;
+
+	}
+	.result{
+
+		button{
+			display: block;
+			margin-bottom: 20px;
+		}
+	}
+}

@@ -1,0 +1,53 @@
+@import '../../../../scss/global/variables';
+@import '../../../../scss/global/mixins';
+.cell-result{
+	width: 100%;
+	background-color: black;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	img{
+		width: 100%;
+		transition: all 0.3s;
+	}
+	overflow: hidden;
+	&.is-excluded{
+		//background-color: #B30A07;
+		.cell-result__footer{
+			z-index: 2;
+			background-color: #B30A07;
+		}
+		img{
+			opacity: 0.6;
+			filter: blur(5px);
+		}
+	}
+	.polygon-cloud{
+		@include stick-to($fix-all);
+		svg{
+			polygon{
+				transform: translate(0.5px,0.5px);
+			}
+		}
+	}
+	&__footer{
+		transition: all 0.3s;
+		padding: 5px 10px;
+		border-top:1px solid $colBGDark;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		color: $colWhite;
+		span.no-foci{
+			color: $colGray;
+		}
+		.MuiSvgIcon-root{
+			cursor: pointer;
+			transition: all .2s;
+			&:hover{
+				transform: scale(1.1);
+			}
+		}
+	}
+}

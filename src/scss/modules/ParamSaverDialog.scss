@@ -1,0 +1,30 @@
+@import "../global/mixins";
+@import "../global/variables";
+
+.param-saver-dialog{
+	box-sizing: border-box;
+	min-width: 600px;
+
+	.new-param-set{
+		padding-top: 0 !important;
+		display: flex;
+		flex-direction: column;
+		>*{
+			width: 100%;
+		}
+	}
+
+	.sep{
+		border-top: 1px solid rgba($colGray,0.5);
+	}
+	input{
+		padding: 15px !important;
+	}
+	input,textarea{
+		font-size: 14px;
+	}
+	.MuiButton-label{
+		color: $colWhite;
+	}
+
+}

@@ -1,0 +1,31 @@
+.app{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+
+	.service-overlay{
+		z-index: 9;
+		@include fix-to($fix-all);
+		content: '';
+		background: rgba(black,.7);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: $colWhite;
+		font-size: 20px;
+	}
+	.inner{
+		box-sizing: content-box;
+		position: relative;
+		transition: all 0.5s;
+		margin-top: $topBarHeight;
+		flex-grow: 1;
+		.main{
+			margin-left: $sideMenuWidthClosed;
+			&.has-sidebar{
+				margin-left: $parameterBarWidth + $sideMenuWidthClosed;
+			}
+		}
+	}
+}

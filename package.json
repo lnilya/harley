@@ -1,0 +1,65 @@
+{
+  "name": "harley",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^4.12.3",
+    "@mui/icons-material": "^5.0.3",
+    "@mui/material": "^5.0.3",
+    "@mui/x-data-grid": "^4.0.2",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
+    "deep-equal": "^2.0.5",
+    "fast-printf": "^1.6.9",
+    "lodash": "^4.17.21",
+    "notistack": "^2.0.2",
+    "react": "^17.0.2",
+    "react-animate-height": "^2.0.23",
+    "react-before-after-slider-component": "^1.0.2",
+    "react-dom": "^17.0.2",
+    "react-inner-image-zoom": "^2.1.0",
+    "react-scripts": "^4.0.3",
+    "react-use": "^17.3.1",
+    "recharts": "^2.1.6",
+    "recoil": "^0.4.1",
+    "sass": "^1.30.0",
+    "typescript": "^4.4.2"
+  },
+  "scripts": {
+    "start:js": "node rswebpackfix.js & react-scripts start",
+    "build:js": "react-scripts build",
+    "start:eel": "python3 index.py --develop",
+    "startwin:eel": "python index.py --develop",
+    "build:eel": "python3 -m eel index.py build --onefile --name harley-1-0.0 --icon icon.icns",
+    "buildwin:eel": "python -m eel index.py build --onefile --name harley-1-0.0 ",
+    "clean:build": "rm -rf build dist",
+    "start": "npm-run-all -p start:*",
+    "build": "npm-run-all clean:build build:*",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "colors": "^1.4.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react": "^7.25.1",
+    "fullname": "^4.0.1",
+    "input": "^1.0.1",
+    "ncp": "^2.0.0",
+    "npm-run-all": "^4.1.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
