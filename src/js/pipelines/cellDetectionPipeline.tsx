@@ -11,6 +11,7 @@ import * as util from './pipelineutil'
 import {Pipeline, PipelineStep} from "../types/pipelinetypes";
 import {suggestModifiedFilename} from "./pipelineutil";
 import thumb from '../../assets/images/cd_thumb.jpg'
+import ResponsiveEmbed from 'react-responsive-embed'
 
 const dataKeys = {
     img: 'Input Image',
@@ -23,6 +24,9 @@ const dataKeys = {
     heatmap: 'Heatmap'
 };
 
+const helpScreen = <div>
+    <ResponsiveEmbed src='https://www.youtube.com/embed/gTJQOmeUkso' allowfullscreen />
+</div>
 
 function getPipeline():Pipeline{
 
@@ -89,7 +93,8 @@ function getPipeline():Pipeline{
         descriptions:{
             thumb: <img src={thumb}/>,
             title:'Cell Detection',
-            description:'This pipeline goes from brightfield images to cell outlines. In the process you can filter detected cells and adjust parameters to detect the most cells in your images.'
+            description:'This pipeline goes from brightfield images to cell outlines. In the process you can filter detected cells and adjust parameters to detect the most cells in your images.',
+            helpscreen:helpScreen
         }
     }
 }

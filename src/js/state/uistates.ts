@@ -43,7 +43,7 @@ export const curPipelineStepNum = connectedAtom<number>({key:'cur_step_num',defa
 export const curPipelineStep = connectedSelector<PipelineStep<any,any>>({key:'cur_step',get:({get}) => {
     const csn = get(curPipelineStepNum);
     const all = get(allPipelineSteps);
-    if(csn >= 0 && csn <= all.length) return all[csn];
+    if(csn >= 0 && csn <= all?.length) return all[csn];
     return null;
 }})
 

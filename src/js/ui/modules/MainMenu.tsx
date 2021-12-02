@@ -17,6 +17,7 @@ import * as alg from "../../state/algstate";
 import {RunningMode} from "../../state/algstate";
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import {Pipeline} from "../../types/pipelinetypes";
+
 interface ISideMenuProps {
     
     /**Additional classnames for this component*/
@@ -25,10 +26,12 @@ interface ISideMenuProps {
     onChangeOpenState: (open: boolean) => void
 }
 
-const aggregatorDescription = (pipeline:Pipeline):ReactNode=>{
-    const nw = (!pipeline?.aggregatorOutputs?.length ? `The pipeline "${pipeline.descriptions.title}" does not have any aggregate outputs defined.` : null )
+const aggregatorDescription = (pipeline: Pipeline): ReactNode => {
+    
     const txt = 'Outputs from different batches can be aggregated into a single file.  For example a CSV table might grow as single batches of data are processed, which can be more useful than single CSV files per batch.';
-    if(nw) return <>
+    if (!pipeline) return txt;
+    const nw = (!pipeline?.aggregatorOutputs?.length ? `The pipeline "${pipeline.descriptions.title}" does not have any aggregate outputs defined.` : null)
+    if (nw) return <>
         <strong>{nw}</strong>
         <br/><br/>
         {txt}
@@ -81,50 +84,55 @@ const MainMenu: React.FC<ISideMenuProps> = ({onChangeOpenState, className}) => {
                                 active={uiState == UIScreens.pipelineswitch}
                                 tooltip={'A pipeline is simply a set of steps with a single task. Like "Count Foci" or "Detect Cells".'}
                                 Icon={<LinearScaleIcon/>}/>
-                <div className="main-menu__sep margin-50-ver"/>
-                <MainMenuButton onClick={() => setUIState(UIScreens.input)} title={'Data Input'}
-                                active={uiState == UIScreens.input}
-                                tooltip={'Selection of Data as input for the current pipeline: ' + pipelineName}
-                                Icon={<AutoAwesomeMotionIcon/>}/>
-                <MainMenuButton onClick={() => setUIState(UIScreens.pipeline)}
-                                title={pipelineName}
-                                disabled={!runReady}
-                                active={uiState == UIScreens.pipeline}
-                                tooltip={runHint}
-                                Icon={<PlayCircleOutlineIcon/>}/>
-                <MainMenuButton onClick={() => setUIState(UIScreens.output)} title={'Data Output'}
-                                disabled={!runReady}
-                                active={uiState == UIScreens.output}
-                                tooltip={runReady ? ('Outputs for current batch: ' + pipelineName) : 'Ouput for batch is not available, since no batch has been started yet.'}
-                                Icon={<AssignmentTurnedInIcon/>}/>
-    
-                <MainMenuButton onClick={() => setUIState(UIScreens.aggregate)} title={'Output Aggregator'}
-                                active={uiState == UIScreens.aggregate}
-                                disabled={!pipeline?.aggregatorOutputs?.length}
-                                tooltip={aggregatorDescription(pipeline)}
-                                Icon={<GroupWorkIcon/>}/>
-                
-                <div className="main-menu__sep margin-50-ver"/>
-                {uiState == UIScreens.pipeline &&
+                {pipeline &&
                 <>
-                    <MainMenuButton onClick={onSaveSettings} title={'Save Current Parameters'}
-                                    tooltip={'Stores this pipelines parameters as a separate file. You can then load it or use in batch processing.'}
-                                    Icon={<SaveIcon/>}/>
-                    <MainMenuButton onClick={onLoadSettings} title={'Load Parameters'}
-                                    tooltip={'Loads previously stored parameters into this pipeline. The current values will be overwritten.'}
-                                    Icon={<UploadFileIcon/>}/>
-                </>
-                }
-                {uiState != UIScreens.pipelineswitch && !pipeline.disableBatchMode &&
-                <>
-                    <div className="fl-grow"/>
-                    <MainMenuButton onClick={() => setAEDialogOpen(!aeDialogOpen)}
-                                    title={aeDialogOpen ? 'Hide Auto Execution' : 'Show Auto Execution'}
-                                    disabled={execState != RunningMode.manual || !runReady}
-                                    active={false}
-                                    tooltipPlacement={'top-end'}
-                                    tooltip={'Auto Execution allows you to run the steps of the pipeline automatically with the current parameters. As long as there is more than one input, your algorithm will continue until all input data is processed or a step encounters an error.'}
-                                    Icon={<NotStartedIcon color={aeDialogOpen ? 'primary' : 'inherit'}/>}/>
+                    <div className="main-menu__sep margin-50-ver"/>
+                    <MainMenuButton onClick={() => setUIState(UIScreens.input)} title={'Data Input'}
+                                    active={uiState == UIScreens.input}
+                                    tooltip={'Selection of Data as input for the current pipeline: ' + pipelineName}
+                                    Icon={<AutoAwesomeMotionIcon/>}/>
+                    <MainMenuButton onClick={() => setUIState(UIScreens.pipeline)}
+                                    title={pipelineName}
+                                    disabled={!runReady}
+                                    active={uiState == UIScreens.pipeline}
+                                    tooltip={runHint}
+                                    Icon={<PlayCircleOutlineIcon/>}/>
+                    <MainMenuButton onClick={() => setUIState(UIScreens.output)} title={'Data Output'}
+                                    disabled={!runReady}
+                                    active={uiState == UIScreens.output}
+                                    tooltip={runReady ? ('Outputs for current batch: ' + pipelineName) : 'Ouput for batch is not available, since no batch has been started yet.'}
+                                    Icon={<AssignmentTurnedInIcon/>}/>
+
+                    <MainMenuButton onClick={() => setUIState(UIScreens.aggregate)} title={'Output Aggregator'}
+                                    active={uiState == UIScreens.aggregate}
+                                    disabled={!pipeline?.aggregatorOutputs?.length}
+                                    tooltip={aggregatorDescription(pipeline)}
+                                    Icon={<GroupWorkIcon/>}/>
+
+                    <div className="main-menu__sep margin-50-ver"/>
+                    {uiState == UIScreens.pipeline &&
+                    <>
+                        <MainMenuButton onClick={onSaveSettings} title={'Save Current Parameters'}
+                                        tooltip={'Stores this pipelines parameters as a separate file. You can then load it or use in batch processing.'}
+                                        Icon={<SaveIcon/>}/>
+                        <MainMenuButton onClick={onLoadSettings} title={'Load Parameters'}
+                                        tooltip={'Loads previously stored parameters into this pipeline. The current values will be overwritten.'}
+                                        Icon={<UploadFileIcon/>}/>
+                    </>
+                    }
+                    {uiState != UIScreens.pipelineswitch && !pipeline.disableBatchMode &&
+                    <>
+                        <div className="fl-grow"/>
+                        <MainMenuButton onClick={() => setAEDialogOpen(!aeDialogOpen)}
+                                        title={aeDialogOpen ? 'Hide Auto Execution' : 'Show Auto Execution'}
+                                        disabled={execState != RunningMode.manual || !runReady}
+                                        active={false}
+                                        tooltipPlacement={'top-end'}
+                                        tooltip={'Auto Execution allows you to run the steps of the pipeline automatically with the current parameters. As long as there is more than one input, your algorithm will continue until all input data is processed or a step encounters an error.'}
+                                        Icon={<NotStartedIcon color={aeDialogOpen ? 'primary' : 'inherit'}/>}/>
+                    </>
+                    }
+
                 </>
                 }
             </div>

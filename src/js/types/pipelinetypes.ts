@@ -121,6 +121,8 @@ export type Pipeline = {
         description?:ReactNode
         /**Thumbnail for this Pipeline*/
         thumb?:ReactNode
+        /**Helpscreen Component*/
+        helpscreen?:ReactNode
     },
     
     /**Default:false. If set to true, will not allow users to run in batchmode. Makes sense for pipelines requiring manual inputs (e.g. labeling, choosing). A pipeline not allowing batchmode can be sometimes faster to implement.*/

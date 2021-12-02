@@ -9,6 +9,7 @@ import * as MaskTighteningParams from '../modules/MaskTightening/params'
 import MaskTightening from "../modules/MaskTightening/MaskTightening";
 import {suggestModifiedFilename} from "./pipelineutil";
 import thumb from "../../assets/images/pp_thumb.jpg";
+import ResponsiveEmbed from 'react-responsive-embed'
 //%NEWMODULE_IMPORT%
 
 const keys = {
@@ -19,6 +20,10 @@ const keys = {
     tightCells: "Tight Cells"
     
 }
+
+const helpScreen = <div>
+    <ResponsiveEmbed src='https://www.youtube.com/embed/RjvG61KGxZI' allowfullscreen />
+</div>
 
 function getPipeline(): Pipeline {
     const steps = [
@@ -99,7 +104,8 @@ function getPipeline(): Pipeline {
         descriptions:{
             thumb: <img src={thumb}/>,
             title:'Pre Processing',
-            description:'This pipeline goes from stacks of images to a single denoised image. Additionally the masks obtained from brightfield images can be tightened with the fluorescence data. This is especially useful, when cell area needs to be calculated precisely, or the cells are very close by and may overlap.'
+            description:'This pipeline goes from stacks of images to a single denoised image. Additionally the masks obtained from brightfield images can be tightened with the fluorescence data. This is especially useful, when cell area needs to be calculated precisely, or the cells are very close by and may overlap.',
+            helpscreen:helpScreen
         }
     }
 }

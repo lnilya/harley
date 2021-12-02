@@ -62,7 +62,7 @@ function _parseType(type:DType,newVal:any):any{
 function _getCurStep(stepnum:number = -1):PipelineStep<any,any>{
     const csn = stepnum == -1 ? getConnectedValue(curPipelineStepNum) :stepnum;
     const all = getConnectedValue(allPipelineSteps);
-    if(csn >= 0 && csn < all.length)
+    if(all && csn >= 0 && csn < all?.length)
         return all[csn];
     
     return null;
@@ -129,6 +129,7 @@ export function updatePipelineData<T extends PipelineData>(newDataKey:PipelineDa
  */
 export function doesPipelineStepHaveData(stepnum:number):true|PipelineDataKey[]{
     var step:PipelineStep<any,any> = _getCurStep(stepnum);
+    if(!step) return null;
     if(step.inputKeys === undefined || Object.keys(step.inputKeys).length == 0) return true; //no inputs
     
     var pipelineData:Record<PipelineDataKey,PipelineData> = getConnectedValue(allPipelineData) || {};

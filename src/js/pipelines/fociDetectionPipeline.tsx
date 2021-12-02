@@ -7,6 +7,7 @@ import {suggestModifiedFilename, suggestSuffixedFileName} from "./pipelineutil";
 import thumb from '../../assets/images/fd_thumb.jpg'
 import * as FociDetectionModelParams from '../modules/FociDetectionModel/params'
 import FociDetectionModel from "../modules/FociDetectionModel/FociDetectionModel";
+import ResponsiveEmbed from 'react-responsive-embed'
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -16,6 +17,10 @@ const inputKeys = {
 const dataKeys = {
     foci: 'Foci',
 }
+
+const helpScreen = <div>
+    <ResponsiveEmbed src='https://www.youtube.com/embed/KRvW-F2ED6g' allowfullscreen />
+</div>
 
 function getPipeline(): Pipeline {
     const datasetDesc = 'A dataset aggregated from the Pre-Procesing pipeline.'
@@ -62,7 +67,8 @@ function getPipeline(): Pipeline {
         descriptions: {
             title: 'Foci Detection',
             description: 'This pipeline detects foci in a dataset using a trained model. You have the option to remove erroneous images as well. The result is a CSV file with information on each foci in each cell.',
-            thumb: <img src={thumb}/>
+            thumb: <img src={thumb}/>,
+            helpscreen:helpScreen
         },
         disableBatchMode:true
     }

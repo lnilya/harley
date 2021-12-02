@@ -304,10 +304,10 @@ export function initializePipelineStack() {
     }
     
     updateConnectedValue(allPipelines, avPipelines)
-    
+    console.log(`HIER`);
     const lastPipeline = storage.loadGlobalData('loaded_pipeline')
-    if (lastPipeline && avPipelines[lastPipeline]) loadPipeline(avPipelines[lastPipeline])
-    else loadPipeline(fds)
+    if (lastPipeline && avPipelines[lastPipeline])
+        loadPipeline(avPipelines[lastPipeline])
     
 }
 

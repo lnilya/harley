@@ -38,20 +38,20 @@ const App: React.FC = () => {
         })
     }, [])
     
-    if (!curStep) return null
-    const showSidebar = uiStep == UIScreens.pipeline && curStep?.parameters.length > 0;
+    // if (!curStep) return null
+    const showSidebar = uiStep == UIScreens.pipeline && curStep?.parameters?.length > 0;
     
     return(
             <div className={"app " + (cl(sideMenuOpen,'app--side-menu-open'))}>
+    
+                {curStep && <AutoPlayOverlay/>}
                 
-                
-                <AutoPlayOverlay/>
                 
                 {openPopup == UIPopups.paramload && <ParamLoaderDialog/>}
                 {openPopup == UIPopups.paramsave && <ParamSaverDialog/>}
                 <MainMenu onChangeOpenState={s=>setSideMenuOpen(s)}/>
                 <Header/>
-                <ProgressOverlay sidebarActive={uiStep == UIScreens.pipeline}/>
+                {curStep &&  <ProgressOverlay sidebarActive={uiStep == UIScreens.pipeline}/> }
                 {showSidebar && <Sidebar/>}
                 <div className={`inner`}>
                     <div className={`main pad-100 rel` + cl(showSidebar, 'has-sidebar')}>

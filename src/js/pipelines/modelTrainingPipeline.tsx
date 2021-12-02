@@ -11,6 +11,7 @@ import * as LabelingParams from '../modules/Labeling/params'
 import Labeling from "../modules/Labeling/Labeling";
 import * as TrainingParams from '../modules/Training/params'
 import Training from "../modules/Training/Training";
+import ResponsiveEmbed from 'react-responsive-embed'
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -25,6 +26,9 @@ const dataKeys = {
     model: 'Model',
 }
 
+const helpScreen = <div>
+    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowfullscreen />
+</div>
 function getPipeline(): Pipeline {
     const datasetDesc = 'A *.cells file that was exported via the preprocessing pipeline aggregator. This file contains images of single cells, that the model will be trained on.'
     
@@ -80,7 +84,8 @@ function getPipeline(): Pipeline {
         descriptions:{
             title:'Model Training',
             description:'This pipeline takes the dataset of cells and trains a model. The user is prompted to decide which parts of the cells are valid foci and the model learns this behaviour. Labelling at least 10-20 cells is recommended. The result is a model configuration that can be used in another pipeline to automatically classify foci.',
-            thumb:<img src={thumb}/>
+            thumb:<img src={thumb}/>,
+            helpscreen:helpScreen
         }
     }
 }
