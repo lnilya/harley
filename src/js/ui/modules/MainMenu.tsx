@@ -17,6 +17,7 @@ import * as alg from "../../state/algstate";
 import {RunningMode} from "../../state/algstate";
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import {Pipeline} from "../../types/pipelinetypes";
+import {Done, DoneAll} from "@mui/icons-material";
 
 interface ISideMenuProps {
     
@@ -87,7 +88,7 @@ const MainMenu: React.FC<ISideMenuProps> = ({onChangeOpenState, className}) => {
                 {pipeline &&
                 <>
                     <div className="main-menu__sep margin-50-ver"/>
-                    <MainMenuButton onClick={() => setUIState(UIScreens.input)} title={'Data Input'}
+                    <MainMenuButton onClick={() => setUIState(UIScreens.input)} title={'Input Files'}
                                     active={uiState == UIScreens.input}
                                     tooltip={'Selection of Data as input for the current pipeline: ' + pipelineName}
                                     Icon={<AutoAwesomeMotionIcon/>}/>
@@ -97,17 +98,17 @@ const MainMenu: React.FC<ISideMenuProps> = ({onChangeOpenState, className}) => {
                                     active={uiState == UIScreens.pipeline}
                                     tooltip={runHint}
                                     Icon={<PlayCircleOutlineIcon/>}/>
-                    <MainMenuButton onClick={() => setUIState(UIScreens.output)} title={'Data Output'}
+                    <MainMenuButton onClick={() => setUIState(UIScreens.output)} title={'Output Files'}
                                     disabled={!runReady}
                                     active={uiState == UIScreens.output}
                                     tooltip={runReady ? ('Outputs for current batch: ' + pipelineName) : 'Ouput for batch is not available, since no batch has been started yet.'}
-                                    Icon={<AssignmentTurnedInIcon/>}/>
+                                    Icon={<Done/>}/>
 
-                    <MainMenuButton onClick={() => setUIState(UIScreens.aggregate)} title={'Output Aggregator'}
+                    <MainMenuButton onClick={() => setUIState(UIScreens.aggregate)} title={'Output Aggregates'}
                                     active={uiState == UIScreens.aggregate}
                                     disabled={!pipeline?.aggregatorOutputs?.length}
                                     tooltip={aggregatorDescription(pipeline)}
-                                    Icon={<GroupWorkIcon/>}/>
+                                    Icon={<DoneAll/>}/>
 
                     <div className="main-menu__sep margin-50-ver"/>
                     {uiState == UIScreens.pipeline &&
