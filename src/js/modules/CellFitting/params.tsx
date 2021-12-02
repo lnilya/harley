@@ -27,8 +27,8 @@ export type Step = PipelineStep<Inputs, Outputs>;
 
 /**Parameter Object of CellFitting*/
 export type Parameters = {
-    minconfidence:[number]
-    mindist:[number]
-    masksize:[number]
+    minconfidence:[number],
+    mindist:[number],
+    masksize:[number],
     snapping:[number]
 }

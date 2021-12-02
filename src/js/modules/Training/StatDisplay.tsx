@@ -5,10 +5,10 @@ import {Tooltip} from "@material-ui/core";
 interface IStatDisplayProps{
 	
 	/**Additional classnames for this component*/
-	className?:string
-    explanation:ReactNode
-    formattedVal:string
-    normVal:number
+	className?:string,
+    explanation:ReactNode,
+    formattedVal:string,
+    normVal:number,
     title:string
 }
 /**

@@ -45,7 +45,7 @@ export type Step = PipelineStep<Inputs, Outputs>;
 
 /**Typing for Parameter Values*/
 export type Parameters = {
-    removeblobs:boolean
+    removeblobs:boolean,
     sb_solidity:[number,number],
     sb_size:[number],
     sb_area:[number],

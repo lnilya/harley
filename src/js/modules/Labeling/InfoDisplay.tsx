@@ -13,7 +13,7 @@ export type InfoObject= {
 interface IInfoDisplayProps{
 	
 	/**Additional classnames for this component*/
-	result:LabelingResult[]
+	result:LabelingResult[],
     totalCells:number
     
 }

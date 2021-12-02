@@ -3,6 +3,7 @@ Updates by version
 
 ### Version: 1.0.0
 - First major release with 4 pipelines.
+- Along with [Paper](https://www.biorxiv.org/content/10.1101/2021.11.29.470484v1?rss=1) publication
 
 ### Version: 0.0.6
 Minor:

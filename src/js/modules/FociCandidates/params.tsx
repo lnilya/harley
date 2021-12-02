@@ -33,6 +33,6 @@ export type Step = PipelineStep<Inputs, Outputs>;
 
 /**Parameter Object of FociCandidates*/
 export type Parameters = {
-    fociSize:[number,number]
+    fociSize:[number,number],
     granularity:[number]
 }

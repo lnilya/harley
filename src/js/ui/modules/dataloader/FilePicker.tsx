@@ -19,10 +19,10 @@ interface IFilePickerProps {
     initialFile?: LocalFileWithPreview,
     
     /**The input for which this dialog is shown.*/
-    input: PipelineInput
+    input: PipelineInput,
     
     /**When fetching previews, we need unique identifiers for each batch, since they must be different filenames on the server.*/
-    batchID: number
+    batchID: number,
     
     /**Called when Pipeline inputs are changed, i.e. when a file is selected and a preview has been loaded.*/
     updateFunction?: (inp: PipelineInput, data: LocalFileWithPreview, add: boolean) => void

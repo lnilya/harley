@@ -23,7 +23,7 @@ import {InputLabel, MenuItem, Select} from "@mui/material";
 interface IBatchCreatorProps {
     
     /**Additional classnames for this component*/
-    className?: string
+    className?: string,
     
     onDone: () => void
 }

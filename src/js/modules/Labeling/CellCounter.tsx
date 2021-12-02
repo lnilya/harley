@@ -11,9 +11,9 @@ import './scss/CellCounter.scss'
 interface ICellCounterProps {
     
     /**Additional classnames for this component*/
-    className?: string
-    cellImg:PipelineImage
-    curCell:SingleCellLabelingData
+    className?: string,
+    cellImg:PipelineImage,
+    curCell:SingleCellLabelingData,
     
     onNext:(res:LabelingResult) => void
 }

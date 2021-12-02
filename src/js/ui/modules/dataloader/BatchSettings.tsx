@@ -10,7 +10,7 @@ import {SingleDataBatch} from "../../../state/algstate";
 import {copyChange} from "../../../util";
 
 interface IBatchSettingsProps {
-    className?:string
+    className?:string,
     batchIdx:number
 }
 

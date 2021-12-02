@@ -6,13 +6,13 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 interface IFileTableProps{
-    className?:string
+    className?:string,
     allFiles:Array<LocalFile>,
     allFolders:Array<LocalFolder>,
     filter:string,
     upFolder:LocalFolder,
     selectedFile:LocalFile,
-    onSelectFile:(f:LocalFile) => void
+    onSelectFile:(f:LocalFile) => void,
     onSelectFolder:(f:LocalFolder) => void
 }
 /**

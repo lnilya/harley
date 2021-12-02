@@ -23,7 +23,7 @@ export type Outputs = {cells:PipelineBlobs }
 export type Step = PipelineStep<Inputs, Outputs>;
 
 export type Parameters = {
-    solidity:[number,number]
+    solidity:[number,number],
     size:[number,number]
     
     /*ttype:'whiteorblack'|'band'

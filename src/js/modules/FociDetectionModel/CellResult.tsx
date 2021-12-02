@@ -9,10 +9,10 @@ import {DeleteForever, RestoreFromTrash} from "@mui/icons-material";
 interface ICellResultProps{
 	
 	/**Additional classnames for this component*/
-	className?:string
+	className?:string,
     img:PipelineImage,
     foci:PipelinePolygons,
-    excluded:boolean
+    excluded:boolean,
     onToggleCellInclusion:()=>void
 }
 /**

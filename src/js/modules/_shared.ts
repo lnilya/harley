@@ -18,7 +18,7 @@ export type SliderInputParams = {
     max:number,
     // borders:{}
     stepsize:number,
-    defaultVal:number[]
+    defaultVal:number[],
     /**If inverted the slider color a different portion of the area*/
     invert?:boolean
 }

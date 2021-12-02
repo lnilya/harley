@@ -8,7 +8,7 @@ export type CellFittingResponse = {
     /**new threshholded heatmap*/
     heatmap:PipelineImage,
     /**Coordinates of maxima that were found*/
-    maxima: PipelinePolygons
+    maxima: PipelinePolygons,
     /**Indices of the points that were accepted wrt constraints*/
     accepted: Array<number>
 }

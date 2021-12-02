@@ -18,7 +18,7 @@ interface IFilePreviewProps {
     input: PipelineInput,
     
     /**When fetching previews, we need unique identifiers for each batch, since they must be different filenames on the server.*/
-    batchID:number
+    batchID:number,
     
     /**Additional classnames for this component*/
     className?: string,

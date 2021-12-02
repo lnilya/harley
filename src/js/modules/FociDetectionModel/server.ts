@@ -6,7 +6,7 @@ import {PipelineImage, PipelinePolygons} from "../../types/datatypes";
 
 export type FociDetectionModelResult = {
     /**Images of the cells*/
-    imgs:PipelineImage[]
+    imgs:PipelineImage[],
     /**Foci in each cell at optimal outline*/
     foci:PipelinePolygons[]
 }

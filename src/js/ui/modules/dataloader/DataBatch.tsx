@@ -21,11 +21,11 @@ import ReplayCircleFilledIcon from '@mui/icons-material/ReplayCircleFilled';
 
 
 interface IDataBatchProps {
-    className?: string
+    className?: string,
     batchIdx: number,
     title: string,
     batch: SingleDataBatch,
-    onOpenSelectionDialogue: (forInp: PipelineInput) => void
+    onOpenSelectionDialogue: (forInp: PipelineInput) => void,
     onDeleteBatch: () => void
 }
 
