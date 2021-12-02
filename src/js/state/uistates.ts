@@ -91,4 +91,4 @@ export enum UIScreens{
     /**Switch of Pipeline Screens*/
     pipelineswitch
 }
-export const appScreen = connectedAtom<UIScreens>({key:'screen',default:UIScreens.pipelineswitch})
+export const appScreen = connectedAtom<UIScreens>({key:'screen',default:UIScreens.welcome})

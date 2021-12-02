@@ -19,6 +19,7 @@ import {useSnackbar} from "notistack";
 import AutoPlayOverlay from "./ui/modules/AutoPlayOverlay";
 import ProgressOverlay from "./ui/modules/ProgressOverlay";
 import Aggregator from "./ui/modules/aggregator/Aggregator";
+import WelcomeScreen from "./ui/modules/WelcomeScreen";
 
 const App: React.FC = () => {
     const overlay = useRecoilValue(ui.overlay);
@@ -60,6 +61,7 @@ const App: React.FC = () => {
                         {uiStep == UIScreens.input && <DataLoader/>}
                         {uiStep == UIScreens.aggregate && <Aggregator/>}
                         {uiStep == UIScreens.pipelineswitch && <PipelineSwitchScreen/>}
+                        {uiStep == UIScreens.welcome && <WelcomeScreen/>}
                     </div>
                 </div>
             </div>

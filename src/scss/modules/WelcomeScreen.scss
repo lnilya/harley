@@ -1,0 +1,23 @@
+@import "../global/variables";
+@import "../global/mixins";
+
+.welcome-screen{
+	font-size: 16px;
+	h1{
+		font-size: 40px;
+		margin-bottom: 0;
+		line-height: 1;
+	}
+	em{
+		font-weight: bold;
+		font-style: normal;
+		text-decoration: underline;
+	}
+	.main-text{
+		line-height: 1.9;
+		a{
+			color: $colMain;
+			font-weight: bold;
+		}
+	}
+}

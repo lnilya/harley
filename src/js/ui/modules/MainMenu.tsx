@@ -10,14 +10,13 @@ import * as ui from '../../state/uistates'
 import {UIPopups, UIScreens} from '../../state/uistates'
 import '../../../scss/modules/MainMenu.scss'
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import {doesPipelineStepHaveData} from "../../state/stateutil";
 import NotStartedIcon from '@mui/icons-material/NotStarted';
 import * as alg from "../../state/algstate";
 import {RunningMode} from "../../state/algstate";
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import {Pipeline} from "../../types/pipelinetypes";
 import {Done, DoneAll} from "@mui/icons-material";
+import MainLogo from "../elements/MainLogo";
 
 interface ISideMenuProps {
     
@@ -81,6 +80,8 @@ const MainMenu: React.FC<ISideMenuProps> = ({onChangeOpenState, className}) => {
             setShowing(false)
         }}>
             <div className={`main-menu__content bg-bgdark`}>
+                <MainLogo onClick={e=>setUIState(UIScreens.welcome)}/>
+                <div className="margin-50-top"/>
                 <MainMenuButton onClick={onSwitchPipeline} title={'Switch Pipeline'}
                                 active={uiState == UIScreens.pipelineswitch}
                                 tooltip={'A pipeline is simply a set of steps with a single task. Like "Count Foci" or "Detect Cells".'}

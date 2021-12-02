@@ -23,7 +23,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-		padding-top: $topBarHeight;
+		//padding-top: $topBarHeight;
 		height: 100%;
 		box-sizing: border-box;
 		.main-menu-button__content span{
@@ -33,7 +33,7 @@
 	}
 	&.is-showing{
 		width: $sideMenuWidthOpen;
-		.main-menu-button__content span{
+		.main-menu-button__content span,.main-logo span{
 			opacity: 1;
 		}
 	}

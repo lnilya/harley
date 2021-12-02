@@ -1,0 +1,25 @@
+.main-logo{
+    height: $topBarHeight;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	cursor: pointer;
+	svg{
+		min-width: 22px;
+		width: 22px;
+		padding-left: 10px;
+	}
+	position: relative;
+	overflow: hidden;
+	span{
+		padding-left: 12px;
+		color: $colWhite;
+		font-weight: bold;
+		white-space: nowrap;
+		opacity: 0;
+		transition: all 0.3s;
+	}
+
+	background-color: $colMain;
+}

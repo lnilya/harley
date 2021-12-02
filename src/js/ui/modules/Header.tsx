@@ -20,7 +20,7 @@ const Header:React.FC<IStepChoiceProps> = ({className}) => {
     const cpn = useRecoilValue(ui.selectedPipelineName)
 	const [uiStep,setUIStep] = useRecoilState(ui.appScreen)
     const curBatchInfo = useRecoilValue(alg.loadedBatchInfo);
-    if(!allSteps) return null;
+    // if(!allSteps) return null;
     
 	return (<div className={'header ' + className}>
         {uiStep == UIScreens.pipeline &&
