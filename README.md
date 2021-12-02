@@ -1,6 +1,11 @@
 # HARLEY
 Human Augmented Recognition of LLPS Ensembles in Yeast
-BioRxiv: BIORXIV/2021/470484
+
+Refer to our [paper (I.Shabanov and JR buchan, 2021)](https://www.biorxiv.org/content/10.1101/2021.11.29.470484v1?rss=1) 
+for details on how Harley works internally.  
+
+DOI: https://doi.org/10.1101/2021.11.29.470484
+
 # Quick Start for Users
 
 
