@@ -3,6 +3,7 @@ from typing import Tuple, Optional, Dict
 
 import imageio
 import numpy as np
+from PIL import Image,ImageSequence
 from mrc import mrc
 
 from src.py.loaders.fileloaderutil import __normImage
@@ -29,6 +30,24 @@ def loadBinaryImage(asPreviewOnly:bool, pipekey:str, filePath:str, intensityBoun
 
     preview = getTransparentMask(g,(255,0,0),pipekey,True)
     return LoaderResult(g,preview['url'],{'Width':g.shape[1],'Height':g.shape[0]})
+
+def loadTifMultiChannelImage(asPreviewOnly:bool, pipekey:str, filePath:str, **addParams)->Optional[LoaderResult]:
+    im = Image.open(filePath)
+
+    imgs = []
+    for i, page in enumerate(ImageSequence.Iterator(im)):
+        imgs += [np.array(page)]
+
+    imgs = np.array(imgs)
+    preview = getPreviewImage(__normImage(imgs[len(imgs) >> 1]),pipekey)
+
+    return LoaderResult(imgs,preview['url'],
+                        {'Width':imgs[0].shape[1],
+                         'Height':imgs[0].shape[0],
+                         # '1px': '%.1fnm'%(pxSize * 1000),
+                         'Channels':1,
+                         'Z-Planes':len(imgs),
+                         })
 
 def loadDVMultiChannelImage(asPreviewOnly:bool, pipekey:str, filePath:str, **addParams)->Optional[LoaderResult]:
     dvfile = mrc.imread(filePath)

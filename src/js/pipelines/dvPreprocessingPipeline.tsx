@@ -59,9 +59,10 @@ function getPipeline(): Pipeline {
         inputs: [
             {
                 key:keys.input,
-                title:'MultiChannel Dv Image',
-                description:'A multichannel DV Image, where the z-stack will be collapsed to create a final image that can be used for foci detection.',
-                loaders:{ 'dv': 'loadDVMultiChannelImage' },
+                title:'MultiChannel Fluorescence Image',
+                description:'A multichannel fluorescence image, where the z-stack will be collapsed to create a final image that can be used for foci detection.',
+                loaders:{ 'dv': 'loadDVMultiChannelImage',
+                           'tif,tiff': 'loadTifMultiChannelImage'},
                 postProcessForJS:util.postProcessForImage
             },
             {
