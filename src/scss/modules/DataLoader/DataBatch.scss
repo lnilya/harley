@@ -4,13 +4,29 @@
 .data-batch{
 	border-radius: 4px;
 	transition: height 1s;
-	overflow: hidden;
+	//overflow: hidden;
 	&__title{
 		border-bottom: 1px solid $colWhite;
 	}
+	position: relative;
+	&__active-indicator{
+		div{
+			transform: rotate(-90deg) translateY(-25px);
+			transform-origin: top right;
+			text-transform: uppercase;
+			font-weight: bold;
+			font-size: 16px;
+			color: $colSuccess;
+		}
+
+		border-right: 8px solid $colSuccess;
+		@include stick-to($fix-left);
+
+		transform: translateX(calc(-100% - 5px));
+	}
 
 	&.active-batch{
-		border: 3px solid $colSuccess;
+		//border: 3px solid $colSuccess;
 
 		span.text-title, span.text-processing{
 			color: darken($colSuccess,10);
