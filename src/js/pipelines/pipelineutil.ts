@@ -2,6 +2,13 @@ import {LocalFileWithPreview, PipelineDataKey, PipelineImage} from "../types/dat
 import {Parameter, ParameterKey} from "../modules/_shared";
 import {parseValueToParamType} from "../state/stateutil";
 
+/**
+ * Merges the settings for a pipeline batch with the metadata data coming from a local file with preview
+ * @param pv The loaded local file with its preview and metadata
+ * @param curSettings The current settings object for the BATCH
+ * @param paramConfig All configs of batch parameters, (comes from the pipeline definition)
+ * a copy of the settings object, to be set into the SingleBatch Object. May or may not have been be modified.
+ */
 export async function mergeMetaInformationWithBatchSettings(pv:LocalFileWithPreview, curSettings:Record<ParameterKey, any>, paramConfig:Array<Parameter<any>>){
     
     var newSettings = {...curSettings}

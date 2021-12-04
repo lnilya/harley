@@ -103,9 +103,10 @@ export async function addBatches(pipe:Pipeline, add: LocalFile[][], removeCurren
         batch.forEach((lf,pidx)=>{
             if(!lf)return;
             const pinputKey = pipe.inputs[pidx].key;
+            const modBatch = pipe.inputs[pidx].modifyBatchParameters;
             const loader = getLoaderFromFileName(lf.name, pipe.inputs[pidx]);
             const ld = loadInputFile(pinputKey, lf.path, loader, i + batchIndexStart)
-            ld.then((res) => {
+            ld.then(async (res) => {
                 updateConnectedValue(ui.overlay, {
                     display: 'overlay',
                     progress: totalLoads / totalFilesToLoad,
@@ -113,11 +114,19 @@ export async function addBatches(pipe:Pipeline, add: LocalFile[][], removeCurren
                 });
                 totalLoads++;
                 if (!res.error) {
-                    if (!arrAfterLoading[i]) arrAfterLoading[i] = {
-                        settingsSetName: paramSetName,
-                        inputs: {},
-                        batchParameters:__getDefaultBatchParameters(pipe)
+                    var batchParameters = __getDefaultBatchParameters(pipe);
+                    
+                    if (!arrAfterLoading[i]){
+                        arrAfterLoading[i] = {
+                            settingsSetName: paramSetName,
+                            inputs: {},
+                            batchParameters:batchParameters
+                        }
                     }
+                    //if possibly modify parameters for the whole batch
+                    if(modBatch)
+                        arrAfterLoading[i].batchParameters = await modBatch(res.data,arrAfterLoading[i].batchParameters,pipe.inputParameters);
+                    
                     arrAfterLoading[i].inputs[pinputKey] = {file: lf, ...res.data};
                 }
             })

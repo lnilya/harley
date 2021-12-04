@@ -79,7 +79,6 @@ const BatchCreator: React.FC<IBatchCreatorProps> = ({onDone, className}) => {
     const onApplyFoundFiles = (overwrite: boolean) => {
         const filesToAdd = result.data.filter((e, i) => selection.indexOf(i) != -1)
         addBatches(pipe, filesToAdd, overwrite,selectedParamSet);
-        //TODO: Make sure the metadata is extracted as in single load.
         onDone();
     }
     
