@@ -25,6 +25,7 @@ export type SliderInputParams = {
 /**Parameters for a single text input box */
 export type TextInputParams = {
     type:'text_input',
+    inputtype:string
     defaultVal:string,
     placeholder:string
 }

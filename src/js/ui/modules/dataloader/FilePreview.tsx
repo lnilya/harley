@@ -5,7 +5,6 @@ import * as server from "../../../eel/eel";
 import {EelResponse} from "../../../eel/eel";
 import ToolTipHint from "../../elements/ErrorHint";
 import {PipelineInput} from "../../../types/pipelinetypes";
-import {updatePipelineInput} from "../../../state/stateutil";
 import {getLoaderFromFileName} from "../../../pipeline";
 
 interface IFilePreviewProps {
@@ -34,8 +33,6 @@ interface IFilePreviewProps {
 const asSelectedFilePreview = atomFamily<LocalFileWithPreview, string>({key: 'file_preview_preview', default: null});
 
 const FilePreview: React.FC<IFilePreviewProps> = ({batchID, updateFunction, initialPreview, input, selFile, className}) => {
-    
-    if (!updateFunction) updateFunction = updatePipelineInput;
     
     const [selFilePreview, setSelFilePreview] = useState<LocalFileWithPreview>(initialPreview);
     const [error, setError] = useState<EelResponse<any>>(null);

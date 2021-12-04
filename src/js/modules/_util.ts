@@ -19,23 +19,25 @@ import {
  * @param defaultVal optional default value
  * @param conditional optional display condition
  */
-export function getTextInputParams(
+export function getTextfieldInputParams(
     key: string,
     title: ReactNode,
     description: ReactNode,
     placeholder: string = 'Value...',
     defaultVal: string = '',
     conditional: Condition = null,
-    frontendOnly:boolean = false
+    frontendOnly:boolean = false,
+    inputType:'text'|'number' = 'text'
 ): Parameter<TextInputParams> {
     
     return {
         key: key,
-        dtype: DType.String,
+        dtype: inputType=='number' ? DType.Float : DType.String,
         input:{
             type:"text_input",
             defaultVal: defaultVal,
-            placeholder: placeholder
+            placeholder: placeholder,
+            inputtype:inputType
         },
         display: {
             title: title,

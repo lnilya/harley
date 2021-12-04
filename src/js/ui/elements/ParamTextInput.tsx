@@ -38,7 +38,7 @@ const ParamTextInput:React.FC<IParamTextInputProps> = ({onParameterChanged, conf
             <ParamHelpBtn toolTipPlacement={tooltipPlacement} content={conf.display.hint}/>
         </div>
         <Input className={'full-w'}
-               placeholder={conf.input.placeholder}
+               placeholder={conf.input.placeholder} type={conf.input.inputtype}
                value={curInputVal} onChange={onChange}
                onBlur={onBlurOut} onKeyUp={onKeyUpInput} onFocus={onBlurIn}
         />

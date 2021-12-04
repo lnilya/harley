@@ -19,6 +19,7 @@ interface IPipelineParamListProps{
 	/**Additional classnames for this component*/
 	className?:string,
     
+    /**Number of processed batch*/
     batchIdx:number,
 }
 /**
@@ -30,7 +31,6 @@ const PipelineParamList:React.FC<IPipelineParamListProps> = ({batchIdx,className
     const pipe = useRecoilValue(ui.selectedPipeline);
     const [allBatches, setAllBatches] = useLocalStoreRecoilHook(alg.allPipelineBatches,'pipeline',false);
     const thisBatch:SingleDataBatch = allBatches[batchIdx];
-    console.log(`RENDEING  ${batchIdx} /`,allBatches);
     if(!thisBatch) return null;
     
     const onParameterChanged = (conf:Parameter<any>,val:any) => {

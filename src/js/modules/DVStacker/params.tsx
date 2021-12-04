@@ -1,6 +1,6 @@
 import {PipelineStep} from "../../types/pipelinetypes";
 import {Parameter} from "../_shared";
-import {getDropdownParams, getTextInputParams} from "../_util";
+import {getDropdownParams, getTextfieldInputParams} from "../_util";
 import React from "react";
 import {PipelineImage} from "../../types/datatypes";
 
@@ -15,7 +15,7 @@ const beh = getDropdownParams('stacking',
     'max',
     {max:'Use Max Value',mean:'Use Mean Value'})
 
-const channel = getTextInputParams('channel','Channel to use','The channel inside the image to use','Channel...','0',null,false)
+const channel = getTextfieldInputParams('channel','Channel to use','The channel inside the image to use','Channel...','0',null,false)
 const zstackdesc = (<div>
     Leave empty to use all.<br/>
     Otherwise you can define ranges with a colon and commas. Note that indices start from 0.<br/>
@@ -26,7 +26,7 @@ const zstackdesc = (<div>
         <li><strong>1,2,3</strong>{'=> 1,2,3'}</li>
     </ul>
 </div>)
-const zstacks = getTextInputParams('zstacks','ZStacks to use',zstackdesc,'ZStacks...','',null,false)
+const zstacks = getTextfieldInputParams('zstacks','ZStacks to use',zstackdesc,'ZStacks...','',null,false)
 
 
 

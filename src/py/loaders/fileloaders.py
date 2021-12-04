@@ -44,7 +44,6 @@ def loadTifMultiChannelImage(asPreviewOnly:bool, pipekey:str, filePath:str, **ad
     return LoaderResult(imgs,preview['url'],
                         {'Width':imgs[0].shape[1],
                          'Height':imgs[0].shape[0],
-                         # '1px': '%.1fnm'%(pxSize * 1000),
                          'Channels':1,
                          'Z-Planes':len(imgs),
                          })

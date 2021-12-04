@@ -70,11 +70,18 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     
     //Load available parameter sets initially.
     const [allParamSets,setAllParamSets] = useState<ParamSet[]>(()=>Object.values(store.loadParameterSets(true))||[]);
-    const resolvePickerDialog = (canceled:boolean = false)=>{
+    const resolvePickerDialog = async (canceled:boolean = false)=>{
         if(selectedInput && !canceled){
             const cb:SingleDataBatch = allBatches[askingForInput.batchIndex]
-            const nb:SingleDataBatch = {...cb,inputs: {...cb.inputs,[askingForInput.input.key]: selectedInput}};
+            const nb:SingleDataBatch = {...cb,batchParameters:{...cb.batchParameters}, inputs: {...cb.inputs,[askingForInput.input.key]: selectedInput}};
+            
+            //we have selected a file check if we need to update the batch settings from loading of this file
+            const inp:PipelineInput = curPipeline.inputs.find(i=>i==askingForInput.input);
+            if(inp.modifyBatchParameters)
+                nb.batchParameters = await inp.modifyBatchParameters(selectedInput,cb.batchParameters,curPipeline.inputParameters)
+            
             setAllBatches(copyChange(allBatches,askingForInput.batchIndex,nb))
+            
         }
         setSelectedInput(null)
         setAskingForInput(null)

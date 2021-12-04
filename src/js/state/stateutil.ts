@@ -18,8 +18,8 @@ const deepEqual = require('deep-equal')
  */
 export function setPipelineParameterValue(conf:Parameter<any>, newVal:any){
     
-    if(Array.isArray(newVal)) newVal = newVal.map((nv)=>_parseType(conf.dtype,nv));
-    else newVal = _parseType(conf.dtype,newVal);
+    if(Array.isArray(newVal)) newVal = newVal.map((nv)=>parseValueToParamType(conf.dtype,nv));
+    else newVal = parseValueToParamType(conf.dtype,newVal);
     
     //find the step this parameter is in
     var oldParams:Array<SettingDictionary> = getConnectedValue(curPipelineParameterValues);
@@ -50,7 +50,7 @@ export function setPipelineParameterValue(conf:Parameter<any>, newVal:any){
 }
 
 //Cast according to desired type
-function _parseType(type:DType,newVal:any):any{
+export function parseValueToParamType(type:DType, newVal:any):any{
     if(type == DType.Bool) return !!newVal;
     else if(type == DType.String) return ''+newVal;
     else if(type == DType.Int) return parseInt(newVal);
@@ -71,11 +71,10 @@ function _getCurStep(stepnum:number = -1):PipelineStep<any,any>{
 export function deletePipelineData(plk:PipelineDataKey, deleteDownstreamResults:boolean = true):void{
     updatePipelineData(plk,null,deleteDownstreamResults)
 }
-export function updatePipelineInput(inp:PipelineInput, data:LocalFileWithPreview, add:boolean):void{
-    console.log(`UPDATING PL INPUT`);
+export async function updatePipelineInput(inp:PipelineInput, data:LocalFileWithPreview, add:boolean){
     if(add){
         updateConnectedValue(alg.allPipelineInputs, {...getConnectedValue(alg.allPipelineInputs),[inp.key]:data})
-        updatePipelineData(inp.key,inp.postProcessForJS(data,inp.key))
+        updatePipelineData(inp.key,await inp.postProcessForJS(data,inp.key))
     }else{
         //inputfile unselected
         var nv = {...getConnectedValue(alg.allPipelineInputs)}
