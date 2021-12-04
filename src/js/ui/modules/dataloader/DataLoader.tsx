@@ -10,7 +10,7 @@ import {Button, Dialog, LinearProgress, Tooltip} from "@material-ui/core";
 import {copyChange, copyRemove} from "../../../util";
 import * as storage from '../../../state/persistance'
 import {useLocalStoreRecoilHook} from "../../uihooks";
-import {unloadPipeline} from "../../../pipeline";
+import {getBlankBatch, unloadPipeline} from "../../../pipeline";
 import {allPipelineBatches, SingleDataBatch} from "../../../state/algstate";
 import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
 import * as store from "../../../state/persistance";
@@ -90,10 +90,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
             unloadPipeline();
     }
     const addNewBatch = () =>{
-        const nb:SingleDataBatch = {inputs:{}, settingsSetName:PARAM_SET_NAME_CURRENT };
-        curPipeline.inputs.forEach((inp)=> {
-            nb.inputs[inp.key] = null;
-        })
+        const nb:SingleDataBatch = getBlankBatch(curPipeline)
         setAllBatches([...allBatches,nb])
     }
     
@@ -106,7 +103,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     
     const deleteAllBatches = () => {
         //delete with an empty batch
-        setAllBatches([{inputs:{}, settingsSetName:PARAM_SET_NAME_CURRENT }])
+        setAllBatches([getBlankBatch(curPipeline)])
         unloadPipeline();
     };
     

@@ -115,7 +115,8 @@ export async function addBatches(pipe:Pipeline, add: LocalFile[][], removeCurren
                 if (!res.error) {
                     if (!arrAfterLoading[i]) arrAfterLoading[i] = {
                         settingsSetName: paramSetName,
-                        inputs: {}
+                        inputs: {},
+                        batchParameters:__getDefaultBatchParameters(pipe)
                     }
                     arrAfterLoading[i].inputs[pinputKey] = {file: lf, ...res.data};
                 }
@@ -202,9 +203,12 @@ export async function loadPipeline(pipe: Pipeline) {
                     
                     totalLoads++;
                     if (!res.error) {
+                        const storedParams = pinput.batchParameters || {};
                         if (!arrAfterLoading[i]) arrAfterLoading[i] = {
                             settingsSetName: pinput.settingsSetName,
-                            inputs: {}
+                            inputs: {},
+                            //overwrite defaults with whatever was loaded
+                            batchParameters: {...__getDefaultBatchParameters(pipe), ...storedParams }
                         }
                         arrAfterLoading[i].inputs[pinputKey] = {file: pinput.inputs[pinputKey].file, ...res.data};
                         // console.log(`DONE LOADING BATCH`,arrAfterLoading[i]);
@@ -225,7 +229,9 @@ export async function loadPipeline(pipe: Pipeline) {
         
         //When no batches are present, auto create a new empty one, for easier user input
         if (lastStoredBatches.length == 0) {
-            lastStoredBatches[0] = {inputs: {}, settingsSetName: PARAM_SET_NAME_CURRENT}
+            lastStoredBatches[0] = {inputs: {},
+                settingsSetName: PARAM_SET_NAME_CURRENT,
+                batchParameters:__getDefaultBatchParameters(pipe)}
             pipe.inputs.forEach((inp) => {
                 lastStoredBatches[0].inputs[inp.key] = null;
             })
@@ -326,6 +332,28 @@ function __mergeDefaultGlobalSettings(pipe: Pipeline): GlobalPipelineSettings {
     const storedData = storage.loadDataForPipeline(alg.pipelineGlobalSettings.key,pipe.name) || {}
     return {...defaults,...storedData}
 }
+/**Creates a blank batch with default parameters*/
+export function getBlankBatch(pipe:Pipeline, settingsName:string = null):SingleDataBatch{
+    const nb:SingleDataBatch = {
+        inputs:{},
+        settingsSetName:settingsName || PARAM_SET_NAME_CURRENT,
+        batchParameters: __getDefaultBatchParameters(pipe)
+    };
+    pipe.inputs.forEach((inp)=> {
+        nb.inputs[inp.key] = null;
+    })
+    return nb
+}
+/**Retrieves the default batch parameters of the pipeline*/
+function __getDefaultBatchParameters(pipe: Pipeline): SettingDictionary{
+    if(!pipe?.inputParameters) return {};
+    var ret = {};
+    pipe.inputParameters.map((p)=>{
+        ret[p.key] = p.input.defaultVal;
+    })
+    return ret;
+}
+/**Retrieves the default parameters for all steps of the pipeline*/
 function __getDefaultParameters(pipe: Pipeline): Array<SettingDictionary> {
     return pipe.steps.map((s) => {
         let stepParams = {};

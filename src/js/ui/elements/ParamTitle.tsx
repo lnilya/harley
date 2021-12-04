@@ -1,14 +1,11 @@
 import React from "react";
 import {Parameter, SeparatorParams} from "../../modules/_shared";
 import ParamHelpBtn from "./ParamHelpBtn";
+import {IParamUISettingBase} from "../../types/uitypes";
 
-interface IParamTitleProps{
-	conf:Parameter<SeparatorParams>,
-	/**Additional classnames for this component*/
-	className?:string,
+interface IParamTitleProps extends IParamUISettingBase<SeparatorParams>{
     //Required only because of the ParameterInterface
     curVal?:any
-    disabled:boolean
 }
 /**
  * ParamTitle

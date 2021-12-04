@@ -27,7 +27,7 @@ const dataKeys = {
 }
 
 const helpScreen = <div>
-    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowfullscreen />
+    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen />
 </div>
 function getPipeline(): Pipeline {
     const datasetDesc = 'A *.cells file that was exported via the preprocessing pipeline aggregator. This file contains images of single cells, that the model will be trained on.'

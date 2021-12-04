@@ -59,6 +59,7 @@
 	}
 	&__preview{
 		transition: all 0.3s;
+		box-sizing: border-box;
 		&:not(.selected){
 			border: 2px dashed $colBGMedium;
 			color:$colBlack;

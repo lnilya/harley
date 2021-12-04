@@ -1,0 +1,29 @@
+@import "../global/variables";
+@import "../global/mixins";
+
+.pipeline-param-list{
+	border-top: 1px solid $colWhite;
+
+	.param.param-text{
+		padding-top: 0;
+		padding-bottom: 0;
+		input{
+			padding: 8px !important;
+		}
+	}
+	.param.param-dropdown{
+		.MuiInputBase-root{
+			padding: 7px;
+			select{
+				padding-left: 0;
+			}
+		}
+	}
+	.param.param-slider{
+		.param-slider__slider{
+			margin-top: 10px;
+		}
+	}
+	//normalize some of the UI so it looks nice
+
+}

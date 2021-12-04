@@ -94,7 +94,6 @@ export type PipelineStep<PipelineInputs,PipelineOutputs> = {
     serverParameters?: Record<string, any>
 }
 
-
 /**Describes total settings for a single Pipeline*/
 export type Pipeline = {
     /**A unique name for the Pipeline used in the UI, should be short to appear for example in dropdowns.*/
@@ -102,6 +101,10 @@ export type Pipeline = {
     
     /**Array of input files to put into the pipeline*/
     inputs: Array<PipelineInput>
+    
+    /**Parameters set for one batch of data. Usually reserved for something related to input data.
+     * for example the resolution of images (e.g. 1px = 40.9nm). FileLoaders have the possibility to change these parameter when a file is loaded.*/
+    inputParameters?: Array<Parameter<any>>
     
     /**Array of available outputs for this pipeline batch, user might not use all*/
     outputs: Array<PipelineOutput>

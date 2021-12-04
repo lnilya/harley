@@ -18,6 +18,7 @@ import {EventTypes} from '../../../state/eventbus';
 import {cl} from "../../../util";
 import {SingleDataBatch} from "../../../state/algstate";
 import ReplayCircleFilledIcon from '@mui/icons-material/ReplayCircleFilled';
+import PipelineParamList from "../../elements/PipelineParamList";
 
 
 interface IDataBatchProps {
@@ -75,7 +76,7 @@ const DataBatch: React.FC<IDataBatchProps> = ({
                         <span className={'text-processing pad-25-left'}>(processing in: {curPipeline.steps[curPipelineStep].title})</span>
                     }
                     <div className="fl-grow"/>
-                    <span className={'pad-50-right text-reg'}>Parameters:</span>
+                    <span className={'pad-50-right text-reg'}>Pipeline Parameters:</span>
                     <BatchSettings batchIdx={batchIdx}/>
                     <div className="sep margin-100-hor"/>
                     <Tooltip title={'Delete this batch'} arrow>
@@ -95,8 +96,8 @@ const DataBatch: React.FC<IDataBatchProps> = ({
                     {curPipeline.inputs.map((i, k) => {
                         if (!batch.inputs[i.key]){
                             return (
-                                <div key={k} className="data-batch__preview" onClick={e => onOpenSelectionDialogue(i)}>
-                                    {i.title}
+                                <div key={k} className="data-batch__preview pad-100" onClick={e => onOpenSelectionDialogue(i)}>
+                                    Add<br/>{i.title}
                                 </div>
                             );
                         }else{
@@ -109,9 +110,11 @@ const DataBatch: React.FC<IDataBatchProps> = ({
                         }
                     })}
                 </div>
+                {curPipeline?.inputParameters?.length && <PipelineParamList batchIdx={batchIdx}/>}
             </div>
         </AnimateHeight>
     
     );
 }
+
 export default DataBatch;

@@ -4,19 +4,18 @@ import {DropDownParams, Parameter} from "../../modules/_shared";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {FormControl, NativeSelect} from "@material-ui/core";
 import {setPipelineParameterValue} from "../../state/stateutil";
+import {IParamUISettingBase} from "../../types/uitypes";
 
-interface IParamDropdownProps{
-	conf:Parameter<DropDownParams>,
-    curVal:string,
-    disabled:boolean,
+interface IParamDropdownProps extends IParamUISettingBase<DropDownParams> {
+    curVal:string
 }
 /**
  * ParamDropdown
  * @author Ilya Shabanov
  */
-const ParamDropdown:React.FC<IParamDropdownProps> = ({conf,curVal,disabled}) => {
+const ParamDropdown:React.FC<IParamDropdownProps> = ({onParameterChanged, tooltipPlacement, conf,curVal,disabled}) => {
     const handleChange = (event) => {
-        setPipelineParameterValue(conf,event.target.value);
+        onParameterChanged(conf,event.target.value);
     };
     
 	return (
@@ -24,7 +23,7 @@ const ParamDropdown:React.FC<IParamDropdownProps> = ({conf,curVal,disabled}) => 
             <div className="fl-row-between">
                 <div className="param__name">{conf.display.title}</div>
                 <div className="fl-grow"/>
-                <ParamHelpBtn content={conf.display.hint}/>
+                <ParamHelpBtn toolTipPlacement={tooltipPlacement} content={conf.display.hint}/>
             </div>
     
             <FormControl variant="outlined">

@@ -2,7 +2,6 @@ import {ReactNode} from "react";
 import {
     CheckboxParams,
     Condition,
-    DirInputParams,
     DropDownParams,
     DType,
     Parameter,
@@ -35,32 +34,6 @@ export function getTextInputParams(
         dtype: DType.String,
         input:{
             type:"text_input",
-            defaultVal: defaultVal,
-            placeholder: placeholder
-        },
-        display: {
-            title: title,
-            hint: description
-        },
-        frontendOnly:frontendOnly,
-        conditional:conditional || ((s)=>'active')
-    }
-}
-export function getDirInputParams(
-    key: string,
-    title: ReactNode,
-    description: ReactNode,
-    placeholder: string = 'Value...',
-    defaultVal: string = '',
-    conditional: Condition = null,
-    frontendOnly:boolean = false
-): Parameter<DirInputParams> {
-    
-    return {
-        key: key,
-        dtype: DType.String,
-        input:{
-            type:"dir_input",
             defaultVal: defaultVal,
             placeholder: placeholder
         },

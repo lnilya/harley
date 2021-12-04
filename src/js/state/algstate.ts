@@ -20,7 +20,7 @@ import {
     PipelineDataAggregatorID,
     PipelineDataKey
 } from "../types/datatypes";
-import {SettingDictionary} from "../modules/_shared";
+import {ParameterKey, SettingDictionary} from "../modules/_shared";
 import * as ui from './uistates'
 import {curPipelineStep} from './uistates'
 import {atom, selector} from "recoil";
@@ -38,7 +38,13 @@ export const allPipelineInputs = connectedAtom<Record<PipelineDataKey,LocalFileW
 
 
 export type SingleDataBatch = {
+    /**Files loaded into this batch*/
     inputs: Record<PipelineDataKey,LocalFileWithPreview>,
+    
+    /**Parameters for this batch*/
+    batchParameters: Record<ParameterKey, any>,
+    
+    /**Name of settings set in this batch*/
     settingsSetName:string
 }
 /**Stores batches, i.e. array of inputs to be processed sequentially*/

@@ -2,23 +2,19 @@ import React, {useState} from "react";
 import {ccl} from "../../../util";
 import '../../../../scss/modules/BatchCreator.scss'
 import * as ui from '../../../state/uistates'
-import * as alg from '../../../state/algstate'
-import {Button, Checkbox, FormControl, FormControlLabel, Input, NativeSelect, TextField} from "@material-ui/core";
-import {setPipelineParameterValue} from "../../../state/stateutil";
-import {atom, atomFamily, useRecoilValue} from "recoil";
+import {Button, FormControl, NativeSelect, TextField} from "@material-ui/core";
+import {atom, useRecoilValue} from "recoil";
 import {useToggle} from "react-use";
 import AnimateHeight from "react-animate-height";
-import {LocalFile, PipelineDataKey, PipelineImage} from "../../../types/datatypes";
+import {LocalFile, PipelineDataKey} from "../../../types/datatypes";
 import {useLocalStoreRecoilHook} from "../../uihooks";
 import * as server from '../../../eel/eel'
-import {EelResponse} from "../../../eel/eel";
+import {EelResponse} from '../../../eel/eel'
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import BatchSettings from "./BatchSettings";
 import ConfirmToolTip from "../../elements/ConfirmToolTip";
 import {addBatches} from "../../../pipeline";
-import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
 import * as store from "../../../state/persistance";
-import {InputLabel, MenuItem, Select} from "@mui/material";
+import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
 
 interface IBatchCreatorProps {
     

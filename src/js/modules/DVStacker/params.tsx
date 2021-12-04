@@ -1,12 +1,6 @@
 import {PipelineStep} from "../../types/pipelinetypes";
 import {Parameter} from "../_shared";
-import {
-    getCheckboxParams,
-    getDirInputParams,
-    getDropdownParams,
-    getTextInputParams,
-    getTitleSeparatorParams
-} from "../_util";
+import {getDropdownParams, getTextInputParams} from "../_util";
 import React from "react";
 import {PipelineImage} from "../../types/datatypes";
 

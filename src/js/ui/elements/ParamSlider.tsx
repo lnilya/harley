@@ -4,15 +4,14 @@ import {Parameter, SliderInputParams} from "../../modules/_shared";
 import {ccl, cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {setPipelineParameterValue} from "../../state/stateutil";
+import {IParamUISettingBase} from "../../types/uitypes";
 
-interface ISliderSettingProps {
-    conf: Parameter<SliderInputParams>,
+interface ISliderSettingProps extends IParamUISettingBase<SliderInputParams>{
     curVal: number[],
-    disabled: boolean,
 }
 
 const cls = ccl('param-slider--')
-const ParamSlider: React.FC<ISliderSettingProps> = ({conf, curVal, disabled}) => {
+const ParamSlider: React.FC<ISliderSettingProps> = ({onParameterChanged,tooltipPlacement, conf, curVal, disabled}) => {
     
     //we need to keep local state, since the slider changes read-only value internally before calling onChange.
     const [curSliderVal, setSliderVal] = useState(curVal);
@@ -48,9 +47,9 @@ const ParamSlider: React.FC<ISliderSettingProps> = ({conf, curVal, disabled}) =>
         setActive(false)
     }
     useEffect(()=>{
-        if(!isActive){
-            setPipelineParameterValue(conf, curSliderVal)
-        }
+        if(!isActive)
+            onParameterChanged(conf,curSliderVal)
+        
     },[isActive])
     
     const onKeyUpInput = (e)=>{
@@ -61,7 +60,7 @@ const ParamSlider: React.FC<ISliderSettingProps> = ({conf, curVal, disabled}) =>
         <div className="fl-row-between">
             <div className="param__name">{conf.display.title}</div>
             <div className="fl-grow"/>
-            <ParamHelpBtn content={conf.display.hint}/>
+            <ParamHelpBtn toolTipPlacement={tooltipPlacement} content={conf.display.hint}/>
         </div>
         {curSliderVal.length == 1 &&
         <div className={`fl-row param-slider__slider is-single`}>

@@ -25,7 +25,7 @@ const dataKeys = {
 };
 
 const helpScreen = <div>
-    <ResponsiveEmbed src='https://www.youtube.com/embed/gTJQOmeUkso' allowfullscreen />
+    <ResponsiveEmbed src='https://www.youtube.com/embed/gTJQOmeUkso' allowFullScreen />
 </div>
 
 function getPipeline():Pipeline{
