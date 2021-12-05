@@ -1,9 +1,8 @@
 import React from "react";
 import {cl} from "../../util";
-import {DropDownParams, Parameter} from "../../modules/_shared";
+import {DropDownParams} from "../../modules/_shared";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {FormControl, NativeSelect} from "@material-ui/core";
-import {setPipelineParameterValue} from "../../state/stateutil";
 import {IParamUISettingBase} from "../../types/uitypes";
 
 interface IParamDropdownProps extends IParamUISettingBase<DropDownParams> {

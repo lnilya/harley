@@ -2,7 +2,7 @@ import {PipelineImage} from "../../types/datatypes";
 import {PipelineStep} from "../../types/pipelinetypes";
 import {Parameter} from "../_shared";
 import React from "react";
-import {LabelingResult, SingleCellLabelingData} from "./server";
+import {LabelingResult} from "./server";
 import {getCheckboxParams} from "../_util";
 
 /**Name of the module*/

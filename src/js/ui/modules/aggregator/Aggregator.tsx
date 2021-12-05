@@ -2,9 +2,7 @@ import React from "react";
 import {ccl} from "../../../util";
 import '../../../../scss/modules/aggregator/Aggregator.scss'
 import * as ui from '../../../state/uistates'
-import * as alg from '../../../state/algstate'
 import {useRecoilValue} from "recoil";
-import ExportStep from "../exporter/ExportStep";
 import AggregatorStep from "./AggregatorStep";
 
 interface IAggregatorProps{

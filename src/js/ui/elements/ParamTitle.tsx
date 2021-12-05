@@ -1,5 +1,5 @@
 import React from "react";
-import {Parameter, SeparatorParams} from "../../modules/_shared";
+import {SeparatorParams} from "../../modules/_shared";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {IParamUISettingBase} from "../../types/uitypes";
 

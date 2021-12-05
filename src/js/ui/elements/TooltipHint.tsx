@@ -1,5 +1,4 @@
 import React, {ReactNode, useState} from "react";
-import {EelResponse} from "../../eel/eel";
 import {ClickAwayListener, Tooltip} from "@material-ui/core";
 
 interface ITooltipHintProps {

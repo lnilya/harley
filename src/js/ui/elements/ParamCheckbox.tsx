@@ -1,9 +1,8 @@
 import React from "react";
 import {cl} from "../../util";
-import {CheckboxParams, Parameter} from "../../modules/_shared";
+import {CheckboxParams} from "../../modules/_shared";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {Checkbox, FormControlLabel} from "@material-ui/core";
-import {setPipelineParameterValue} from "../../state/stateutil";
 import {IParamUISettingBase} from "../../types/uitypes";
 
 interface IParamCheckboxProps extends IParamUISettingBase<CheckboxParams> {

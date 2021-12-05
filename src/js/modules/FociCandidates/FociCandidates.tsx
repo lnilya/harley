@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from "react"
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
-import * as alg from "../../state/algstate";
-import * as ui from "../../state/uistates";
-import * as eventbus from "../../state/eventbus";
+import React, {useState} from "react"
+import {atomFamily, useRecoilState} from "recoil";
 import * as server from "./server";
+import {FociInCell} from "./server";
 import * as self from "./params";
 import './scss/FociCandidates.scss'
 import {useStepHook, useToggleKeys} from "../_hooks";
@@ -11,10 +9,8 @@ import {PipelineImage} from "../../types/datatypes";
 import {EelResponse} from "../../eel/eel";
 import ErrorHint from "../../ui/elements/ErrorHint";
 import {cl} from "../../util";
-import {FociInCell} from "./server";
 import PolygonCloud from "../../ui/elements/PolygonCloud";
 import styled from "@emotion/styled";
-import {useToggle} from "react-use";
 import ButtonIcon from "../../ui/elements/ButtonIcon";
 
 

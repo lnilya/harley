@@ -1,18 +1,14 @@
-import React, {useEffect, useState} from "react"
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
-import * as alg from "../../state/algstate";
-import * as ui from "../../state/uistates";
-import * as eventbus from "../../state/eventbus";
+import React, {useState} from "react"
+import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {runTraining, TrainingResult} from "./server";
 import './scss/Training.scss'
 import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
 import {EelResponse} from "../../eel/eel";
 import ErrorHint from "../../ui/elements/ErrorHint";
 import StatDisplay, {cvExplanation, testExplanation} from "./StatDisplay";
 import {printf} from "fast-printf";
-import {AreaChart, Label, ComposedChart,Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line} from 'recharts';
+import {Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 
 /**PERSISTENT UI STATE DEFINITIONS*/

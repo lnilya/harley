@@ -3,14 +3,14 @@ import * as DVStackerParams from "../modules/DVStacker/params";
 import React from "react";
 import {Pipeline} from "../types/pipelinetypes";
 import * as util from './pipelineutil'
+import {suggestModifiedFilename} from './pipelineutil'
 import * as DenoiseParams from '../modules/Denoise/params'
 import Denoise from "../modules/Denoise/Denoise";
 import * as MaskTighteningParams from '../modules/MaskTightening/params'
 import MaskTightening from "../modules/MaskTightening/MaskTightening";
-import {suggestModifiedFilename} from "./pipelineutil";
 import thumb from "../../assets/images/pp_thumb.jpg";
 import ResponsiveEmbed from 'react-responsive-embed'
-import {getCheckboxParams, getDropdownParams, getSliderParams, getTextfieldInputParams} from "../modules/_util";
+import {getTextfieldInputParams} from "../modules/_util";
 //%NEWMODULE_IMPORT%
 
 const keys = {

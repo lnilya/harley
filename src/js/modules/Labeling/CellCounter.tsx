@@ -2,7 +2,7 @@ import React, {Suspense, useState} from "react";
 import {SeedPolygon, SelectedPolygon, SplitablePolygon, SplitPolygon, SplitSeedPolygon} from "./_polygons";
 import {useToggleKeys} from "../_hooks";
 import {copyChange, doesPolygonContain} from "../../util";
-import {Button, TextField} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import {PipelineImage, PolygonData} from "../../types/datatypes";
 import PolygonCloud from "../../ui/elements/PolygonCloud";
 import {LabelingResult, SingleCellLabelingData} from "./server";

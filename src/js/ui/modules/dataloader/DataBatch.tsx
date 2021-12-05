@@ -3,9 +3,9 @@ import '../../../../scss/modules/DataLoader/DataBatch.scss'
 import {PipelineInput} from "../../../types/pipelinetypes";
 import {useRecoilState, useRecoilValue} from "recoil";
 import * as ui from "../../../state/uistates";
-import * as alg from "../../../state/algstate";
 import {UIScreens} from "../../../state/uistates";
-import {LocalFileWithPreview, PipelineDataKey} from "../../../types/datatypes";
+import * as alg from "../../../state/algstate";
+import {SingleDataBatch} from "../../../state/algstate";
 import {DeleteForever} from "@mui/icons-material";
 import {Tooltip} from "@material-ui/core";
 import AnimateHeight from 'react-animate-height';
@@ -16,7 +16,6 @@ import {loadBatchAndStartPipeline} from "../../../pipeline";
 import * as eventbus from '../../../state/eventbus';
 import {EventTypes} from '../../../state/eventbus';
 import {cl} from "../../../util";
-import {SingleDataBatch} from "../../../state/algstate";
 import ReplayCircleFilledIcon from '@mui/icons-material/ReplayCircleFilled';
 import PipelineParamList from "../../elements/PipelineParamList";
 

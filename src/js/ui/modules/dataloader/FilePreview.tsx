@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {LocalFile, LocalFileWithPreview} from "../../../types/datatypes";
-import {atomFamily, useRecoilState} from "recoil";
+import {atomFamily} from "recoil";
 import * as server from "../../../eel/eel";
 import {EelResponse} from "../../../eel/eel";
 import ToolTipHint from "../../elements/ErrorHint";

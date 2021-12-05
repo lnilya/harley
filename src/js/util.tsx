@@ -1,8 +1,7 @@
 /**
  * Shorthand for an if statement tobe used in defining classes like is-disabled
  */
-import {EelResponse} from "./eel/eel";
-import {LocalFile, PolygonData} from "./types/datatypes";
+import {PolygonData} from "./types/datatypes";
 
 export function cl(v:boolean, className:string){
     if(v) return ` ${className} `;

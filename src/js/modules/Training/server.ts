@@ -1,8 +1,7 @@
-import {EelResponse} from "../../eel/eel";
 import * as eel from "../../eel/eel";
-import {updatePipelineData,deletePipelineData} from "../../state/stateutil";
+import {EelResponse} from "../../eel/eel";
+import {deletePipelineData, updatePipelineData} from "../../state/stateutil";
 import * as self from "./params";
-import {LabelingResult} from "../Labeling/server";
 
 export type TrainingResult = {
     /**CrossValidation MCC of model*/

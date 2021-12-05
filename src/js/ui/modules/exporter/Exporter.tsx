@@ -2,11 +2,11 @@ import React from "react"
 import ExportStep from "./ExportStep";
 import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
+import {SingleDataBatch} from '../../../state/algstate'
 import * as server from '../../../eel/eel'
 import {useRecoilValue} from "recoil";
 import {PipelineOutput, PipelineStep} from "../../../types/pipelinetypes";
 import {LocalFilePath} from "../../../types/datatypes";
-import {SingleDataBatch} from "../../../state/algstate";
 
 interface IExporterProps{
 

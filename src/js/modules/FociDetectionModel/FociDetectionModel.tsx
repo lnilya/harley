@@ -1,17 +1,13 @@
-import React, {useEffect, useState} from "react"
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
-import * as alg from "../../state/algstate";
-import * as ui from "../../state/uistates";
-import * as eventbus from "../../state/eventbus";
+import React, {useState} from "react"
+import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {changeCellSelection, FociDetectionModelResult, runFociDetectionModel} from "./server";
 import './scss/FociDetectionModel.scss'
 import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
 import {EelResponse} from "../../eel/eel";
 import ErrorHint from "../../ui/elements/ErrorHint";
 import CellResult from "./CellResult";
-import {copyChange, copyRemove} from "../../util";
+import {copyRemove} from "../../util";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<FociDetectionModelResult,string>({key:'foci-detection-model_result',default:null});

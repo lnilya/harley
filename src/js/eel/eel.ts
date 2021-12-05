@@ -13,7 +13,6 @@ import {
 import {addExecutionCallback} from "./eelJsFunctions";
 import {Pipeline, PipelineDataLoader, PipelineStep} from "../types/pipelinetypes";
 import {ModuleID} from "../types/maintypes";
-import {getLoaderFromFileName} from "../pipeline";
 import {ParameterKey} from "../modules/_shared";
 
 export type EelThreadKey = string

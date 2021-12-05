@@ -1,6 +1,6 @@
-import {EelResponse} from "../../eel/eel";
 import * as eel from "../../eel/eel";
-import {updatePipelineData,deletePipelineData} from "../../state/stateutil";
+import {EelResponse} from "../../eel/eel";
+import {deletePipelineData, updatePipelineData} from "../../state/stateutil";
 import * as self from "./params";
 import {PipelinePolygons} from "../../types/datatypes";
 

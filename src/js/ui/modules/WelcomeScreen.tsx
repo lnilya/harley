@@ -2,10 +2,9 @@ import React from "react";
 import {ccl} from "../../util";
 import '../../../scss/modules/WelcomeScreen.scss'
 import * as ui from '../../state/uistates'
-import * as alg from '../../state/algstate'
+import {UIScreens} from '../../state/uistates'
 import packageJson from '../../../../package.json';
 import {Button} from "@material-ui/core";
-import {UIScreens} from "../../state/uistates";
 import {useRecoilState} from "recoil";
 
 interface IWelcomeScreenProps{

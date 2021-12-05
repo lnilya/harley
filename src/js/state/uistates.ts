@@ -1,7 +1,6 @@
 /**Stores all states related to the state of the UI*/
 import {connectedAtom, connectedSelector} from "./ConnectedStore";
 import {OverlayState} from "../types/maintypes";
-import {selector} from "recoil";
 import {PipelineName} from "../types/datatypes";
 import {Pipeline, PipelineStep} from "../types/pipelinetypes";
 

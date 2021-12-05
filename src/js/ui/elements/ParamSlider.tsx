@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react"
 import {Input, Slider} from "@material-ui/core";
-import {Parameter, SliderInputParams} from "../../modules/_shared";
+import {SliderInputParams} from "../../modules/_shared";
 import {ccl, cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
-import {setPipelineParameterValue} from "../../state/stateutil";
 import {IParamUISettingBase} from "../../types/uitypes";
 
 interface ISliderSettingProps extends IParamUISettingBase<SliderInputParams>{

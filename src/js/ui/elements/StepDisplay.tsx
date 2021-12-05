@@ -1,11 +1,12 @@
 import React from "react";
+import * as ui from "../../state/uistates";
 import {UIScreens} from "../../state/uistates";
 import {doesPipelineStepHaveData} from "../../state/stateutil";
 import {useRecoilState, useRecoilValue} from "recoil";
-import * as ui from "../../state/uistates";
 import * as alg from "../../state/algstate";
 import {cl} from "../../util";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+
 interface IStepDistplayProps {
     
     /**Additional classnames for this component*/

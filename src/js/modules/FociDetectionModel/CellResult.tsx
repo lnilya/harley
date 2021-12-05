@@ -1,5 +1,5 @@
 import React from "react";
-import {ccl, cl} from "../../util";
+import {cl} from "../../util";
 import './scss/CellResult.scss'
 import {PipelineImage, PipelinePolygons} from "../../types/datatypes";
 import PolygonCloud from "../../ui/elements/PolygonCloud";

@@ -1,4 +1,4 @@
-import React, {ReactNode, SVGProps, useEffect, useRef, useState} from "react";
+import React, {SVGProps} from "react";
 import {printf} from "fast-printf";
 import styled from "@emotion/styled";
 import {PolygonData} from "../../types/datatypes";

@@ -1,5 +1,6 @@
 import React from "react"
 import packageJson from '../../../../package.json';
+
 interface IHarleyLogoProps {
     className?: string,
     onClick:(e:any)=>void

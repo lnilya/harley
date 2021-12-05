@@ -1,15 +1,14 @@
 import {RecoilState, SetterOrUpdater, useRecoilState, useRecoilValue} from "recoil";
 import * as alg from "../state/algstate";
+import {SingleDataBatch} from "../state/algstate";
 import * as ui from "../state/uistates";
 import * as eventbus from "../state/eventbus";
+import {ParametersChangedPayload} from "../state/eventbus";
 import {useEffect, useState} from "react";
-import {ModuleID, OverlayState} from "../types/maintypes";
+import {OverlayState} from "../types/maintypes";
 import {abortStep} from "../eel/eel";
 import {PipelineStep} from "../types/pipelinetypes";
 import {DisplayOptionSetting} from "../ui/modules/DisplayOptions";
-import {Parameter} from "./_shared";
-import {ParametersChangedPayload} from "../state/eventbus";
-import {SingleDataBatch} from "../state/algstate";
 
 const deepEqual = require('deep-equal')
 

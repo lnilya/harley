@@ -3,10 +3,10 @@ import {
     AtomEffect,
     atomFamily,
     AtomFamilyOptions,
-    AtomOptions, ReadOnlySelectorOptions,
-    ReadWriteSelectorFamilyOptions,
-    ReadWriteSelectorOptions,
-    RecoilState, RecoilValueReadOnly,
+    AtomOptions,
+    ReadOnlySelectorOptions,
+    RecoilState,
+    RecoilValueReadOnly,
     selector,
     SetterOrUpdater
 } from "recoil";

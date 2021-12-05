@@ -2,6 +2,7 @@ import React, {ReactNode} from "react";
 import {ccl} from "../../util";
 import './scss/StatDisplay.scss'
 import {Tooltip} from "@material-ui/core";
+
 interface IStatDisplayProps{
 	
 	/**Additional classnames for this component*/

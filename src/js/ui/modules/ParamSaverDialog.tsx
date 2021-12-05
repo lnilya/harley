@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {ccl, copyRemove} from "../../util";
 import "../../../scss/modules/ParamSaverDialog.scss";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField} from "@material-ui/core";
+import {Button, Dialog, TextField} from "@material-ui/core";
 import * as ui from '../../state/uistates'
 import * as alg from '../../state/algstate'
 import * as store from '../../state/persistance'
+import {deleteStoredParameterSet, ParamSet, saveParameters} from '../../state/persistance'
 import {useRecoilState, useRecoilValue} from "recoil";
-import {deleteStoredParameterSet, ParamSet, saveParameters} from "../../state/persistance";
-import {loadStoredParametersIntoPipeline} from "../../pipeline";
 import ParamSetListentry from "../elements/ParamSetListentry";
 import {EventTypes, fireEvent, ToastEventPayload} from "../../state/eventbus";
 

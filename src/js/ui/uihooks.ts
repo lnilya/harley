@@ -1,8 +1,8 @@
 import {atomFamily, RecoilState, useRecoilState} from "recoil";
 import {useEffect} from "react";
 import * as storage from '../state/persistance'
-import {EventPayload, EventResult, EventTypes} from "../state/eventbus";
 import * as eventbus from "../state/eventbus";
+import {EventPayload, EventResult, EventTypes} from "../state/eventbus";
 
 const asPrevSettings = atomFamily<boolean,string>({key:'prev_settings',default:false});
 export function useInitalLoadCallback(recoilState:RecoilState<any>, initCallBack:()=>any){

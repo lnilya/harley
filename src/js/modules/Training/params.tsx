@@ -1,4 +1,3 @@
-import {PipelineImage} from "../../types/datatypes";
 import {PipelineStep} from "../../types/pipelinetypes";
 import {Parameter} from "../_shared";
 import React from "react";

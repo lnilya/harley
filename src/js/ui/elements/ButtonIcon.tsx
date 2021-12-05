@@ -1,5 +1,4 @@
 import React from "react";
-import shift from '../../../assets/images/shift.svg'
 
 interface IButtonIconProps{
 	

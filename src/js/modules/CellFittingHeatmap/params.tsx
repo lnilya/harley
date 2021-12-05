@@ -1,5 +1,4 @@
-import * as datatypes from "../../types/datatypes";
-import { PipelineImage} from "../../types/datatypes";
+import {PipelineImage} from "../../types/datatypes";
 import {PipelineStep} from "../../types/pipelinetypes";
 import {Parameter} from "../_shared";
 import {getCheckboxParams, getSliderParams} from "../_util";

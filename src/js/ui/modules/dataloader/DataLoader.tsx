@@ -1,19 +1,18 @@
-import React, {useEffect, useState} from "react"
-import {useRecoilState, useRecoilValue} from "recoil";
+import React, {useState} from "react"
+import {useRecoilValue} from "recoil";
 import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
+import {SingleDataBatch} from '../../../state/algstate'
 import FilePicker from "./FilePicker";
 import {Pipeline, PipelineInput} from "../../../types/pipelinetypes";
 import DataBatch from "./DataBatch";
 import {LocalFileWithPreview} from "../../../types/datatypes";
-import {Button, Dialog, LinearProgress, Tooltip} from "@material-ui/core";
-import {copyChange, copyRemove} from "../../../util";
-import * as storage from '../../../state/persistance'
+import {Button, Dialog, Tooltip} from "@material-ui/core";
+import {copyChange} from "../../../util";
+import * as store from '../../../state/persistance'
+import {PARAM_SET_NAME_CURRENT, ParamSet} from '../../../state/persistance'
 import {useLocalStoreRecoilHook} from "../../uihooks";
 import {getBlankBatch, unloadPipeline} from "../../../pipeline";
-import {allPipelineBatches, SingleDataBatch} from "../../../state/algstate";
-import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
-import * as store from "../../../state/persistance";
 import {Alert} from "@mui/material";
 import {startPipelineAutoPlay} from "../../../pipelineexec";
 import BatchCreator from "./BatchCreator";

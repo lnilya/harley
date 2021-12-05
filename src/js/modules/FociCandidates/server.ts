@@ -1,8 +1,7 @@
-import {EelResponse} from "../../eel/eel";
 import * as eel from "../../eel/eel";
-import {updatePipelineData} from "../../state/stateutil";
+import {EelResponse} from "../../eel/eel";
+import {deletePipelineData, updatePipelineData} from "../../state/stateutil";
 import * as self from "./params";
-import {deletePipelineData} from "../../state/stateutil";
 import {PipelineImage, PipelinePolygons} from "../../types/datatypes";
 
 export type FociInCell = {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import FileTable from "./FileTable";
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilValue} from "recoil";
 import * as server from "../../../eel/eel";
 import {EelResponse} from "../../../eel/eel";
 import {ccl} from "../../../util";
@@ -9,10 +9,8 @@ import {Input} from "@material-ui/core";
 import * as storage from '../../../state/persistance'
 import FilePreview from "./FilePreview";
 import ToolTipHint from "../../elements/ErrorHint";
-import {useInitalLoadCallback} from "../../uihooks";
 import * as ui from '../../../state/uistates'
 import {PipelineInput} from "../../../types/pipelinetypes";
-import AnimateHeight from "react-animate-height";
 
 interface IFilePickerProps {
     /**This file will be selected, overrides initial Folder*/

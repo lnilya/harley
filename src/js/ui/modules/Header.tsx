@@ -1,11 +1,8 @@
 import React from "react"
 import {useRecoilState, useRecoilValue} from "recoil";
 import * as ui from '../../state/uistates'
-import * as alg from '../../state/algstate'
 import {UIScreens} from '../../state/uistates'
-import {cl} from "../../util";
-import {LinearProgress} from "@material-ui/core";
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import * as alg from '../../state/algstate'
 import StepDisplay from "../elements/StepDisplay";
 
 interface IStepChoiceProps{

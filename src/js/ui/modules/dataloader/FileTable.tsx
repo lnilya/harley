@@ -1,10 +1,10 @@
 import React from "react";
-import {Button} from "@material-ui/core";
 import {LocalFile, LocalFolder} from "../../../types/datatypes";
 import {cl} from "../../../util";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+
 interface IFileTableProps{
     className?:string,
     allFiles:Array<LocalFile>,

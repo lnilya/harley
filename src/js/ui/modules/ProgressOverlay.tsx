@@ -2,7 +2,6 @@ import React, {ReactNode, useEffect, useReducer, useState} from "react";
 import {ccl} from "../../util";
 import '../../../scss/modules/ProgressOverlay.scss'
 import * as ui from '../../state/uistates'
-import * as alg from '../../state/algstate'
 import {useRecoilValue} from "recoil";
 import {Button, LinearProgress} from "@material-ui/core";
 import {OverlayState} from "../../types/maintypes";

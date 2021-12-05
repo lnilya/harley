@@ -1,5 +1,4 @@
 import React, {ReactNode} from "react";
-import ArchiveIcon from "@mui/icons-material/Archive";
 import {Tooltip} from "@material-ui/core";
 import {cl} from "../../util";
 import '../../../scss/elements/MainMenuButton.scss'

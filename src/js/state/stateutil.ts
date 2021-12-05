@@ -1,10 +1,10 @@
 import {getConnectedValue, updateConnectedValue} from "./ConnectedStore";
+import * as alg from "./algstate";
 import {allPipelineData, curPipelineParameterValues} from "./algstate";
-import {allPipelineSteps, curPipelineStepNum, selectedPipelineName} from "./uistates";
+import {allPipelineSteps, curPipelineStepNum} from "./uistates";
 import {DType, Parameter, SettingDictionary} from "../modules/_shared";
 import {LocalFileWithPreview, PipelineData, PipelineDataKey} from "../types/datatypes";
 import * as store from "./persistance";
-import * as alg from "./algstate";
 import {PipelineInput, PipelineStep} from "../types/pipelinetypes";
 
 const deepEqual = require('deep-equal')

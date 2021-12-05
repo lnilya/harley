@@ -2,8 +2,7 @@ import {SettingDictionary} from "../modules/_shared";
 import {PipelineName} from "../types/datatypes";
 import {getConnectedValue} from "./ConnectedStore";
 import * as ui from '../state/uistates'
-import {Pipeline} from "../types/pipelinetypes";
-import {selectedPipelineName} from "../state/uistates";
+import {selectedPipelineName} from '../state/uistates'
 
 enum keys{
     PIPELINE_PARAMS='pipelineparams',

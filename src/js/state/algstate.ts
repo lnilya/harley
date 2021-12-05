@@ -13,18 +13,12 @@
  */
 
 import {connectedAtom, connectedSelector} from "./ConnectedStore";
-import {
-    LocalFilePath,
-    LocalFileWithPreview,
-    PipelineData,
-    PipelineDataAggregatorID,
-    PipelineDataKey
-} from "../types/datatypes";
+import {LocalFileWithPreview, PipelineData, PipelineDataKey} from "../types/datatypes";
 import {ParameterKey, SettingDictionary} from "../modules/_shared";
 import * as ui from './uistates'
 import {curPipelineStep} from './uistates'
-import {atom, selector} from "recoil";
-import {GlobalPipelineSettings, PipelineAggregatorOutput, PipelineStep} from "../types/pipelinetypes";
+import {selector} from "recoil";
+import {GlobalPipelineSettings, PipelineStep} from "../types/pipelinetypes";
 
 
 /**Stores all available data by key. The key is set in the pipeline. This way a step can identify wether or not

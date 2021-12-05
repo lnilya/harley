@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react"
-import {Parameter, TextInputParams} from "../../modules/_shared";
+import {TextInputParams} from "../../modules/_shared";
 import {cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {Input} from "@material-ui/core";
-import {setPipelineParameterValue} from "../../state/stateutil";
 import {IParamUISettingBase} from "../../types/uitypes";
 
 interface IParamTextInputProps extends IParamUISettingBase<TextInputParams>{

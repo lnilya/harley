@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from "react"
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
-import * as alg from "../../state/algstate";
-import * as ui from "../../state/uistates";
+import React, {useState} from "react"
+import {atomFamily, useRecoilState} from "recoil";
 import * as eventbus from "../../state/eventbus";
 import * as self from "./params";
 import {generateDatasetForCell, labelCell, LabelingResult, SingleCellLabelingData} from "./server";
@@ -12,12 +10,10 @@ import {EelResponse} from "../../eel/eel";
 import ErrorHint from "../../ui/elements/ErrorHint";
 import CellCounter from "./CellCounter";
 import ButtonIcon from "../../ui/elements/ButtonIcon";
-import {Button, Dialog} from "@material-ui/core";
-import {Help} from "@mui/icons-material";
+import {Button} from "@material-ui/core";
 import HelpDialogue from "./HelpDialogue";
 import {copyChange} from "../../util";
 import InfoDisplay from "./InfoDisplay";
-import {updatePipelineData} from "../../state/stateutil";
 
 function getNextLabel(allImgs:PipelineImage[], results:LabelingResult[], random:boolean){
     if(allImgs.length == results.length) return -1

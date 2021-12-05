@@ -8,8 +8,8 @@ import CellFitting from "../modules/CellFitting/CellFitting";
 import * as CellFittingParams from "../modules/CellFitting/params";
 import React from "react";
 import * as util from './pipelineutil'
+import {suggestModifiedFilename} from './pipelineutil'
 import {Pipeline, PipelineStep} from "../types/pipelinetypes";
-import {suggestModifiedFilename} from "./pipelineutil";
 import thumb from '../../assets/images/cd_thumb.jpg'
 import ResponsiveEmbed from 'react-responsive-embed'
 
