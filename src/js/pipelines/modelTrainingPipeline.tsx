@@ -1,9 +1,7 @@
 import React from "react";
 import * as util from './pipelineutil'
+import {suggestSuffixedFileName} from './pipelineutil'
 import {Pipeline} from "../types/pipelinetypes";
-import * as FociDetectionParams from '../modules/FociDetection/params'
-import FociDetection from "../modules/FociDetection/FociDetection";
-import {suggestModifiedFilename, suggestSuffixedFileName} from "./pipelineutil";
 import thumb from '../../assets/images/svm_thumb.jpg'
 import * as FociCandidatesParams from '../modules/FociCandidates/params'
 import FociCandidates from "../modules/FociCandidates/FociCandidates";

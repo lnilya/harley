@@ -103,10 +103,6 @@ def loadIntensityImage(asPreviewOnly:bool, pipekey:str, filePath:str, **normaliz
     preview = getPreviewImage(g,pipekey)
 
     retMeta = {'Width':g.shape[1],'Height':g.shape[0]};
-    if 'scale' in meta:
-        retMeta['1px'] = '%.1f nm'%(float(meta['scale']) * 1000);
-        retMeta['__1px'] = float(meta['scale']);
-
 
     return LoaderResult(g,preview['url'],retMeta)
 

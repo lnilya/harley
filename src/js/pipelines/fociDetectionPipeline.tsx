@@ -1,13 +1,12 @@
 import React from "react";
 import * as util from './pipelineutil'
+import {suggestSuffixedFileName} from './pipelineutil'
 import {Pipeline} from "../types/pipelinetypes";
-import * as FociDetectionParams from '../modules/FociDetection/params'
-import FociDetection from "../modules/FociDetection/FociDetection";
-import {suggestModifiedFilename, suggestSuffixedFileName} from "./pipelineutil";
 import thumb from '../../assets/images/fd_thumb.jpg'
 import * as FociDetectionModelParams from '../modules/FociDetectionModel/params'
 import FociDetectionModel from "../modules/FociDetectionModel/FociDetectionModel";
 import ResponsiveEmbed from 'react-responsive-embed'
+import {getSliderParams, getTextfieldInputParams} from "../modules/_util";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -50,8 +49,13 @@ function getPipeline(): Pipeline {
                 key: inputKeys.dataset,
                 title: 'Dataset file', description: datasetDesc,
                 loaders: {'cells': 'loadCells'},
-                postProcessForJS: util.postProcessForImage
+                postProcessForJS: util.postProcessForImage,
+                modifyBatchParameters:util.mergeMetaInformationWithBatchSettings
             }
+        ],
+        inputParameters: [
+            getTextfieldInputParams('1px','1px in nm','How many nanometers correspond to 1px. This is useful for your dataset to have the proper scale and allow downstream processing steps to access this information. If blank no conversion will be used and all downstream values will be in px.','Scale...','',null,false,'number'),
+            getSliderParams('cellstoprocess','Use Subset in %','If your dataset is large, you might only want to process the first x% of it, to get a feel for the result. At this point you might determine to use another model, or process the whole dataset. Use this slider to adjust the percentage of cells to process.',1,100,0.5,100),
         ],
         outputs: [
             {

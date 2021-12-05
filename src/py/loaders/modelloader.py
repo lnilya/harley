@@ -39,4 +39,4 @@ def loadModel(asPreview:bool, pipekey:str, filePath:str):
     preview = getPreviewImage(__generateModelPreview(data['data'].imgs, (2,2)), pipekey, True)
     # {'model': self.model, 'data': self.session.getData(self.keys.inTrainingData),
     #     'labels': self.session.getData(self.keys.inLabels)}
-    return LoaderResult(data, preview['url'], {'Trained on Cells': len(data['data'].imgs)})
+    return LoaderResult(data, preview['url'], {'Trained on Cells': len(data['data'].imgs), 'Generalization Score':'%.2f%%'%(100*data['cvscore'])})

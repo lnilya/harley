@@ -21,6 +21,7 @@ interface IBatchCreatorProps {
     /**Additional classnames for this component*/
     className?: string,
     
+    /**Called when batch creator dialogue is closed.*/
     onDone: () => void
 }
 

@@ -9,6 +9,7 @@ import {PipelineStep} from "../types/pipelinetypes";
 import {DisplayOptionSetting} from "../ui/modules/DisplayOptions";
 import {Parameter} from "./_shared";
 import {ParametersChangedPayload} from "../state/eventbus";
+import {SingleDataBatch} from "../state/algstate";
 
 const deepEqual = require('deep-equal')
 
@@ -17,7 +18,8 @@ export type StepState<InputType, ParameterType, Step> = {
     curInputs: InputType,
     curStep: Step,
     isRunning: boolean,
-    setOverlay:SetterOrUpdater<OverlayState>
+    setOverlay:SetterOrUpdater<OverlayState>,
+    curBatch: SingleDataBatch
 }
 type AtomFamily<P> = (param: P) => RecoilState<P>
 
@@ -43,6 +45,7 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
         const curParams:Parameters = useRecoilValue(alg.curPipelineStepParameterValues) as Parameters;
         const curInputs:Inputs = useRecoilValue(alg.curPipelineStepInputData) as unknown as Inputs;
         const curStep:Step = useRecoilValue(ui.curPipelineStep) as unknown as Step;
+        const curBatch:SingleDataBatch = useRecoilValue(alg.curLoadedBatch);
         const [overlay, setOverlay] = useRecoilState(ui.overlay);
         const [lastRunSettings, setLastRunSettings] = useRecoilState(settingsAtomFamily(curStep.moduleID));
         
@@ -149,7 +152,8 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
             curParams: curParams as Parameters,
             isRunning: !!overlay,
             curStep: curStep,
-            setOverlay:setOverlay
+            setOverlay:setOverlay,
+            curBatch: curBatch
         };
 }
 

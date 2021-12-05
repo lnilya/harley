@@ -29,6 +29,7 @@ class Training(ModuleBase):
 
     keys: TrainingKeys
     model:SVMClassifier
+    lastCVScore: float
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -54,7 +55,7 @@ class Training(ModuleBase):
             #train the basic model
             svmParams = SVMClassifierParams(DataWhitenerNorm(),mcc)
             self.model = SVMClassifier(trainingData,labels,svmParams)
-            cvCorrelation, testCorrelation = self.model.trainModel()
+            self.lastCVScore, testCorrelation = self.model.trainModel()
 
             self.onGeneratedData(self.keys.outModel,self.model,params)
 
@@ -62,7 +63,7 @@ class Training(ModuleBase):
             if params['trainingCurve']:
                 trainCurve = self.__generateCVCurve()
 
-            return {'cv':cvCorrelation, 'test':testCorrelation, 'traincurve':trainCurve}
+            return {'cv':self.lastCVScore, 'test':testCorrelation, 'traincurve':trainCurve}
 
     def __generateCVCurve(self):
         s,m,x = self.model.getTrainingCurve()
@@ -74,6 +75,7 @@ class Training(ModuleBase):
         with open(path, 'wb') as handle:
             data = {'model':self.model,
                     'data':self.session.getData(self.keys.inTrainingData),
+                    'cvscore':self.lastCVScore,
                     'extractionparams':self.session.getParams(self.keys.inCandidateParameters),
                     'labels':self.session.getData(self.keys.inLabels)}
             pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)

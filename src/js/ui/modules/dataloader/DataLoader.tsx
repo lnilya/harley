@@ -61,7 +61,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     const [askingForInput,setAskingForInput] = useState<DialogState>(null);
     const [selectedInput,setSelectedInput] = useState<LocalFileWithPreview>(null);
     const [multiBatchDialog,setMultiBatchDialog] = useState(false);
-    const curLoadedBatch = useRecoilValue(alg.curLoadedBatch);
+    const curLoadedBatch = useRecoilValue(alg.curLoadedBatchNumber);
     //Initial Load of inputs
     const openPickerDialog = (pinp:PipelineInput, idx:number)=>{
         setSelectedInput(null)

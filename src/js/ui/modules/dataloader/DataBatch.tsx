@@ -43,7 +43,7 @@ const DataBatch: React.FC<IDataBatchProps> = ({
     const [curPipelineStep, setCurPipelineStep] = useRecoilState(ui.curPipelineStepNum);
     const [overlay, setOverlay] = useRecoilState(ui.overlay);
     const [deleted, setDeleted] = useState(false);
-    const loadedBatch = useRecoilValue(alg.curLoadedBatch);
+    const loadedBatch = useRecoilValue(alg.curLoadedBatchNumber);
     
     
     const runSingleBatch = async () => {
@@ -73,7 +73,7 @@ const DataBatch: React.FC<IDataBatchProps> = ({
                 <div className="data-batch__title  margin-50-neg-hor pad-50-hor pad-50-bottom margin-100-bottom text-bold fl-row-start fl-align-center">
                     <span className={'text-title pad-50-left'}>{title}</span>
                     {loadedBatch == batchIdx &&
-                        <span className={'text-processing pad-25-left'}>(processing in: {curPipeline.steps[curPipelineStep].title})</span>
+                        <span className={'text-processing pad-25-left'}>(in step: {curPipeline.steps[curPipelineStep].title})</span>
                     }
                     <div className="fl-grow"/>
                     <span className={'pad-50-right text-reg'}>Pipeline Parameters:</span>

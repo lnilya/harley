@@ -1,13 +1,20 @@
-
 //***************************************************************/
 //* TYPING OF THE JS->PYTHON INTERFACE */
 //***************************************************************/
 
-import {LocalFile, LocalFilePath, LocalFileWithPreview, LocalFolder, PipelineDataKey} from "../types/datatypes";
+import {
+    LocalFile,
+    LocalFilePath,
+    LocalFileWithPreview,
+    LocalFolder,
+    PipelineDataAggregatorID,
+    PipelineDataKey
+} from "../types/datatypes";
 import {addExecutionCallback} from "./eelJsFunctions";
 import {Pipeline, PipelineDataLoader, PipelineStep} from "../types/pipelinetypes";
 import {ModuleID} from "../types/maintypes";
 import {getLoaderFromFileName} from "../pipeline";
+import {ParameterKey} from "../modules/_shared";
 
 export type EelThreadKey = string
 
@@ -51,9 +58,9 @@ enum EelPythonFunctions {
 /**A generic server response object response, to avoid try catch for server errors.
  * Will either hava data set or error and errorTrace .*/
 export type EelResponse<T> = Partial<{
-    error:string,
-    errorTrace:string[],
-    data:T
+    error: string,
+    errorTrace: string[],
+    data: T
 }>;
 
 const eel = window['eel'];
@@ -62,8 +69,8 @@ const eel = window['eel'];
 //* PUBLIC API FOR REST OF REACT APP                            */
 //***************************************************************/
 
-export async function abortStep(threadID:EelThreadKey):Promise<any>{
-    return runEelEndpoint(EelPythonFunctions.abortStep,[threadID]);
+export async function abortStep(threadID: EelThreadKey): Promise<any> {
+    return runEelEndpoint(EelPythonFunctions.abortStep, [threadID]);
 }
 
 /**
@@ -76,8 +83,8 @@ export async function abortStep(threadID:EelThreadKey):Promise<any>{
  * @param step
  * @param customThreadID
  */
-export async function runStepAsync<T>(moduleName:string,action:string, params:any, step:PipelineStep<any, any>, customThreadID:EelThreadKey = null):Promise<EelResponse<T>>{
-    const args = [ moduleName,
+export async function runStepAsync<T>(moduleName: string, action: string, params: any, step: PipelineStep<any, any>, customThreadID: EelThreadKey = null): Promise<EelResponse<T>> {
+    const args = [moduleName,
         step.moduleID,
         action,
         params,
@@ -95,8 +102,8 @@ export async function runStepAsync<T>(moduleName:string,action:string, params:an
  * @param params
  * @param step
  */
-export async function runStep<T>(moduleName:string,action:string, params:any, step:PipelineStep<any, any>):Promise<EelResponse<T>>{
-    const args = [ moduleName,
+export async function runStep<T>(moduleName: string, action: string, params: any, step: PipelineStep<any, any>): Promise<EelResponse<T>> {
+    const args = [moduleName,
         step.moduleID,
         action,
         params,
@@ -105,46 +112,78 @@ export async function runStep<T>(moduleName:string,action:string, params:any, st
     return runEelEndpoint<T>(EelPythonFunctions.runStep, args);
 }
 
-export async function onLoadNewPipeline(pn:Pipeline):Promise<EelResponse<boolean>>{
+export async function onLoadNewPipeline(pn: Pipeline): Promise<EelResponse<boolean>> {
     var serverParams = {}
     //Extract parameters for the single modules
-    pn.steps.forEach((ps)=>{
+    pn.steps.forEach((ps) => {
         serverParams[ps.moduleID] = ps.serverParameters || {}
     })
-    return runEelEndpoint<boolean>(EelPythonFunctions.onNewPipelineLoaded,[pn.name,serverParams]);
+    return runEelEndpoint<boolean>(EelPythonFunctions.onNewPipelineLoaded, [pn.name, serverParams]);
 }
 
-export async function getBatchGlobs(patterns:string[],extensions:string[][]):Promise<EelResponse<LocalFile[][]>>{
-    return await runEelEndpoint<LocalFile[][]>(EelPythonFunctions.getBatchGlobs,[patterns,extensions])
+export async function getBatchGlobs(patterns: string[], extensions: string[][]): Promise<EelResponse<LocalFile[][]>> {
+    return await runEelEndpoint<LocalFile[][]>(EelPythonFunctions.getBatchGlobs, [patterns, extensions])
 }
-export async function loadInputFile(pipelinekey:string, filePath:string,loader:PipelineDataLoader, batchIndexPreview:number = -1):Promise<EelResponse<LocalFileWithPreview>>{
+
+export async function loadInputFile(pipelinekey: string, filePath: string, loader: PipelineDataLoader, batchIndexPreview: number = -1): Promise<EelResponse<LocalFileWithPreview>> {
     const loaderName = Array.isArray(loader) ? loader[0] : loader
     const loaderParams = Array.isArray(loader) ? loader[1] : {}
     
-    return await runEelEndpoint<LocalFileWithPreview>(EelPythonFunctions.loadInputFile,[pipelinekey, filePath,loaderName,loaderParams,batchIndexPreview])
-}
-export async function exportData(moduleID:ModuleID, pipelinekey:PipelineDataKey, filePath:LocalFilePath,overwrite:boolean,addtlParams = null):Promise<EelResponse<boolean>>{
-    return await runEelEndpoint<boolean>(EelPythonFunctions.exportData,
-        [moduleID,pipelinekey,filePath,overwrite,addtlParams || {}])
-}
-export type AggregateDataResponse = {msg:string, info:AggregateDataInfo}
-export async function exportAggregateData(aggregatorID:string, batchnum:number, filePath:LocalFilePath,addtlParams = null):Promise<EelResponse<AggregateDataResponse>>{
-    return await runEelEndpoint<AggregateDataResponse>(EelPythonFunctions.exportAggregateData,
-        [aggregatorID,filePath,batchnum, addtlParams || {}])
-}
-export type AggregateDataInfo = {exists:boolean, info:any, ready:boolean}
-export async function getAggregateDataInfo(aggregatorID:string, filePath:LocalFilePath):Promise<EelResponse<AggregateDataInfo>>{
-    return await runEelEndpoint<AggregateDataInfo>(EelPythonFunctions.getAggregateDataInfo,
-        [aggregatorID,filePath])
-}
-export async function resetAggregateData(aggregatorID:string, filePath:LocalFilePath):Promise<EelResponse<boolean>>{
-    return await runEelEndpoint<boolean>(EelPythonFunctions.resetAggregateData,
-        [aggregatorID,filePath])
+    return await runEelEndpoint<LocalFileWithPreview>(EelPythonFunctions.loadInputFile, [pipelinekey, filePath, loaderName, loaderParams, batchIndexPreview])
 }
 
-type FolderContents = { files:LocalFile[], folders:LocalFolder[] };
-export async function getFolderContents(folder:string, extensions:string[] = null):Promise<EelResponse<FolderContents>>{
-    return await runEelEndpoint<FolderContents>(EelPythonFunctions.getFolderContents,[folder,extensions])
+/**
+ * Runs a data exporter in the given module ID
+ * @param moduleID The moduleID to execute the export
+ * @param pipelinekey The key of the export object
+ * @param filePath The user deined filepath where the export goes to
+ * @param overwrite If true, will overwrite existing file
+ * @param batchSettings The settings for this batch, set in the data input screen.(e.g. An image scale parameter "1px = 23.4µm")
+ * @param addtlParams A dictionary of additional parameters the exporter might need, these are set in pipeline definition and passed automatically.
+ * @return An eelresponse with error information or simply "true" if it went alright.
+ */
+export async function exportData(moduleID: ModuleID, pipelinekey: PipelineDataKey, filePath: LocalFilePath, overwrite: boolean, batchSettings: Record<ParameterKey, any> = null, addtlParams = null): Promise<EelResponse<boolean>> {
+    const params = {...addtlParams||{}, ...batchSettings||{}}
+    return await runEelEndpoint<boolean>(EelPythonFunctions.exportData,
+        [moduleID, pipelinekey, filePath, overwrite, params])
+}
+
+export type AggregateDataResponse = { msg: string, info: AggregateDataInfo }
+
+/**
+ * Exports data via an aggregator (which accumulates data from multiple batches into a single output file)
+ * @param aggregatorID The ID of the aggregator as defined in pipeline settings. Identifies the function to use on server.
+ *
+ * @param batchnum The number of this batch. Useful on server if you don't want to accumulate data for the same batch, but overwrite it for this batch only.
+ *
+ * @param filePath The path of the output file.
+ * @param batchSettings The settings for this batch, set in the data input screen.(e.g. An image scale parameter "1px = 23.4µm")
+ * @param addtlParams A dictionary of additional parameters the exporter might need, these are set in pipeline definition and passed automatically.
+ * @return An eelresponse with error information or AggregatorDataResponse.
+ * @see AggregateDataResponse
+ */
+export async function exportAggregateData(aggregatorID: PipelineDataAggregatorID, batchnum: number, filePath: LocalFilePath, batchSettings: Record<ParameterKey, any> = null, addtlParams = null): Promise<EelResponse<AggregateDataResponse>> {
+    const params = {...addtlParams||{}, ...batchSettings||{}}
+    return await runEelEndpoint<AggregateDataResponse>(EelPythonFunctions.exportAggregateData,
+        [aggregatorID, filePath, batchnum, params])
+}
+
+export type AggregateDataInfo = { exists: boolean, info: any, ready: boolean }
+
+export async function getAggregateDataInfo(aggregatorID: string, filePath: LocalFilePath): Promise<EelResponse<AggregateDataInfo>> {
+    return await runEelEndpoint<AggregateDataInfo>(EelPythonFunctions.getAggregateDataInfo,
+        [aggregatorID, filePath])
+}
+
+export async function resetAggregateData(aggregatorID: string, filePath: LocalFilePath): Promise<EelResponse<boolean>> {
+    return await runEelEndpoint<boolean>(EelPythonFunctions.resetAggregateData,
+        [aggregatorID, filePath])
+}
+
+type FolderContents = { files: LocalFile[], folders: LocalFolder[] };
+
+export async function getFolderContents(folder: string, extensions: string[] = null): Promise<EelResponse<FolderContents>> {
+    return await runEelEndpoint<FolderContents>(EelPythonFunctions.getFolderContents, [folder, extensions])
 }
 
 
@@ -152,7 +191,7 @@ export async function getFolderContents(folder:string, extensions:string[] = nul
 //* CORE FUNCTIONS HANDLING THE EEL COMMUNICATION */
 //***************************************************************/
 
-function parseEelError<T>(err:{errorText:string, errorTraceback:string}):EelResponse<T>{
+function parseEelError<T>(err: { errorText: string, errorTraceback: string }): EelResponse<T> {
     return {
         error: err.errorText,
         errorTrace: err?.errorTraceback?.split('\n') || ['No Stacktrace available.']
@@ -161,41 +200,43 @@ function parseEelError<T>(err:{errorText:string, errorTraceback:string}):EelResp
 
 const debug = true;
 var num = 0;
-async function runEelEndpointAsync<T>(threadID:EelThreadKey, endpoint:EelPythonFunctions, params:any = {}):Promise<EelResponse<T>>{
-    if(!eel) return {error:'Eel Not initialized', errorTrace:[]};
+
+async function runEelEndpointAsync<T>(threadID: EelThreadKey, endpoint: EelPythonFunctions, params: any = {}): Promise<EelResponse<T>> {
+    if (!eel) return {error: 'Eel Not initialized', errorTrace: []};
     var curExec = num++;
-    debug && console.log(`[runEelEndpointAsync ${curExec}]: Contacting ${endpoint} in thread ${endpoint} with params:`,params);
-    try{
+    debug && console.log(`[runEelEndpointAsync ${curExec}]: Contacting ${endpoint} in thread ${endpoint} with params:`, params);
+    try {
         
         //Start execution
-        await eel[endpoint](threadID,...params)();
+        await eel[endpoint](threadID, ...params)();
         
         //wait for the eel process to send a callback
-        var data = await new Promise<T>((resolve,reject)=>{
-            addExecutionCallback(threadID,resolve,reject)
+        var data = await new Promise<T>((resolve, reject) => {
+            addExecutionCallback(threadID, resolve, reject)
         })
         
-        debug && console.log(`[runEelEndpointAsync ${curExec}]: Completed ${endpoint}, result:`,data);
+        debug && console.log(`[runEelEndpointAsync ${curExec}]: Completed ${endpoint}, result:`, data);
         
-    }catch (e){
+    } catch (e) {
         debug && console.log(`[runEelEndpointAsync ${curExec}]: ERROR ${e.errorText}`);
         return parseEelError<T>(e)
     }
-    return {data:data};
+    return {data: data};
 }
-async function runEelEndpoint<T>(endpoint:EelPythonFunctions, params:any = {}):Promise<EelResponse<T>>{
+
+async function runEelEndpoint<T>(endpoint: EelPythonFunctions, params: any = {}): Promise<EelResponse<T>> {
     
-    if(!eel) return {error:'Eel Not initialized', errorTrace:[]};
+    if (!eel) return {error: 'Eel Not initialized', errorTrace: []};
     var curExec = num++;
-    debug && console.log(`[runEelEndpoint ${curExec}]: Contacting ${endpoint} with params:`,params);
+    debug && console.log(`[runEelEndpoint ${curExec}]: Contacting ${endpoint} with params:`, params);
     
-    try{
-        var k =  await eel[endpoint](...params)();
-        debug && console.log(`[runEelEndpoint ${curExec}]: Completed ${endpoint}, result:`,k);
+    try {
+        var k = await eel[endpoint](...params)();
+        debug && console.log(`[runEelEndpoint ${curExec}]: Completed ${endpoint}, result:`, k);
         
-    }catch (e){
+    } catch (e) {
         debug && console.log(`[runEelEndpoint ${curExec}]: ERROR ${e.errorText}`);
         return parseEelError<T>(e)
     }
-    return {data:k};
+    return {data: k};
 }

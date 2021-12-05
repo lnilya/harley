@@ -84,14 +84,14 @@ export type PipelineOutput = {
     
     /**
      * If provided will be called by exporter to generate a name suggestion for output destination
-     * for the output file based on the inputfile used.
+     * for the output file based on the inputfile used. If not user will have to input it manually.
      * Designed to create a new output path that will appear in the destination textfield of this pipelineoutput.
      */
     suggestDestinationOutput?:{
         /**The key of pipelineData that was loaded via DataLoader in first step before pipeline,
          * since only them have LocalFilePreviews, that contain things like a path.*/
         pipelineInputKey:PipelineDataKey,
-        /**FileName Transformation function recieved the LFWP and generates a new full output path from it*/
+        /**FileName Transformation function recieves the LFWP and generates a new full output path from it*/
         transform:(lfp:LocalFileWithPreview)=>string
     }
     

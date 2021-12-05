@@ -10,10 +10,11 @@ export type FociDetectionModelResult = {
     /**Foci in each cell at optimal outline*/
     foci:PipelinePolygons[]
 }
-export async function runFociDetectionModel(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<FociDetectionModelResult>>{
+export async function runFociDetectionModel(curParams:self.Parameters, curStep:self.Step, portion:number):Promise<EelResponse<FociDetectionModelResult>>{
     
     //Run algorithm - this demo is for a simple image in and image out.
-    var res:EelResponse<FociDetectionModelResult> = await eel.runStepAsync<FociDetectionModelResult>(self.moduleName,'apply',curParams,curStep)
+    var res:EelResponse<FociDetectionModelResult> =
+        await eel.runStepAsync<FociDetectionModelResult>(self.moduleName,'apply', {...curParams, portion:portion},curStep)
 
     //update pipeline, on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.foci);

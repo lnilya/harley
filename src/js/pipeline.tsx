@@ -83,7 +83,7 @@ export async function loadBatchAndStartPipeline(batchIndex: number, reloadParame
     }
     
     //update index of batch
-    updateConnectedValue(alg.curLoadedBatch, batchIndex)
+    updateConnectedValue(alg.curLoadedBatchNumber, batchIndex)
     return true
 }
 
@@ -176,7 +176,7 @@ export async function loadPipeline(pipe: Pipeline) {
         
         //update UI back to input
         updateConnectedValue(ui.appScreen, UIScreens.input);
-        updateConnectedValue(alg.curLoadedBatch, -1);
+        updateConnectedValue(alg.curLoadedBatchNumber, -1);
         
         //Reload previous input batches
         

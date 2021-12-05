@@ -34,6 +34,7 @@ class FociDetectionModel(ModuleBase):
     classifier: SVMClassifier
     trainingData: TrainingData
     cells: Set
+    loadedPortion:float
     cellsInExport: Set
     result: LabelingResult
     dataLoaded:bool
@@ -44,9 +45,9 @@ class FociDetectionModel(ModuleBase):
         self.trace('initialized')
         self.dataLoaded = False
 
-    def unpackParams(self,sizeadjustment,**other):
+    def unpackParams(self,sizeadjustment,portion,**other):
         #unpack and possibly parse/cast all parameters
-        return sizeadjustment[0]
+        return sizeadjustment[0],portion[0]
 
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = FociDetectionModelKeys(inputkeys, outputkeys)
@@ -59,18 +60,23 @@ class FociDetectionModel(ModuleBase):
 
         elif action == 'apply':
 
-            sizeAdjustment = self.unpackParams(**params)
+            sizeAdjustment,portion = self.unpackParams(**params)
 
-            if not self.dataLoaded:
+            if not self.dataLoaded or self.loadedPortion != portion:
+                self.loadedPortion = portion
                 model = self.session.getData(self.keys.inModel) #binaryMask
                 self.classifier = model['model']
 
                 #Prepare dataset
 
                 #get all images
-                allCells: List[np.ndarray] = self.session.getData(self.keys.inDataset)  # List of images with cells
+                allCells: List[np.ndarray] = self.session.getData(self.keys.inDataset)['imgs']  # List of images with cells
 
-                # allCells = allCells[0:10]
+                #pick a portion of dataset
+                nc = int(len(allCells) * self.loadedPortion/100.0)
+                if nc < 1: nc  = 1
+                if nc > len(allCells)-1: nc  = len(allCells)-1
+                allCells = allCells[0:nc]
 
                 # add a border to prevent problems with contours landing outside of image
                 allCells = [addBorder(i, 3) for i in allCells]
@@ -145,11 +151,17 @@ class FociDetectionModel(ModuleBase):
         return adjustedChoices
 
     def exportData(self, key: str, path: str, **args):
+        scale = args['1px'] if '1px' in args else 1
+
         with open(path, 'w', newline='') as csvfile:
             wr = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             #write header
-            wr.writerow( ['Cell', 'Focus', 'x in px', 'y in px', 'Area in px^2',
-                 'peakBrightness','meanBrightness', 'contourBrightness'])
+            if scale != 1:
+                wr.writerow( ['Cell', 'Focus', 'x in nm', 'y in nm', 'Area in nm^2',
+                     'peakBrightness','meanBrightness', 'contourBrightness'])
+            else:
+                wr.writerow( ['Cell', 'Focus', 'x in px', 'y in px', 'Area in px^2',
+                     'peakBrightness','meanBrightness', 'contourBrightness'])
 
             adjustedFociChoices = self.session.getData(self.keys.outFoci)
 
@@ -165,8 +177,8 @@ class FociDetectionModel(ModuleBase):
 
                     area = Polygon(self.trainingData.contours[c][f][lvl]).area
                     center = self.trainingData.getFociCenters(c,[f])
-                    wr.writerow([i,nf,center[0,1],center[0,0],
-                                 area,
+                    wr.writerow([i,nf,center[0,1] * scale,center[0,0] * scale,
+                                 area * (scale**2),
                                  region.max_intensity,
                                  region.mean_intensity,
                                  self.trainingData.contourLevels[c][f][lvl]])
