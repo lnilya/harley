@@ -41,7 +41,14 @@ def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[in
 
     #Merge all batch images into a single one
     allImages = []
-    for i in curData['data']: allImages += curData['data'][i]
+    for i in curData['data']: allImages += curData['data'][i]['images']
+
+    data = {'imgs':allImages}
+    meta = {'Cells':len(allImages), 'Batches':len(curData['data'])}
+    scale = [curData['data'][i]['scale'] for i in curData['data'] if curData['data'][i]['scale'] is not None]
+    if len(scale) > 0:
+        meta['1px'] = '%.2fnm'%scale[0]
+        data['1px'] = scale[0]
 
     preview = getPreviewImage(__generateDataSetPreview(allImages,previewGridSize),pipekey,True)
-    return LoaderResult(allImages,preview['url'],{'Cells':len(allImages), 'Batches':len(curData['data'])})
+    return LoaderResult(data,preview['url'],meta)

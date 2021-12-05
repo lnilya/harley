@@ -10,6 +10,7 @@ import MaskTightening from "../modules/MaskTightening/MaskTightening";
 import {suggestModifiedFilename} from "./pipelineutil";
 import thumb from "../../assets/images/pp_thumb.jpg";
 import ResponsiveEmbed from 'react-responsive-embed'
+import {getCheckboxParams, getDropdownParams, getSliderParams, getTextfieldInputParams} from "../modules/_util";
 //%NEWMODULE_IMPORT%
 
 const keys = {
@@ -22,7 +23,7 @@ const keys = {
 }
 
 const helpScreen = <div>
-    <ResponsiveEmbed src='https://www.youtube.com/embed/RjvG61KGxZI' allowfullscreen />
+    <ResponsiveEmbed src='https://www.youtube.com/embed/RjvG61KGxZI' allowFullScreen />
 </div>
 
 function getPipeline(): Pipeline {
@@ -63,7 +64,9 @@ function getPipeline(): Pipeline {
                 description:'A multichannel fluorescence image, where the z-stack will be collapsed to create a final image that can be used for foci detection.',
                 loaders:{ 'dv': 'loadDVMultiChannelImage',
                            'tif,tiff': 'loadTifMultiChannelImage'},
-                postProcessForJS:util.postProcessForImage
+                postProcessForJS:util.postProcessForImage,
+                //will overwrite the "1px" setting
+                modifyBatchParameters:util.mergeMetaInformationWithBatchSettings
             },
             {
                 key:keys.mask,
@@ -72,6 +75,9 @@ function getPipeline(): Pipeline {
                 loaders:{ 'png,tiff': 'loadBinaryImage' },
                 postProcessForJS:util.postProcessForImage
             }
+        ],
+        inputParameters: [
+            getTextfieldInputParams('1px','1px in nm','How many nanometers correspond to 1px. This is useful for your dataset to have the proper scale and allow downstream processing steps to access this information. If blank no conversion will be used and all downstream values will be in px.','Scale...','40.9',null,false,'number'),
         ],
         aggregatorOutputs:[
             {

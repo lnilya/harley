@@ -20,7 +20,7 @@ import {
     PipelineDataAggregatorID,
     PipelineDataKey
 } from "../types/datatypes";
-import {SettingDictionary} from "../modules/_shared";
+import {ParameterKey, SettingDictionary} from "../modules/_shared";
 import * as ui from './uistates'
 import {curPipelineStep} from './uistates'
 import {atom, selector} from "recoil";
@@ -38,7 +38,13 @@ export const allPipelineInputs = connectedAtom<Record<PipelineDataKey,LocalFileW
 
 
 export type SingleDataBatch = {
+    /**Files loaded into this batch*/
     inputs: Record<PipelineDataKey,LocalFileWithPreview>,
+    
+    /**Parameters for this batch*/
+    batchParameters: Record<ParameterKey, any>,
+    
+    /**Name of settings set in this batch*/
     settingsSetName:string
 }
 /**Stores batches, i.e. array of inputs to be processed sequentially*/
@@ -46,8 +52,16 @@ export const allPipelineBatches = connectedAtom<SingleDataBatch[]>({key:'all_pl_
 
 /**The number of the batch currently loaded, which is an index of allPipelineBatches. If a batch is deleted,
  *  this index needs to change as well to still point to the right batch.*/
-export const curLoadedBatch = connectedAtom<number>({key:'cur_pl_batches', default:-1});
+export const curLoadedBatchNumber = connectedAtom<number>({key:'cur_pl_batches', default:-1});
 
+/**Convenience selector for getting the SingleDataBatch object currently selected/processed*/
+export const curLoadedBatch = connectedSelector<SingleDataBatch>({key:'cur_pl_selected_batch',
+    get:({get})=>{
+        const apb = get(allPipelineBatches);
+        const bn = get(curLoadedBatchNumber);
+        return !apb ? null : apb[bn]
+    }
+})
 
 export type BatchInfo = {batch:number, displayedBatch:number, totalDispBatches:number};
 /**Since allPipelineBatches is not a dense array, i.e. it has nulls in it, which is necessary due to preloading of images
@@ -58,7 +72,7 @@ export type BatchInfo = {batch:number, displayedBatch:number, totalDispBatches:n
 export const loadedBatchInfo = connectedSelector<BatchInfo>({key:'cur_displayed_batch',
     get:({get})=>{
         const apb = get(allPipelineBatches);
-        const bn = get(curLoadedBatch);
+        const bn = get(curLoadedBatchNumber);
         var k = 0;
         for (let i = 0; i < apb.length; i++) {
             if(i == bn) break;

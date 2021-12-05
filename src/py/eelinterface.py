@@ -54,9 +54,6 @@ def getModule(moduleID: str, moduleName: str):
         elif moduleName == 'MaskTightening':
             from src.py.modules.MaskTightening import MaskTightening
             modulesById[moduleID] = MaskTightening(moduleID,session)
-        elif moduleName == 'FociDetection':
-            from src.py.modules.FociDetection import FociDetection
-            modulesById[moduleID] = FociDetection(moduleID,session)
         elif moduleName == 'FociCandidates':
             from src.py.modules.FociCandidates import FociCandidates
             modulesById[moduleID] = FociCandidates(moduleID,session)
@@ -115,7 +112,7 @@ def exportData(moduleID:str, pipelinekey:str, path:str, overwrite:bool,exporterA
     return True
 
 @eel.expose
-def getAggregateDataInfo(aggregatorID:str, path:str):
+def getAggregateDataInfo(aggregatorID:str, path:str, exporterArgs:Dict = None):
     aggregatorFun = getattr(aggregators, aggregatorID+'_Info')  # will throw an error if doesnt exist
     return aggregatorFun(path)
 
@@ -128,7 +125,7 @@ def resetAggregateData(aggregatorID:str, path:str):
 @eel.expose
 def exportAggregateData(aggregatorID:str, path:str, batchnum:int, exporterArgs:Dict = None):
     aggregatorFun = getattr(aggregators, aggregatorID)  # will throw an error if doesnt exist
-    return aggregatorFun(path,session,modulesById,batchnum,**exporterArgs)
+    return aggregatorFun(path,session,modulesById,batchnum,exporterArgs)
 
 @eel.expose
 def getBatchGlobs(patterns:List[str],allowedExtensions:List[List[str]]):

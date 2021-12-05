@@ -1,9 +1,7 @@
 import React from "react";
 import * as util from './pipelineutil'
+import {suggestSuffixedFileName} from './pipelineutil'
 import {Pipeline} from "../types/pipelinetypes";
-import * as FociDetectionParams from '../modules/FociDetection/params'
-import FociDetection from "../modules/FociDetection/FociDetection";
-import {suggestModifiedFilename, suggestSuffixedFileName} from "./pipelineutil";
 import thumb from '../../assets/images/svm_thumb.jpg'
 import * as FociCandidatesParams from '../modules/FociCandidates/params'
 import FociCandidates from "../modules/FociCandidates/FociCandidates";
@@ -27,7 +25,7 @@ const dataKeys = {
 }
 
 const helpScreen = <div>
-    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowfullscreen />
+    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen />
 </div>
 function getPipeline(): Pipeline {
     const datasetDesc = 'A *.cells file that was exported via the preprocessing pipeline aggregator. This file contains images of single cells, that the model will be trained on.'

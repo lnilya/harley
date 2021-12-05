@@ -37,6 +37,7 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
     const curBatchInfo = useRecoilValue(alg.loadedBatchInfo);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<EelResponse<boolean>>(null);
+    const curBatch = useRecoilValue(alg.curLoadedBatch);
     
     const missingKeys:string[] = step.requiredInputs.filter((a)=>{return allData[a] == null})
     //find the steps that generate the missing key, for legibility
@@ -55,7 +56,7 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
     
     const initExport = async (suppressToast:boolean = false)=>{
         setLoading(true)
-        const res = await server.exportAggregateData(step.aggregatorID,curBatchInfo.displayedBatch+1,curFolder,step.exporterParams)
+        const res = await server.exportAggregateData(step.aggregatorID,curBatchInfo.displayedBatch+1,curFolder,curBatch.batchParameters,step.exporterParams)
         if(res.error)
             
             !suppressToast && eventbus.fireEvent<ToastEventPayload>(EventTypes.ToastEvent, {

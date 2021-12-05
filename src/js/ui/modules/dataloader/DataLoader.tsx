@@ -10,7 +10,7 @@ import {Button, Dialog, LinearProgress, Tooltip} from "@material-ui/core";
 import {copyChange, copyRemove} from "../../../util";
 import * as storage from '../../../state/persistance'
 import {useLocalStoreRecoilHook} from "../../uihooks";
-import {unloadPipeline} from "../../../pipeline";
+import {getBlankBatch, unloadPipeline} from "../../../pipeline";
 import {allPipelineBatches, SingleDataBatch} from "../../../state/algstate";
 import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
 import * as store from "../../../state/persistance";
@@ -61,7 +61,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     const [askingForInput,setAskingForInput] = useState<DialogState>(null);
     const [selectedInput,setSelectedInput] = useState<LocalFileWithPreview>(null);
     const [multiBatchDialog,setMultiBatchDialog] = useState(false);
-    const curLoadedBatch = useRecoilValue(alg.curLoadedBatch);
+    const curLoadedBatch = useRecoilValue(alg.curLoadedBatchNumber);
     //Initial Load of inputs
     const openPickerDialog = (pinp:PipelineInput, idx:number)=>{
         setSelectedInput(null)
@@ -70,11 +70,18 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     
     //Load available parameter sets initially.
     const [allParamSets,setAllParamSets] = useState<ParamSet[]>(()=>Object.values(store.loadParameterSets(true))||[]);
-    const resolvePickerDialog = (canceled:boolean = false)=>{
+    const resolvePickerDialog = async (canceled:boolean = false)=>{
         if(selectedInput && !canceled){
             const cb:SingleDataBatch = allBatches[askingForInput.batchIndex]
-            const nb:SingleDataBatch = {...cb,inputs: {...cb.inputs,[askingForInput.input.key]: selectedInput}};
+            const nb:SingleDataBatch = {...cb,batchParameters:{...cb.batchParameters}, inputs: {...cb.inputs,[askingForInput.input.key]: selectedInput}};
+            
+            //we have selected a file check if we need to update the batch settings from loading of this file
+            const inp:PipelineInput = curPipeline.inputs.find(i=>i==askingForInput.input);
+            if(inp.modifyBatchParameters)
+                nb.batchParameters = await inp.modifyBatchParameters(selectedInput,cb.batchParameters,curPipeline.inputParameters)
+            
             setAllBatches(copyChange(allBatches,askingForInput.batchIndex,nb))
+            
         }
         setSelectedInput(null)
         setAskingForInput(null)
@@ -90,10 +97,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
             unloadPipeline();
     }
     const addNewBatch = () =>{
-        const nb:SingleDataBatch = {inputs:{}, settingsSetName:PARAM_SET_NAME_CURRENT };
-        curPipeline.inputs.forEach((inp)=> {
-            nb.inputs[inp.key] = null;
-        })
+        const nb:SingleDataBatch = getBlankBatch(curPipeline)
         setAllBatches([...allBatches,nb])
     }
     
@@ -106,7 +110,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     
     const deleteAllBatches = () => {
         //delete with an empty batch
-        setAllBatches([{inputs:{}, settingsSetName:PARAM_SET_NAME_CURRENT }])
+        setAllBatches([getBlankBatch(curPipeline)])
         unloadPipeline();
     };
     

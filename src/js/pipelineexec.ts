@@ -17,7 +17,7 @@ import {doesPipelineStepHaveData} from "./state/stateutil";
  * @return result false if nothign is found otherwise {batch:... idx:...} object.
  */
 function __getNextAvailableBatch(firstElemToCheck: number = -1) {
-    firstElemToCheck = firstElemToCheck != -1 ? firstElemToCheck :  getConnectedValue(alg.curLoadedBatch) + 1;
+    firstElemToCheck = firstElemToCheck != -1 ? firstElemToCheck :  getConnectedValue(alg.curLoadedBatchNumber) + 1;
     const allBatches = getConnectedValue(alg.allPipelineBatches);
     //step to the next non-null batch
     while (firstElemToCheck < allBatches.length && !allBatches[firstElemToCheck])

@@ -28,7 +28,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
     
     /**RUNNING ALGORITHM CALLBACK*/
     const runMainAlgorithm = async (params:self.Parameters,step:self.Step)=>{
-        const res = await runFociDetectionModel(params,step);
+        const res = await runFociDetectionModel(params,step,curBatch.batchParameters['cellstoprocess']);
         setError(res.error ? res : null)
         setResult(!res.error ? res.data : null)
         setIncludedCells(!res.error ? res.data.imgs.map((v,i)=>i) : null)
@@ -37,7 +37,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
     };
     
     /**CORE HOOK FOR SETTING UP STATE*/
-    const {curInputs,curStep,curParams,isRunning} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
+    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
         {msg: 'Running Detection', display: "overlay", progress:0});
@@ -61,13 +61,18 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
 	return (<div className={'foci-detection-model margin-100-neg pad-100'}>
 	    {error && <ErrorHint error={error}/> }
         {!error && result &&
-            <div className={`grid cols-${curParams.fociperrow} half-gap`}>
-                {result.imgs.map((img,i)=>{
-                    return <CellResult key={i} img={img} foci={result.foci[i]}
-                                       excluded={includedCells.indexOf(i) == -1}
-                                       onToggleCellInclusion={()=>onCellInclusionToggle(i)} />
-                })}
-            </div>
+            <>
+                {curBatch.batchParameters['cellstoprocess'] < 100 &&
+                <div className="incomplete-hint col-error pad-100-bottom">Showing only first {curBatch.batchParameters['cellstoprocess']}% of dataset as preview. Change parameter in Data Input if not desired.</div>
+                }
+                <div className={`grid cols-${curParams.fociperrow} half-gap`}>
+                    {result.imgs.map((img,i)=>{
+                        return <CellResult key={i} img={img} foci={result.foci[i]}
+                                           excluded={includedCells.indexOf(i) == -1}
+                                           onToggleCellInclusion={()=>onCellInclusionToggle(i)} />
+                    })}
+                </div>
+            </>
         }
 	</div>);
 }

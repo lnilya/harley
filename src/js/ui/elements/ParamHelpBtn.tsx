@@ -3,16 +3,29 @@ import {ClickAwayListener, Tooltip} from "@material-ui/core";
 
 interface IParamHelpBtnProps {
     content: ReactNode
-    className?:string
+    className?:string,
+    toolTipPlacement?:'bottom-end'
+    | 'bottom-start'
+    | 'bottom'
+    | 'left-end'
+    | 'left-start'
+    | 'left'
+    | 'right-end'
+    | 'right-start'
+    | 'right'
+    | 'top-end'
+    | 'top-start'
+    | 'top';
 }
 
-const ParamHelpBtn: React.FC<IParamHelpBtnProps> = ({className, content}) => {
+const ParamHelpBtn: React.FC<IParamHelpBtnProps> = ({toolTipPlacement, className, content}) => {
+    toolTipPlacement = toolTipPlacement || 'right'
     
     const [open, setOpen] = useState(false);
     return (
         <ClickAwayListener onClickAway={() => setOpen(false)}>
             <Tooltip interactive title={content} open={open} disableFocusListener disableHoverListener disableTouchListener
-            placement={'right'} arrow>
+            placement={toolTipPlacement} arrow>
                 <div className={`param-help-btn ${className}`} onClick={()=>setOpen(true)}>?</div>
             </Tooltip>
         </ClickAwayListener>

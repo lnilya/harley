@@ -37,7 +37,7 @@ class FociCandidates(ModuleBase):
         self.keys = FociCandidatesKeys(inputkeys, outputkeys)
 
         if action == 'generateImages':
-            allCells:List[np.ndarray] = self.session.getData(self.keys.inCells) #List of images with cells
+            allCells:List[np.ndarray] = self.session.getData(self.keys.inCells)['imgs'] #List of images with cells
 
             #add a border to prevent problems with contours landing outside of image
             allCells = [addBorder(i,3) for i in allCells]
