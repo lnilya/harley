@@ -1,6 +1,13 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.0.1
+Major:
+- Added possibility to manually add/remove foci after model detection
+- Added scale parameters to batches, so outputs are in nm instead of pixels
+Minor:
+- Fixed missing library bug in cell fitting
+- Integration of Youtubetube tutorials into UI and added intro screen
 ### Version: 1.0.0
 - First major release with 4 pipelines.
 - Along with [Paper](https://www.biorxiv.org/content/10.1101/2021.11.29.470484v1?rss=1) publication
