@@ -2,5 +2,20 @@
 @import '../../../../scss/global/mixins';
 .foci-detection-model{
 	min-height: calc(100vh - #{$topBarHeight});
+
+	&.mod-1{
+		.polygon-cloud{
+			display: none;
+		}
+	}
+	&.mod-2{
+		.polygon-cloud.available-foci{
+			svg polygon{
+				transition: none !important;
+				opacity: 1 !important;
+			}
+		}
+
+	}
 }
 @import "CellResult";

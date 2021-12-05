@@ -1,5 +1,5 @@
 import csv
-from typing import Tuple, List, Set
+from typing import Tuple, List, Set, Any
 
 import numpy as np
 import skimage.measure
@@ -15,6 +15,7 @@ from src.py.modules.ModuleBase import ModuleBase
 from src.py.modules.TrainingUtil.SVMClassifier import SVMClassifier
 from src.py.util import imgutil
 from src.py.util.imgutil import addBorder, getPreviewImage
+from src.py.util.modelutil import getCutoffLevel
 from src.py.util.shapeutil import getPolygonMaskPatch
 
 
@@ -30,17 +31,22 @@ class FociDetectionModelKeys:
 
 class FociDetectionModel(ModuleBase):
 
+    userSelectedFociPerCell: List[List[int]]
+    modelFociPerCell: List[List[int]]
     keys: FociDetectionModelKeys
     classifier: SVMClassifier
     trainingData: TrainingData
-    cells: Set
+    cellInidices: Set
     loadedPortion:float
     cellsInExport: Set
     result: LabelingResult
+    allPossibleContourSelections: List[List[int]] #Cell x Foci => selected contour level
     dataLoaded:bool
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        self.userSelectedFociPerCell = []
+        self.modelSelectedFociPerCell = []
         self.log = 'FociDetectionModel'
         self.trace('initialized')
         self.dataLoaded = False
@@ -58,6 +64,10 @@ class FociDetectionModel(ModuleBase):
 
             return True
 
+        elif action == 'changefociselection':
+            self.userSelectedFociPerCell = params['foci']
+            d = self.session.getData(self.keys.outFoci)
+            self.onGeneratedData(self.keys.outFoci, {'foci': d['foci'], 'selection': self.userSelectedFociPerCell},params)
         elif action == 'apply':
 
             sizeAdjustment,portion = self.unpackParams(**params)
@@ -70,56 +80,71 @@ class FociDetectionModel(ModuleBase):
                 #Prepare dataset
 
                 #get all images
-                allCells: List[np.ndarray] = self.session.getData(self.keys.inDataset)['imgs']  # List of images with cells
+                allCellImages: List[np.ndarray] = self.session.getData(self.keys.inDataset)['imgs']  # List of images with cells
 
                 #pick a portion of dataset
-                nc = int(len(allCells) * self.loadedPortion/100.0)
+                nc = int(len(allCellImages) * self.loadedPortion/100.0)
                 if nc < 1: nc  = 1
-                if nc > len(allCells)-1: nc  = len(allCells)-1
-                allCells = allCells[0:nc]
+                if nc > len(allCellImages)-1: nc  = len(allCellImages)-1
+                allCellImages = allCellImages[0:nc]
 
                 # add a border to prevent problems with contours landing outside of image
-                allCells = [addBorder(i, 3) for i in allCells]
+                allCellImages = [addBorder(i, 3) for i in allCellImages]
 
-                self.cells = set(range(0,len(allCells)))
-                self.cellsInExport = set(range(0,len(allCells)))
+                self.cellInidices = set(range(0, len(allCellImages)))
+                self.cellsInExport = set(range(0,len(allCellImages)))
 
                 #Generate the contour loops candidates
-                fociData = FociCandidateData(allCells)
+                fociData = FociCandidateData(allCellImages)
                 fociData.extractContours(model['extractionparams']['fociSize'],
                                               model['extractionparams']['granularity'][0],
                                          progressMsg='1/2 Extracting Contour Candidates')
 
                 #Create a full list of all contours for all foci in all cells in dataset
                 self.trainingData:TrainingData = TrainingData()
-                for i in self.cells:
+                for i in self.cellInidices:
                     cnt = fociData.extractLabellingContour(i,model['extractionparams']['fociSize'],
                                               model['extractionparams']['granularity'][0])
                     #Add the cells to the training set and extract features
-                    self.trainingData.addCell(allCells[i], cnt['foci'])
-                    eeljs_sendProgress(i/len(self.cells),'2/2 Extracting Foci Features')
+                    self.trainingData.addCell(allCellImages[i], cnt['foci'])
+                    eeljs_sendProgress(i / len(self.cellInidices), '2/2 Extracting Foci Features')
 
+                #Make predictions for all foci, for the user to be able to select it
+                self.allPossibleContourSelections = []
+                for c in self.cellInidices:
+                    allContoursInCell = self.trainingData.contours[c]
+                    sel = []
+                    for f,cnt in enumerate(allContoursInCell):
+                        sel += [getCutoffLevel(self.trainingData.contourLevels[c][f],cnt)[1]]
+                    self.allPossibleContourSelections += [sel]
 
                 #Predict the foci using the model
                 eeljs_sendProgress(-1,'Classifying Foci')
                 self.result = self.classifier.predict(self.trainingData)
 
+                #Create datastructure containing an array of foci indices per cell
+                self.userSelectedFociPerCell = []
+                for c in self.cellInidices:
+                    self.userSelectedFociPerCell += [[i for i, cc in enumerate(self.result.contourChoices[c]) if cc != -1]]
+
+                self.modelSelectedFociPerCell = self.userSelectedFociPerCell.copy()
+
                 # generate preview Images for all cells
-                self.previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i) for i, img in enumerate(allCells)]
+                self.previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i) for i, img in enumerate(allCellImages)]
 
                 self.dataLoaded = True
 
 
-            #Adjust sizes
+            #Adjust sizes for ALL choices
             adjustedChoices = self.getFociWithSizeAdjustment(sizeAdjustment)
 
-            #get the polygon data for the selected foci
+
+            #get the polygon data for all possible foci
             allFoci = []
-            for c in self.cells:
+            for c in self.cellInidices:
                 cc = adjustedChoices[c]
                 fociInCell = []
                 for f, lvl in enumerate(cc):
-                    if lvl == -1: continue
                     #get the contour at predicted level
                     cnt = self.trainingData.contours[c][f][lvl]
                     fociInCell += [{'x': np.around((cnt[:, 1]), decimals=3).tolist(),
@@ -127,14 +152,15 @@ class FociDetectionModel(ModuleBase):
 
                 allFoci += [fociInCell]
 
-            self.onGeneratedData(self.keys.outFoci, adjustedChoices, params)
+            self.onGeneratedData(self.keys.outFoci, {'foci':adjustedChoices, 'selection':self.userSelectedFociPerCell}, params)
 
-            return {'imgs': self.previews, 'foci':allFoci}
+            return {'imgs': self.previews, 'foci':allFoci, 'modelSelection':self.modelSelectedFociPerCell, 'selection':self.userSelectedFociPerCell}
 
     def getFociWithSizeAdjustment(self,adjFactor:float):
         adjustedChoices = []
-        for c in self.cells:
-            cc = self.result.contourChoices[c]
+        for c in self.cellInidices:
+            # cc = self.result.contourChoices[c]
+            cc = self.allPossibleContourSelections[c]
             cc2 = [-1] * len(cc)
 
             for f, lvl in enumerate(cc):
@@ -163,13 +189,16 @@ class FociDetectionModel(ModuleBase):
                 wr.writerow( ['Cell', 'Focus', 'x in px', 'y in px', 'Area in px^2',
                      'peakBrightness','meanBrightness', 'contourBrightness'])
 
-            adjustedFociChoices = self.session.getData(self.keys.outFoci)
+            d = self.session.getData(self.keys.outFoci)
+            adjustedFociChoices = d['foci']
+            selectedChoices = d['selection']
 
             for i,c in enumerate(list(self.cellsInExport)):
                 cc = adjustedFociChoices[c]
+                selFoci = selectedChoices[c]
                 nf = 0
                 for f, lvl in enumerate(cc):
-                    if lvl == -1: continue
+                    if f not in selFoci: continue
                     binMaskOuter, offx, offy = getPolygonMaskPatch(self.trainingData.contours[c][f][lvl][:, 1], self.trainingData.contours[c][f][lvl][:, 0], 0)
                     region:RegionProperties = skimage.measure.regionprops(binMaskOuter.astype('int'),
                                                             self.trainingData.imgs[c][offy:offy + binMaskOuter.shape[0],

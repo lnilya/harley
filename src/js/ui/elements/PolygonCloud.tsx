@@ -28,13 +28,13 @@ interface IPolygonCloudProps{
     
     PolyCompFactory?:(idx:number) => React.FC<SVGProps<SVGPolygonElement>>,
     
-    /**Callback click for a single ellipse*/
+    /**Callback click for a single polygon*/
     onClick?:(id:number) => void,
     
-    /**Callback hover for a single ellipse*/
+    /**Callback hover for a single polygon*/
     onMouseEnter?:(id:number) => void,
     
-    /**Callback hover for a single ellipse*/
+    /**Callback hover for a single polygon*/
     onMouseDown?:(id:number,e) => void,
 }
 /**

@@ -43,10 +43,19 @@
 			color: $colGray;
 		}
 		.MuiSvgIcon-root{
-			cursor: pointer;
-			transition: all .2s;
-			&:hover{
-				transform: scale(1.1);
+			width: 20px;
+			height: 20px;
+			margin-right: 15px;
+			&:not(.disabled){
+				cursor: pointer;
+				transition: all .2s;
+				&:hover{
+					transform: scale(1.1);
+				}
+			}
+			&.disabled{
+				opacity: 0.5;
+				pointer-events: none;
 			}
 		}
 	}
