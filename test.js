@@ -1,5 +1,3 @@
-const colors = require('colors');
-const fs = require('fs');
 const input = require('input');
 
 const createPipelineStep = require('./scripts/create_pipelinestep')

@@ -20,7 +20,6 @@ async function createFile(compname,filename){
     var pathSCSS = './src/sammie/scss/'+compname + '/' + filename + '.scss';
 
     await writeTSX(getExistingTemplate(tsxTemplates), path + filename + '.tsx',filename,compname);
-    console.log(`\n`);
     await writeSCSS(pathSCSS,filename);
 }
 
@@ -40,24 +39,27 @@ async function writeTSX(templatePath,resultPath,componentName,compname){
         }
     }
 
-    fs.readFile(templatePath,'utf8',(err,data)=>{
-        if(err) throw err;
+    return new Promise((resolve)=>{
+        fs.readFile(templatePath,'utf8',(err,data)=>{
+            if(err) throw err;
 
-        var replacements = [
-            { regex: /__NAME__/g, replacement:componentName },
-            { regex: /__NAME_LC__/g, replacement:toSnakeCase(componentName) },
-            { regex: /__AUTHOR__/g, replacement:authorName },
-            { regex: /__COMP__/g, replacement:compname },
-        ];
+            var replacements = [
+                { regex: /__NAME__/g, replacement:componentName },
+                { regex: /__NAME_LC__/g, replacement:toSnakeCase(componentName) },
+                { regex: /__AUTHOR__/g, replacement:authorName },
+                { regex: /__COMP__/g, replacement:compname },
+            ];
 
-        for (let i = 0; i < replacements.length; i++) {
-            data = data.replace(replacements[i].regex, replacements[i].replacement);
-        }
+            for (let i = 0; i < replacements.length; i++) {
+                data = data.replace(replacements[i].regex, replacements[i].replacement);
+            }
 
-        fs.writeFile(resultPath, data, function (err) {
-            if (err) throw err;
-            console.log(`Success: TSX File created at ${resultPath}`.green + ` (Template: ${templatePath})`);
-        });
+            fs.writeFile(resultPath, data, function (err) {
+                if (err) throw err;
+                console.log(`Success: TSX File created at ${resultPath}`.green + ` (Template: ${templatePath})`);
+                resolve();
+            });
+        })
     })
 }
 
