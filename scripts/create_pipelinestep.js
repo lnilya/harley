@@ -9,9 +9,9 @@ const moduleTemplateFolderJS = './.templates/PipelineModule/'
 const moduleTemplatePY = './.templates_py/PipelineModule.py'
 const moduleFolderJS = './src/js/modules/'
 const moduleFolderPY = './src/py/modules/'
-const eelinterfacePY = './src/py/eelinterface.py'
+const eelinterfaceFolderPY = './src/py/' //Must have a *ModuleConnector.py file
 const pipelineJSFolder = './src/js/pipelines/'
-const excludedInPipelineFolder = ['pipelineutil.ts']
+const excludedInPipelineFolder = ['pipelineutil.ts','init.ts']
 
 const toSnakeCase = (str) => {
     return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
@@ -118,20 +118,30 @@ function replacePlaceholders() {
 
 
 function extendEeelInterfacePy(){
-    var data = fs.readFileSync(eelinterfacePY, 'utf8')
-    var placeholder = '#%NEW_MODULE%';
+    var allFiles = fs.readdirSync(eelinterfaceFolderPY)
+    moduleConnectorFile = allFiles.find((fn)=>fn.indexOf('ModuleConnector.py') != -1)
+
+    if(!moduleConnectorFile){
+        console.log('Error:'.bold.red + ` could not find ModuleConnector file in ${eelinterfaceFolderPY}. The file needs to be named *ModuleConnector.py and contain a "${placeholder}" comment.\nYou will need to add the module initialization manually.`.red);
+        return;
+    }
+
+    var file = eelinterfaceFolderPY + moduleConnectorFile;
+
+    var data = fs.readFileSync(file, 'utf8')
+    var placeholder = '# %NEW_MODULE%';
 
     var newData = `elif moduleName == '${params.modulename}':
             from src.py.modules.${params.modulename} import ${params.modulename}
-            modulesById[moduleID] = ${params.modulename}(moduleID,session)`
+            return ${params.modulename}(moduleID,session)`
 
     if(data.indexOf(placeholder) == -1){
-        console.log('Error:'.bold.red + ' eelinterface.py seems not to have the placeholder tag '.red + placeholder.red);
+        console.log('Error:'.bold.red + ` Module Connector file seems not to have the placeholder tag "${placeholder}". Please double check. `.red);
         return;
     }
     data = data.replace(placeholder, newData + "\n        " + placeholder );
 
-    fs.writeFileSync(eelinterfacePY, data);
+    fs.writeFileSync(file, data);
     console.log(`Successfully added ModuleImport to eelinterface.py`.bold.green);
 }
 

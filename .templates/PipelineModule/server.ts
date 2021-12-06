@@ -8,7 +8,7 @@ export type __NAME__Result = {
 }
 export async function run__NAME__(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<__NAME__Result>>{
     
-    //Run algorithm - this demo is for a simple image in and image out.
+    //Run athe lgorithm associated with this module
     var res:EelResponse<__NAME__Result> = await eel.runStepAsync<__NAME__Result>(self.moduleName,'apply',curParams,curStep)
 
     //update pipeline, on error, delete the output again.

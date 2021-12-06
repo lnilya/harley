@@ -44,9 +44,6 @@ class HarleyModuleConnector(ModuleConnector):
         elif moduleName == 'CellFittingHeatmap':
             from src.py.modules.CellFittingHeatmap import CellFittingHeatmap
             return CellFittingHeatmap(moduleID, session, **params)
-        elif moduleName == 'CellFittingManual':
-            from src.py.modules.CellFittingManual import CellFittingManual
-            return CellFittingManual(moduleID, session, **params)
         elif moduleName == 'DVStacker':
             from src.py.modules.DVStacker import DVStacker
             return DVStacker(moduleID, session, **params)

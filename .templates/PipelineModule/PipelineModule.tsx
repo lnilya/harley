@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react"
 import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
-import * as alg from "../../state/algstate";
-import * as ui from "../../state/uistates";
-import * as eventbus from "../../state/eventbus";
+import * as alg from "../../../sammie/js/state/algstate";
+import * as ui from "../../../sammie/js/state/uistates";
+import * as eventbus from "../../../sammie/js/state/eventbus";
 import * as self from "./params";
-import {run__NAME__} from "./server";
-import './scss/__NAME__.scss'
-import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
+import * as server from "./server";
+import './scss/NewModule.scss'
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {useState} from "react";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asDemoUIState = atomFamily<PipelineImage,string>({key:'__NAME_LC___demo',default:null});
@@ -25,7 +25,7 @@ const __NAME__:React.FC<I__NAME__Props> = () => {
     
     /**RUNNING ALGORITHM CALLBACK*/
     const runMainAlgorithm = async (params:self.Parameters,step:self.Step)=>{
-        const res = await run__NAME__(params,step);
+        const res = await server.run__NAME__(params,step);
         setError(res.error ? res : null)
         if(res.error) {
             console.log(`Error...`);
@@ -36,10 +36,10 @@ const __NAME__:React.FC<I__NAME__Props> = () => {
     };
     
     /**CORE HOOK FOR SETTING UP STATE*/
-    const {curInputs,curStep,curParams,isRunning} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
+    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
-        {msg: 'Running Threshhold', display: "text"});
+        {msg: 'Running __NAME__', display: "overlay"});
     
     /**UI SPECIFIC STATE*/
     const [demoState,setDemoSTate] = useRecoilState(asDemoUIState(curStep.moduleID))
