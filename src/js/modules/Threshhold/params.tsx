@@ -1,7 +1,7 @@
-import {getDropdownParams, getSliderParams} from "../_util";
+import {getDropdownParams, getSliderParams} from "../../../sammie/js/modules/paramutil";
 import React from "react";
-import {PipelineImage} from "../../types/datatypes";
-import {PipelineStep} from "../../types/pipelinetypes";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 
 
 var bandDesc = <>Intensity is a range/spectrum between 0 and 1, 0 being black and 1 being white. Thresholding allows to pick out a subrange

@@ -2,11 +2,11 @@ import React from "react"
 import {atomFamily, useRecoilState} from "recoil";
 import {runBlobRemoval} from "./server";
 import * as self from "./params";
-import DisplayOptions, {DisplayOptionSetting} from "../../ui/modules/DisplayOptions";
-import {PipelineImage} from "../../types/datatypes";
+import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
 import './scss/BlobRemoval.scss'
-import MasksOverImage, {MaskOverImageMask} from "../../ui/elements/MasksOverImage";
-import {useStepHook} from "../_hooks";
+import MasksOverImage, {MaskOverImageMask} from "../../../sammie/js/ui/elements/MasksOverImage";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 
 interface IBlobRemovalProps {
 

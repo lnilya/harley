@@ -3,12 +3,12 @@ import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {changeCellSelection, changeFociSelection, FociDetectionModelResult, runFociDetectionModel} from "./server";
 import './scss/FociDetectionModel.scss'
-import {useStepHook, useToggleKeys} from "../_hooks";
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
+import {useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import CellResult from "./CellResult";
-import {cl, copyChange, copyRemove} from "../../util";
-import ButtonIcon from "../../ui/elements/ButtonIcon";
+import {cl, copyChange, copyRemove} from "../../../sammie/js/util";
+import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<FociDetectionModelResult,string>({key:'foci-detection-model_result',default:null});

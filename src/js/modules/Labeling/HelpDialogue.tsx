@@ -6,7 +6,7 @@ import step4 from './imgs/step4.jpg'
 import step5a from './imgs/step5a.jpg'
 import step5b from './imgs/step5b.jpg'
 import AnimImg from "./AnimImg";
-import ButtonIcon from "../../ui/elements/ButtonIcon";
+import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 import {Dialog} from "@material-ui/core";
 import './scss/HelpDialogue.scss'
 

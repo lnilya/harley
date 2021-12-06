@@ -1,11 +1,11 @@
 import React from "react";
-import {cl, copyRemove} from "../../util";
+import {cl, copyRemove} from "../../../sammie/js/util";
 import './scss/CellResult.scss'
-import {PipelineImage, PipelinePolygons} from "../../types/datatypes";
-import PolygonCloud from "../../ui/elements/PolygonCloud";
+import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
+import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
 import styled from "@emotion/styled";
 import {Autorenew, Cancel, DeleteForever, RestoreFromTrash, Visibility, VisibilityOff} from "@mui/icons-material";
-import ToolTipIconButton from "../../ui/elements/ToolTipIconButton";
+import ToolTipIconButton from "../../../sammie/js/ui/elements/ToolTipIconButton";
 import _ from "lodash";
 
 interface ICellResultProps{

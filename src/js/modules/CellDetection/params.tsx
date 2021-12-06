@@ -1,7 +1,7 @@
-import {PipelineBlobs, PipelineImage} from "../../types/datatypes";
-import {Parameter} from "../_shared";
-import {getSliderParams} from "../_util";
-import {PipelineStep} from "../../types/pipelinetypes";
+import {PipelineBlobs, PipelineImage} from "../../../sammie/js/types/datatypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
+import {getSliderParams} from "../../../sammie/js/modules/paramutil";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 
 
 var size = 'The maximum width/height of the bounding box of the cell.'

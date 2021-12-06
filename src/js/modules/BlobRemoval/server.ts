@@ -1,7 +1,7 @@
-import {PipelineImage} from "../../types/datatypes";
-import * as eel from "../../eel/eel";
-import {EelResponse} from "../../eel/eel";
-import {updatePipelineData} from "../../state/stateutil";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import * as eel from "../../../sammie/js/eel/eel";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import {updatePipelineData} from "../../../sammie/js/state/stateutil";
 import * as self from "./params";
 
 export async function runBlobRemoval(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<PipelineImage>>{

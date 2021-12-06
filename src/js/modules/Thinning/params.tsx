@@ -1,7 +1,7 @@
-import {PipelineImage} from "../../types/datatypes";
-import {Parameter} from "../_shared";
-import {getSliderParams} from "../_util";
-import {PipelineStep} from "../../types/pipelinetypes";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
+import {getSliderParams} from "../../../sammie/js/modules/paramutil";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 
 const maxGap = getSliderParams('maxgap','Max Closed Gap','Algorithm will try to close gaps on end points of the thinned image. This defines how big of a gap can be closed. Set to 0 if you do not want to close gaps.',0,100,1,30)
 

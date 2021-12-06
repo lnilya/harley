@@ -3,10 +3,10 @@ import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {runDenoise} from "./server";
 import './scss/Denoise.scss'
-import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import ReactBeforeSliderComponent from 'react-before-after-slider-component';
 import 'react-before-after-slider-component/dist/build.css';
 

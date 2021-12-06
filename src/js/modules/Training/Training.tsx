@@ -3,9 +3,9 @@ import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {runTraining, TrainingResult} from "./server";
 import './scss/Training.scss'
-import {useStepHook} from "../_hooks";
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import StatDisplay, {cvExplanation, testExplanation} from "./StatDisplay";
 import {printf} from "fast-printf";
 import {Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';

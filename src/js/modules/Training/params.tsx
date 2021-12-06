@@ -1,8 +1,8 @@
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import React from "react";
 import {SingleCellLabelingData} from "../Labeling/server";
-import {getCheckboxParams} from "../_util";
+import {getCheckboxParams} from "../../../sammie/js/modules/paramutil";
 
 /**Name of the module*/
 export const moduleName = 'Training'

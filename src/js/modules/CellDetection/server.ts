@@ -1,8 +1,8 @@
 import * as self from "./params";
-import {PipelineBlobs} from "../../types/datatypes";
-import * as eel from "../../eel/eel";
-import {EelResponse} from "../../eel/eel";
-import {updatePipelineData} from "../../state/stateutil";
+import {PipelineBlobs} from "../../../sammie/js/types/datatypes";
+import * as eel from "../../../sammie/js/eel/eel";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import {updatePipelineData} from "../../../sammie/js/state/stateutil";
 
 type CellDetectionBlobs = { blobs:PipelineBlobs , accepted: number[], border:number[] };
 

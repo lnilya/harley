@@ -1,12 +1,12 @@
 import React from "react";
-import * as util from './pipelineutil'
-import {suggestSuffixedFileName} from './pipelineutil'
-import {Pipeline} from "../types/pipelinetypes";
+import * as util from '../../sammie/js/pipelines/pipelineutil'
+import {suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
+import {Pipeline} from "../../sammie/js/types/pipelinetypes";
 import thumb from '../../assets/images/fd_thumb.jpg'
 import * as FociDetectionModelParams from '../modules/FociDetectionModel/params'
 import FociDetectionModel from "../modules/FociDetectionModel/FociDetectionModel";
 import ResponsiveEmbed from 'react-responsive-embed'
-import {getSliderParams, getTextfieldInputParams} from "../modules/_util";
+import {getSliderParams, getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {

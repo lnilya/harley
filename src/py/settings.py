@@ -9,3 +9,5 @@ REACT_DEV_PATH = 'http://localhost:3000/'
 
 #OTHER SETTINGS
 TMP_FOLDER = 'tmp'
+
+AGGREGATORS

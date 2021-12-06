@@ -7,9 +7,9 @@ import * as CellFittingHeatmapParams from "../modules/CellFittingHeatmap/params"
 import CellFitting from "../modules/CellFitting/CellFitting";
 import * as CellFittingParams from "../modules/CellFitting/params";
 import React from "react";
-import * as util from './pipelineutil'
-import {suggestModifiedFilename} from './pipelineutil'
-import {Pipeline, PipelineStep} from "../types/pipelinetypes";
+import * as util from '../../sammie/js/pipelines/pipelineutil'
+import {suggestModifiedFilename} from '../../sammie/js/pipelines/pipelineutil'
+import {Pipeline, PipelineStep} from "../../sammie/js/types/pipelinetypes";
 import thumb from '../../assets/images/cd_thumb.jpg'
 import ResponsiveEmbed from 'react-responsive-embed'
 
