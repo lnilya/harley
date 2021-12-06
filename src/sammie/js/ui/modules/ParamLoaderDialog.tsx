@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {ccl, copyRemove} from "../../util";
 import "../../../scss/modules/ParamLoaderDialog.scss";
-import {Dialog} from "@material-ui/core";
+import {Dialog} from "@mui/material";
 import * as ui from '../../state/uistates'
 import * as store from '../../state/persistance'
 import {deleteStoredParameterSet, ParamSet} from '../../state/persistance'

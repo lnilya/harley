@@ -2,7 +2,7 @@ import React, {useState} from "react"
 import * as store from "../../../state/persistance";
 import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
 import "../../../../scss/modules/DataLoader/BatchSettings.scss";
-import {FormControl, NativeSelect} from "@material-ui/core";
+import {FormControl, NativeSelect} from "@mui/material";
 import ParamHelpBtn from "../../elements/ParamHelpBtn";
 import {useLocalStoreRecoilHook} from "../../uihooks";
 import * as alg from "../../../state/algstate";

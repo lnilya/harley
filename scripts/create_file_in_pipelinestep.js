@@ -103,3 +103,8 @@ function getExistingTemplate(templateFiles){
 
 writeTSX(getExistingTemplate(tsxTemplates), path + filename + '.tsx',filename);
 writeSCSS();
+
+function askInput(){
+
+}
+module.exports = askInput;

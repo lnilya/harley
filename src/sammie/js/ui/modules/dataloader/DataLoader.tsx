@@ -7,7 +7,7 @@ import FilePicker from "./FilePicker";
 import {Pipeline, PipelineInput} from "../../../types/pipelinetypes";
 import DataBatch from "./DataBatch";
 import {LocalFileWithPreview} from "../../../types/datatypes";
-import {Button, Dialog, Tooltip} from "@material-ui/core";
+import {Button, Dialog, Tooltip} from "@mui/material";
 import {copyChange} from "../../../util";
 import * as store from '../../../state/persistance'
 import {PARAM_SET_NAME_CURRENT, ParamSet} from '../../../state/persistance'

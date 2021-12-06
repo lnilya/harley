@@ -1,6 +1,6 @@
 import React, {ReactNode} from "react";
 import '../../../scss/elements/ToolTipIconButton.scss'
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 import {TooltipPlacement} from "../../types/uitypes";
 import {SvgIconComponent} from "@mui/icons-material";
 

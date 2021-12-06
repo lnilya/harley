@@ -9,7 +9,7 @@ import {UIScreens} from '../../state/uistates'
 import * as alg from '../../state/algstate'
 import {BatchInfo, PipelineLogEntry, RunningMode} from '../../state/algstate'
 import {useRecoilState, useRecoilValue} from "recoil";
-import {LinearProgress, Tooltip} from "@material-ui/core";
+import {LinearProgress, Tooltip} from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AnimateHeight from "react-animate-height";
 import {printf} from "fast-printf";

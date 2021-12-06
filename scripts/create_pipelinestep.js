@@ -64,9 +64,6 @@ async function askInput() {
     console.log(`Successfully created new Module: ${params.modulename}`.bgGreen);
 }
 
-askInput();
-
-
 async function copyModuleTemplatePY() {
     fs.copyFileSync(moduleTemplatePY, moduleFolderPY + params.modulename + '.py')
 }
@@ -170,3 +167,5 @@ function extendPipeline(pipeFile){
     fs.writeFileSync(pipeFile, data);
     console.log(`Successfully added new Module as last step in pipeline`.bold.green);
 }
+
+module.exports = askInput;

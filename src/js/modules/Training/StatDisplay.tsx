@@ -1,7 +1,7 @@
 import React, {ReactNode} from "react";
 import {ccl} from "../../../sammie/js/util";
 import './scss/StatDisplay.scss'
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 
 interface IStatDisplayProps{
 	

@@ -7,7 +7,7 @@ import {UIScreens} from "../../../state/uistates";
 import * as alg from "../../../state/algstate";
 import {SingleDataBatch} from "../../../state/algstate";
 import {DeleteForever} from "@mui/icons-material";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 import AnimateHeight from 'react-animate-height';
 import BatchSettings from "./BatchSettings";
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';

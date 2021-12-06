@@ -5,7 +5,7 @@ import * as server from "../../../eel/eel";
 import {EelResponse} from "../../../eel/eel";
 import {ccl} from "../../../util";
 import {LocalFile, LocalFileWithPreview, LocalFolder} from "../../../types/datatypes";
-import {Input} from "@material-ui/core";
+import {Input} from "@mui/material";
 import * as storage from '../../../state/persistance'
 import FilePreview from "./FilePreview";
 import ToolTipHint from "../../elements/ErrorHint";

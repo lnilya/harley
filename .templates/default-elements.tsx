@@ -17,9 +17,10 @@ const cl = ccl('__NAME_LC__--')
 const __NAME__:React.FC<I__NAME__Props> = ({className}) => {
 	
 	return (
-		<div className={`__NAME_LC__`}>
-			This is my new __NAME__ component
+		<div className={`__NAME_LC__ ${className || ''}`}>
+			This is my new __NAME__ __COMP__
 		</div>
 	);
 }
+
 export default __NAME__;

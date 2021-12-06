@@ -10,7 +10,7 @@ import {EelResponse} from "../../../sammie/js/eel/eel";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import CellCounter from "./CellCounter";
 import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import HelpDialogue from "./HelpDialogue";
 import {copyChange} from "../../../sammie/js/util";
 import InfoDisplay from "./InfoDisplay";

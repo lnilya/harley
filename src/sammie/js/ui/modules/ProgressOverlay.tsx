@@ -3,7 +3,7 @@ import {ccl} from "../../util";
 import '../../../scss/modules/ProgressOverlay.scss'
 import * as ui from '../../state/uistates'
 import {useRecoilValue} from "recoil";
-import {Button, LinearProgress} from "@material-ui/core";
+import {Button, LinearProgress} from "@mui/material";
 import {OverlayState} from "../../types/uitypes";
 
 interface IProgressOverlayProps {

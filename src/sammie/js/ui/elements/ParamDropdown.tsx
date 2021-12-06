@@ -1,7 +1,7 @@
 import React from "react";
 import {cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
-import {FormControl, NativeSelect} from "@material-ui/core";
+import {FormControl, NativeSelect} from "@mui/material";
 import {IParamUISettingBase} from "../../types/uitypes";
 import {DropDownParams} from "../../modules/paramtypes";
 

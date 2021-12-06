@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 import {cl} from "../../util";
 import '../../../scss/elements/MainMenuButton.scss'
 

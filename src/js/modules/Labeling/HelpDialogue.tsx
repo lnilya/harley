@@ -7,7 +7,7 @@ import step5a from './imgs/step5a.jpg'
 import step5b from './imgs/step5b.jpg'
 import AnimImg from "./AnimImg";
 import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
-import {Dialog} from "@material-ui/core";
+import {Dialog} from "@mui/material";
 import './scss/HelpDialogue.scss'
 
 interface IHelpDialogueProps{

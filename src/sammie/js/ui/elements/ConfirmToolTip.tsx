@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {ClickAwayListener, Tooltip, TooltipProps} from "@material-ui/core";
+import {ClickAwayListener, Tooltip, TooltipProps} from "@mui/material";
 
 interface IConfirmToolTipProps{
 	
@@ -34,7 +34,7 @@ const ConfirmToolTip:React.FC<IConfirmToolTipProps> = ({disabled, tooltipParams,
     
 	return (
         <ClickAwayListener onClickAway={() => setOpen(false)}>
-            <Tooltip interactive title={cnt} className={`confirm-tool-tip`} open={open} onClose={e=>setOpen(false)}
+            <Tooltip title={cnt} className={`confirm-tool-tip`} open={open} onClose={e=>setOpen(false)}
                      disableFocusListener disableHoverListener disableTouchListener
                      {...(tooltipParams||{})}>
                 <div onClick={disabled ? null : e=>setOpen(true)}>

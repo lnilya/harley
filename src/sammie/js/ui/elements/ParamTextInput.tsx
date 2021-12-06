@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
-import {Input} from "@material-ui/core";
+import {Input} from "@mui/material";
 import {IParamUISettingBase} from "../../types/uitypes";
 import {TextInputParams} from "../../modules/paramtypes";
 

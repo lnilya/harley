@@ -4,7 +4,7 @@ import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
 import {useRecoilValue} from "recoil";
 import {PipelineOutput, PipelineStep} from "../../../types/pipelinetypes";
-import {Button, Input} from "@material-ui/core";
+import {Button, Input} from "@mui/material";
 import {LocalFilePath} from "../../../types/datatypes";
 import {EelResponse} from "../../../eel/eel";
 import ErrorHint from "../../elements/ErrorHint";

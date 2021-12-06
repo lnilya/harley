@@ -1,5 +1,5 @@
 import React, {ReactNode, useState} from "react";
-import {ClickAwayListener, Tooltip} from "@material-ui/core";
+import {ClickAwayListener, Tooltip} from "@mui/material";
 
 interface ITooltipHintProps {
     col:'success'|'error'

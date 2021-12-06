@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {Input, Slider} from "@material-ui/core";
+import {Input, Slider} from "@mui/material";
 import {ccl, cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
 import {IParamUISettingBase} from "../../types/uitypes";

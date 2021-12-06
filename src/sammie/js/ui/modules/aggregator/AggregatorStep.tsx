@@ -4,7 +4,7 @@ import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
 import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
 import {PipelineAggregatorOutput, PipelineOutput, PipelineStep} from "../../../types/pipelinetypes";
-import {Button, Input, Tooltip} from "@material-ui/core";
+import {Button, Input, Tooltip} from "@mui/material";
 import {LocalFilePath, PipelineDataAggregatorID} from "../../../types/datatypes";
 import * as server from "../../../eel/eel";
 import {AggregateDataInfo, EelResponse} from "../../../eel/eel";

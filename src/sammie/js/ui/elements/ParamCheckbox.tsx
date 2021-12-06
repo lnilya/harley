@@ -1,7 +1,7 @@
 import React from "react";
 import {cl} from "../../util";
 import ParamHelpBtn from "./ParamHelpBtn";
-import {Checkbox, FormControlLabel} from "@material-ui/core";
+import {Checkbox, FormControlLabel} from "@mui/material";
 import {IParamUISettingBase} from "../../types/uitypes";
 import {CheckboxParams} from "../../modules/paramtypes";
 

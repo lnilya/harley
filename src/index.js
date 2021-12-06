@@ -4,9 +4,8 @@ import './sammie/scss/index.scss';
 import App from "./sammie/js/App";
 import './sammie/js/eel/eelJsFunctions'
 import {RecoilRoot} from "recoil";
-import {ThemeProvider} from '@material-ui/core/styles';
 import {SnackbarProvider} from "notistack";
-import {Zoom} from "@mui/material";
+import {ThemeProvider, Zoom} from "@mui/material";
 import {pipelineDefinitions, theme} from "./js/__config";
 
 window['eel']?.set_host('ws://localhost:1234');

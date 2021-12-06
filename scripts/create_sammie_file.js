@@ -2,6 +2,8 @@
 
 const colors = require('colors');
 const _ = require('lodash');
+const input = require('input');
+const fs = require('fs');
 
 const toSnakeCase = (str) =>{
     return str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
@@ -9,44 +11,29 @@ const toSnakeCase = (str) =>{
         .join('-');
 }
 
+async function createFile(compname,filename){
 
+    //different template files for different types.
+    var tsxTemplates = [`./.templates/default-${compname}.tsx`,'./.templates/default.tsx'];
 
-if(process.argv.length < 3){
-    console.log('Error'.bold.red + 'Not enough arguments. first: M,E for type, second: Name of file'.red);
-    return;
-}
+    var path = './src/sammie/js/ui/'+compname+'/';
+    var pathSCSS = './src/sammie/scss/'+compname + '/' + filename + '.scss';
 
-var type = process.argv[2];
-var filename = process.argv[3];
-
-var overwrite = process.argv.indexOf('-o') != -1;
-
-//different template files for different types.
-var tsxTemplates = [`./.templates/default-${type}.tsx`,'./.templates/default.tsx'];
-
-
-var path = './src/js/ui/';
-var pathSCSS = './src/scss/';
-var compname = '';
-if(type.toLowerCase() == 'e') compname = 'elements';
-else if(type.toLowerCase() == 'm') compname = 'modules';
-else{
-    console.log('Error:'.bold.red+' Component name must be e=Element, m=Module'.red);
-    return;
+    await writeTSX(getExistingTemplate(tsxTemplates), path + filename + '.tsx',filename,compname);
+    console.log(`\n`);
+    await writeSCSS(pathSCSS,filename);
 }
 
 
-path += compname + '/';
-pathSCSS += compname + '/' + filename + '.scss';
-const fs = require('fs');
 
 //TSX FILE
-async function writeTSX(templatePath,resultPath,componentName){
+async function writeTSX(templatePath,resultPath,componentName,compname){
     const fullName =require('fullname') ;
     var  authorName = await fullName();
     if(fs.existsSync(resultPath)){
+        const overwrite = await input.confirm(`${resultPath} exists, overwrite?`);
         if(!overwrite){
-            console.log('Error: '.bold.red + `Cannot create TSX file ${resultPath}. It already exists.`.red);
+            console.log('Skipped creation of TSX file, it already exists.'.bold.red);
             return;
         }else{
             console.log(`File ${resultPath} already exists and will be overwritten.`.bold.yellow);
@@ -74,11 +61,12 @@ async function writeTSX(templatePath,resultPath,componentName){
     })
 }
 
-function writeSCSS(){
+async function writeSCSS(pathSCSS,filename){
     /* SCSS FILE */
     if(fs.existsSync(pathSCSS)){
+        const overwrite = await input.confirm(`${pathSCSS} exists, overwrite?`);
         if(!overwrite){
-            console.log('Error: '.bold.red + `Cannot create SCSS file ${pathSCSS}. It already exists.`.red);
+            console.log('Skipped creation of SCSS file, it already exists.'.bold.red);
             return;
         }else{
             console.log(`File ${pathSCSS} already exists and will be overwritten.`.bold.yellow);
@@ -124,5 +112,19 @@ function getExistingTemplate(templateFiles){
 }
 
 
-writeTSX(getExistingTemplate(tsxTemplates), path + filename + '.tsx',filename);
-writeSCSS();
+
+async function askInput(){
+    console.log(`\nBy convention Elements are small building blocks of the UI, that can be reused in different modules.\nModules on the other hand are bigger pieces of UI combining multiple elements.\nThose two are stored in different folders for a better structure of the project.\n`.blue);
+    const type = await input.select('Create a Module or an Element?',['Module','Element'])
+    const name = await input.text(`Name your ${type}. (Do not include file extension, use CamelCase.)`)
+
+    var folder = '';
+    switch(type){
+        case 'Module': folder = 'modules'; break;
+        case 'Element': folder = 'elements'; break;
+    }
+
+    createFile(folder,name);
+
+}
+module.exports = askInput;
