@@ -12,9 +12,11 @@ const PipelineListEntry:React.FC<IPipelineListEntryProps> = ({pl, onChoose}) => 
     
 	return (<div className={'pipeline-list-entry margin-200-bottom full-w'}>
         <div className="fl-row bg-bglight">
-            <div className="pipeline-list-entry__thumb">
-                {pl.descriptions?.thumb}
-            </div>
+            {pl.descriptions?.thumb &&
+                <div className="pipeline-list-entry__thumb">
+                    {pl.descriptions?.thumb}
+                </div>
+            }
             <div className={'pipeline-list-entry__text pad-100 fl-grow'}>
                 <h2>{pl.descriptions?.title || pl.name}</h2>
                 <div className="pipeline-list-entry__desc">
