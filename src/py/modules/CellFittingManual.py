@@ -1,4 +1,4 @@
-from src.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.modules.ModuleBase import ModuleBase
 
 
 class CellFittingManualKeys:

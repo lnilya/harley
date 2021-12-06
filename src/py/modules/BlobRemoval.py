@@ -3,8 +3,8 @@ from typing import Tuple
 import numpy as np
 import skimage.measure
 
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import imgutil
 
 
 class BlobRemoval(ModuleBase):
@@ -62,7 +62,7 @@ class BlobRemoval(ModuleBase):
             if params['removeblobs']:
                 cleanedImage = self.removeBlobs(np.copy(inputImg),params)
 
-            ret = imgutil.getTransparentMask(cleanedImage,(255,0,0),outputkeys[0], True)
+            ret = imgutil.getTransparentMask(cleanedImage, (255, 0, 0), outputkeys[0], True)
             self.onGeneratedData(outputkeys[0], cleanedImage,params)
 
             return ret

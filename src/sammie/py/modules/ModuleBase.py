@@ -1,9 +1,8 @@
 import abc
 from typing import List, Dict, Callable
 
-from src.py import SessionData
-from src.py.util import util
-
+from src.sammie.py import SessionData
+from src.sammie.py.util import util
 
 class ModuleBase(metaclass=abc.ABCMeta):
 

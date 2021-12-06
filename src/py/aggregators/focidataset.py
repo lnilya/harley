@@ -4,8 +4,8 @@ import time
 from typing import Dict
 
 from src.py.SessionData import SessionData
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import shapeutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import shapeutil
 
 
 def __getBaseAggregateFile():

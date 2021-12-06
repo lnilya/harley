@@ -10,7 +10,8 @@ from matplotlib.axes import Axes
 from numpngw import write_png
 from numpy import ndarray
 
-from src.py import eelutil, settings
+from src.py import settings
+from src.sammie.py import eelutil
 
 
 def meshgridForImage(img: ndarray, spacing=1):

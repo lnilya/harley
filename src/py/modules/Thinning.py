@@ -6,8 +6,8 @@ import numpy as np
 import skimage.draw
 import skimage.measure
 
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import imgutil
 
 
 class Thinning(ModuleBase):
@@ -209,8 +209,8 @@ class Thinning(ModuleBase):
     def getJSOutput(self, keys: List[str]):
         #Create transparent image
         if self.previewThinnedImageWithGaps is None:
-            self.previewThinnedImageWithGaps = imgutil.getTransparentMask(self.thinnedImageWithGaps,(255,0,0),keys[0]+'_withgaps', True)
+            self.previewThinnedImageWithGaps = imgutil.getTransparentMask(self.thinnedImageWithGaps, (255, 0, 0), keys[0] + '_withgaps', True)
         if self.previewThinnedImage is None:
-            self.previewThinnedImage = imgutil.getTransparentMask(self.thinnedImage,(255,0,0),keys[0], True)
+            self.previewThinnedImage = imgutil.getTransparentMask(self.thinnedImage, (255, 0, 0), keys[0], True)
 
         return {'thinnedWithGaps':self.previewThinnedImageWithGaps, 'thinned':self.previewThinnedImage}

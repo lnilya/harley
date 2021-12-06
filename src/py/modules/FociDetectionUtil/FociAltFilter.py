@@ -6,9 +6,8 @@ from matplotlib import pyplot as plt
 from numpy import ndarray
 from skimage.feature import peak_local_max
 
-import src.py.util.imgutil as imgutil
+import src.sammie.py.util.imgutil as imgutil
 from src.py.modules.FociDetectionUtil.FociAltFilterResult import FociAltFilterResult, FociMinDistGraph
-from src.py.util.util import toc, tic
 
 
 class FociAltFilterParams:
@@ -112,7 +111,7 @@ class ContourPatch:
         bestContour = None
 
         if debug:
-            ax = imgutil.displayImageGrid([self.patch],['Optimizing Contours'])
+            ax = imgutil.displayImageGrid([self.patch], ['Optimizing Contours'])
 
         # start at topmost level -> smallest contour
         # We assume that this should always be a "hit". Then go stepsize down
@@ -446,7 +445,7 @@ class FociAltFilter:
 
         # print('ACCEPTED INDICES: ', result.getAccpetedIndices())
         if debug:
-            ax = imgutil.displayImageGrid([img], cmaps='gray' , windowTitle='Contours Before Split/Merge or Filter')
+            ax = imgutil.displayImageGrid([img], cmaps='gray', windowTitle='Contours Before Split/Merge or Filter')
             for i in result.getAccpetedIndices():
                 b = result[i]
                 ax[0].plot(b['cnt'][:, 1], b['cnt'][:, 0], 'y-')
@@ -527,7 +526,7 @@ class FociAltFilter:
         img = img[b:-b, b:-b]
 
         if debug:
-            ax = imgutil.setUpSubplot(2,2,'Result ' + self.debugTitle)
+            ax = imgutil.setUpSubplot(2, 2, 'Result ' + self.debugTitle)
             result.plotDiscardedResult(img,ax[0])
             result.plotResult(img,'')
 

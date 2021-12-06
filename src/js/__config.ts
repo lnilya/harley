@@ -1,5 +1,5 @@
 import {createTheme} from "@material-ui/core";
-import {getPipelineDefinitions} from "./js/pipelines/init";
+import {getPipelineDefinitions} from "./pipelines/init";
 
 
 /**Main function to initialize all pipelines*/

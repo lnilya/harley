@@ -1,22 +1,20 @@
 import csv
-from typing import Tuple, List, Set, Any
+from typing import List, Set
 
 import numpy as np
 import skimage.measure
 from shapely.geometry import Polygon
 from skimage.measure._regionprops import RegionProperties
 
-import src.py.exporters as exporters
-from src.py.eeljsinterface import eeljs_sendProgress
+from src.sammie.py.eeljsinterface import eeljs_sendProgress
 from src.py.modules.FociCandidatesUtil.FociCandidateData import FociCandidateData
 from src.py.modules.LabelingUtil import LabelingResult
 from src.py.modules.LabelingUtil.TrainingData import TrainingData
-from src.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.py.modules.TrainingUtil.SVMClassifier import SVMClassifier
-from src.py.util import imgutil
-from src.py.util.imgutil import addBorder, getPreviewImage
+from src.sammie.py.util.imgutil import addBorder, getPreviewImage
 from src.py.util.modelutil import getCutoffLevel
-from src.py.util.shapeutil import getPolygonMaskPatch
+from src.sammie.py.util.shapeutil import getPolygonMaskPatch
 
 
 class FociDetectionModelKeys:

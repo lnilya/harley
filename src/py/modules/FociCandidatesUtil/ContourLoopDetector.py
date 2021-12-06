@@ -1,17 +1,12 @@
-from typing import Tuple, List
+from typing import Tuple
 
 import numpy as np
 import skimage
 import skimage.filters
-from matplotlib import pyplot as plt
-from skimage.segmentation import watershed
-from scipy import ndimage as ndi
-import src.py.util.imgutil as imgutil
+import src.sammie.py.util.imgutil as imgutil
 from src.py.modules.FociCandidatesUtil.ContourLoopsInCell import ContourLoopsInCell
 from src.py.modules.FociDetectionUtil.FociDetectorContourResult import FociDetectorContourResult
-from src.py.util import shapeutil
-from src.py.util.imgutil import addBorder
-from src.py.util.shapeutil import getPolygonMaskPatch, addPatchOntoImage
+from src.sammie.py.util import shapeutil
 from src.py.util.util import MplColorHelper
 
 
@@ -45,7 +40,7 @@ class ContourLoopDetector:
 
     def __plotResult(self,img, res:FociDetectorContourResult, mask):
         mch = MplColorHelper('jet', 0, 1)
-        ax = imgutil.displayImageGrid([img],['Image','Contours'],windowTitle=self.debugTitle)
+        ax = imgutil.displayImageGrid([img], ['Image', 'Contours'], windowTitle=self.debugTitle)
         for i, (outer,seed) in enumerate(res.contours):
             if res.mergableContours[i] is not None:
                 ax[0].plot(seed[:, 1], seed[:, 0], color=mch.get_rgb(0.4))

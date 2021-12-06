@@ -1,12 +1,9 @@
 import json
-from typing import Tuple, List
+from typing import List
 
 import imageio
 import numpy as np
 import skimage
-import src.py.util.imgutil as imgutil
-from src.py.util import shapeutil
-from src.py.util.util import MplColorHelper
 from matplotlib import pyplot as plt
 
 

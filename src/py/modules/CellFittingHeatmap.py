@@ -4,9 +4,9 @@ import cv2
 import numpy as np
 
 import src.py.modules.CellFittingUtil as cf
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util.imgutil import getPreviewHeatMap, getTransparentMask
-from src.py.util import imgutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util.imgutil import getPreviewHeatMap, getTransparentMask
+
 
 class CellFittingOutKeys:
     heatmapKey:str

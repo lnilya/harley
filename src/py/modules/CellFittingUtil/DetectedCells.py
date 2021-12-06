@@ -5,7 +5,7 @@ import numpy as np
 from numpy import ndarray
 
 import src.py.modules.CellFittingUtil as cf
-import src.py.util.imgutil as imgutil
+import src.sammie.py.util.imgutil as imgutil
 
 
 class DetectedCells:
@@ -101,7 +101,7 @@ class DetectedCells:
         rs = [self.patches[x][1] for x in patchNums]
         cs = [self.patches[x][2] for x in patchNums]
         titles = ['Patch #%d' % x for x in patchNums]
-        axes = imgutil.displayImageGrid(imgs,titles,windowTitle='Cell Patches Debug', callShow=False)
+        axes = imgutil.displayImageGrid(imgs, titles, windowTitle='Cell Patches Debug', callShow=False)
         for i,ax in enumerate(axes):
             if i >= len(imgs): break
             #plot original ellipse

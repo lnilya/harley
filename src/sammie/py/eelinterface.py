@@ -6,9 +6,11 @@ from typing import Dict, List
 import eel
 
 from src.py import aggregators
-from src.py.SessionData import SessionData
-from src.py.modules.FileLoader import FileLoader
-from src.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.SessionData import SessionData
+
+from src.py.__config import initializeModule
+from src.sammie.py.modules.FileLoader import FileLoader
+from src.sammie.py.modules.ModuleBase import ModuleBase
 
 executionKey:int = 0
 log = True
@@ -29,54 +31,9 @@ pipelineParams: Dict = {}
 
 
 def getModule(moduleID: str, moduleName: str):
-
     params = pipelineParams[moduleID]
-
     if moduleID not in modulesById:
-        # Instantiate required module and return new instance
-        if moduleName == 'Threshhold':
-            from src.py.modules.Threshhold import Threshhold
-            modulesById[moduleID] = Threshhold(moduleID,session,**params)
-        elif moduleName == 'BlobRemoval':
-            from src.py.modules.BlobRemoval import BlobRemoval
-            modulesById[moduleID] = BlobRemoval(moduleID,session,**params)
-        elif moduleName == 'Thinning':
-            from src.py.modules.Thinning import Thinning
-            modulesById[moduleID] = Thinning(moduleID,session,**params)
-        elif moduleName == 'CellDetection':
-            from src.py.modules.CellDetection import CellDetection
-            modulesById[moduleID] = CellDetection(moduleID,session,**params)
-        elif moduleName == 'CellFitting':
-            from src.py.modules.CellFitting import CellFitting
-            modulesById[moduleID] = CellFitting(moduleID,session,**params)
-        elif moduleName == 'CellFittingHeatmap':
-            from src.py.modules.CellFittingHeatmap import CellFittingHeatmap
-            modulesById[moduleID] = CellFittingHeatmap(moduleID,session,**params)
-        elif moduleName == 'CellFittingManual':
-            from src.py.modules.CellFittingManual import CellFittingManual
-            modulesById[moduleID] = CellFittingManual(moduleID,session,**params)
-        elif moduleName == 'DVStacker':
-            from src.py.modules.DVStacker import DVStacker
-            modulesById[moduleID] = DVStacker(moduleID,session,**params)
-        elif moduleName == 'Denoise':
-            from src.py.modules.Denoise import Denoise
-            modulesById[moduleID] = Denoise(moduleID,session)
-        elif moduleName == 'MaskTightening':
-            from src.py.modules.MaskTightening import MaskTightening
-            modulesById[moduleID] = MaskTightening(moduleID,session)
-        elif moduleName == 'FociCandidates':
-            from src.py.modules.FociCandidates import FociCandidates
-            modulesById[moduleID] = FociCandidates(moduleID,session)
-        elif moduleName == 'Labeling':
-            from src.py.modules.Labeling import Labeling
-            modulesById[moduleID] = Labeling(moduleID,session)
-        elif moduleName == 'Training':
-            from src.py.modules.Training import Training
-            modulesById[moduleID] = Training(moduleID,session)
-        elif moduleName == 'FociDetectionModel':
-            from src.py.modules.FociDetectionModel import FociDetectionModel
-            modulesById[moduleID] = FociDetectionModel(moduleID,session)
-        #%NEW_MODULE%
+        modulesById[moduleID] = initializeModule(moduleID,moduleName,params,session)
 
     return modulesById[moduleID]
 

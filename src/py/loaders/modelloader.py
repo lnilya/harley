@@ -4,7 +4,7 @@ from typing import Tuple
 import numpy as np
 
 from src.py.loaders.fileloaders import LoaderResult
-from src.py.util.imgutil import getPreviewImage
+from src.sammie.py.util.imgutil import getPreviewImage
 
 
 def __generateModelPreview(allImages, previewGridSize):
