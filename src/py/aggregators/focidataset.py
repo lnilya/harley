@@ -3,7 +3,7 @@ import pickle
 import time
 from typing import Dict
 
-from src.py.SessionData import SessionData
+from src.sammie.py.SessionData import SessionData
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util import shapeutil
 

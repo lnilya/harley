@@ -5,7 +5,7 @@ import time
 
 import eel
 
-from src.py import settings
+from src.sammie.py import settings
 
 
 def getRootPath()->str:

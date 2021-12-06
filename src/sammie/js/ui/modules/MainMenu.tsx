@@ -8,7 +8,7 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import * as ui from '../../state/uistates'
 import {UIPopups, UIScreens} from '../../state/uistates'
-import '../../../../scss/modules/MainMenu.scss'
+import '../../../scss/modules/MainMenu.scss'
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import {doesPipelineStepHaveData} from "../../state/stateutil";
 import NotStartedIcon from '@mui/icons-material/NotStarted';

@@ -1,6 +1,6 @@
 import React from "react";
 import {ccl} from "../../../util";
-import '../../../../../scss/modules/aggregator/Aggregator.scss'
+import '../../../../scss/modules/aggregator/Aggregator.scss'
 import * as ui from '../../../state/uistates'
 import {useRecoilValue} from "recoil";
 import AggregatorStep from "./AggregatorStep";

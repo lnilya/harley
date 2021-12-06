@@ -11,5 +11,5 @@ export function getPipelineDefinitions() {
     const dvs: Pipeline = preprocessingPipeline()
     const fds: Pipeline = fociDetectionPipeline()
     const svm: Pipeline = modelPipeline()
-    return [cd,dvs,fds,svm];
+    return [cd,dvs,svm,fds];
 }

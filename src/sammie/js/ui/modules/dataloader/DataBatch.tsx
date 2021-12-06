@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import '../../../../../scss/modules/DataLoader/DataBatch.scss'
+import '../../../../scss/modules/DataLoader/DataBatch.scss'
 import {PipelineInput} from "../../../types/pipelinetypes";
 import {useRecoilState, useRecoilValue} from "recoil";
 import * as ui from "../../../state/uistates";

@@ -3,15 +3,16 @@ import os
 import re
 from typing import Dict, List
 
+from src.sammie.py.ModuleConnector import ModuleConnector, LoaderResult
 from src.sammie.py.modules.ModuleBase import ModuleBase
-from src.py import loaders
 
 class FileLoader(ModuleBase):
-    """
-    Simply a mock module for the FileLoader, which is not 
-    """
-    def __init__(self, sessionData):
+
+    moduleConnector: ModuleConnector
+
+    def __init__(self, sessionData, moduleConnector:ModuleConnector):
         super().__init__('FileLoader',sessionData)
+        self.moduleConnector = moduleConnector
 
     def __getFiles(self, fromPattern: str):
         #Given a glob pattern 'path/**/file_*.jpg' will return a list of lists
@@ -99,16 +100,13 @@ class FileLoader(ModuleBase):
 
     #Load as Preview, these files do not need to be processed or anything, and is simply for the user as a feedback
     def loadFilePreview(self,pipelinekey:str,batchID:int,path:str,loaderName:str,loaderArgs:Dict):
-        loaderFun = getattr(loaders, loaderName)  # will throw an error if doesnt exist
-        res: loaders.LoaderResult = loaderFun(True, pipelinekey + '_preview_' + str(batchID), path, **loaderArgs)
-
+        res: LoaderResult = self.moduleConnector.runLoader(loaderName,True,pipelinekey + '_preview_' + str(batchID),path)
         # return preview
         return {'previewURL': res.previewURL, 'meta': res.metaData}
 
     def loadFile(self,pipelinekey,path:str,loaderName:str,loaderArgs:Dict):
-        loaderFun = getattr(loaders, loaderName)  # will throw an error if doesnt exist
-        res: loaders.LoaderResult = loaderFun(False, pipelinekey, path, **loaderArgs)
 
+        res: LoaderResult = self.moduleConnector.runLoader(loaderName,False,pipelinekey,path)
         # push data into the pipeline, for loaders the parameters is simply a dump for any metadata
         self.session.onDataAdded(pipelinekey,self,res.data, {'path':path, 'meta':res.metaData})
 

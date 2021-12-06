@@ -1,7 +1,7 @@
 import React, {ReactNode} from "react";
 import {Tooltip} from "@material-ui/core";
 import {cl} from "../../util";
-import '../../../../scss/elements/MainMenuButton.scss'
+import '../../../scss/elements/MainMenuButton.scss'
 
 interface IMainMenuButtonProps {
     

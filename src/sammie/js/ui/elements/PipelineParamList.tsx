@@ -1,6 +1,6 @@
 import React from "react";
 import {ccl, copyChange} from "../../util";
-import '../../../../scss/elements/PipelineParamList.scss'
+import '../../../scss/elements/PipelineParamList.scss'
 import * as ui from '../../state/uistates'
 import {useRecoilValue} from "recoil";
 import ParamSlider from "./ParamSlider";

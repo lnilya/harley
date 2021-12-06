@@ -56,7 +56,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     
     const curPipeline:Pipeline = useRecoilValue(ui.selectedPipeline)
     const overlay = useRecoilValue(ui.overlay)
-    const [allBatches, setAllBatches] = useLocalStoreRecoilHook(alg.allPipelineBatches,'pipeline',false);
+    const [allBatches, setAllBatches] = useLocalStoreRecoilHook(alg.allPipelineBatches,'pipeline',false, curPipeline.name);
     const [askingForInput,setAskingForInput] = useState<DialogState>(null);
     const [selectedInput,setSelectedInput] = useState<LocalFileWithPreview>(null);
     const [multiBatchDialog,setMultiBatchDialog] = useState(false);

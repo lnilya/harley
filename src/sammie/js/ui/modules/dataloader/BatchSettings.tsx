@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import * as store from "../../../state/persistance";
 import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
-import "../../../../../scss/modules/DataLoader/BatchSettings.scss";
+import "../../../../scss/modules/DataLoader/BatchSettings.scss";
 import {FormControl, NativeSelect} from "@material-ui/core";
 import ParamHelpBtn from "../../elements/ParamHelpBtn";
 import {useLocalStoreRecoilHook} from "../../uihooks";

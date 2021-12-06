@@ -1,18 +1,6 @@
-# Session Data is a datastorage for all data a module provides as output
-# Data can be anything from images, to complex classes or trained models.
-# Modules are instructed by JS which data to use as inputs, also JS can asynchroniously
-# load this data if it needs it, by contacting the responsive module
 from typing import Dict, List, Tuple, Optional
 
 
-class FileLoaderMockModule:
-    """
-    Mock module to use loaded files, which are not loaded via a module
-    inside session data
-    """
-    id:str
-    def __init__(self):
-        self.id = 'File Loader'
 
 class DataAtom:
     #Instance of the module used to generate the data
@@ -24,13 +12,20 @@ class DataAtom:
 
 
 class SessionData:
+    """
+        Session Data is a datastorage for all data a module provides as output
+        Data can be anything from images, to complex classes or trained models.
+        Modules are instructed by JS which data to use as inputs, also JS can asynchroniously
+        load this data if it needs it, by contacting the responsive module
+    """
+
+
     __data: Dict[str, DataAtom]  # data key -> data, parameters
     log: bool = True
 
     def __init__(self):
         self.__data = {}
         print("Session Data Created")
-
 
 
     def printAllData(self):
@@ -58,8 +53,8 @@ class SessionData:
             else:
                 print('[SessionData]: Replced data "%s" from module %s'%(key,module.id))
 
-    # Removes a key from store, so it can't be used anymore.
     def removeData(self, key: str):
+        """Removes a key from store, so it can't be used anymore."""
         if key not in self.__data: return
 
         if self.log:

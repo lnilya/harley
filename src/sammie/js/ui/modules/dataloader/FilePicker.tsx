@@ -68,7 +68,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
         
         //save the last used folder for this pipeline input
         if (!res.error) {
-            storage.saveDataForCurPipeline(folder, k + '_folder')
+            storage.saveDataForCurPipeline(folder, k + '_folder',pipeName)
             setCurFolder(folder)
             var liof = folder.lastIndexOf('/')
             if (liof == -1) liof = folder.lastIndexOf('\\')
@@ -92,7 +92,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
     useEffect(() => {
         
         //Filter is always shared for all batches, just load it from cookie.
-        setFilter(storage.loadDataForPipeline(k + '_filter'))
+        setFilter(storage.loadDataForPipeline(k + '_filter',pipeName))
         
         //Reload folder contents, then
         //select the file we are looking for for, if we have a file.
@@ -101,7 +101,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
             fetchFolderContents(initFolder, initialFile.file);
         else {
             //no file or folder passed, use the old folder stored in cookie
-            const lastUsedFolder = storage.loadDataForPipeline(k + '_folder')
+            const lastUsedFolder = storage.loadDataForPipeline(k + '_folder',pipeName)
             fetchFolderContents(lastUsedFolder);
         }
     }, [])
@@ -110,7 +110,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
     //Change of Filter
     const setAndStoreFilter = (fv: string) => {
         setFilter(fv)
-        storage.saveDataForCurPipeline(fv, k + '_filter')
+        storage.saveDataForCurPipeline(fv, k + '_filter',pipeName)
     }
     
     //Change of file Selection

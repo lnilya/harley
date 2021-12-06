@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {ccl} from "../../../util";
-import '../../../../../scss/modules/BatchCreator.scss'
+import '../../../../scss/modules/BatchCreator.scss'
 import * as ui from '../../../state/uistates'
 import {Button, FormControl, NativeSelect, TextField} from "@material-ui/core";
 import {atom, useRecoilValue} from "recoil";

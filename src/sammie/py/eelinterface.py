@@ -5,10 +5,10 @@ from typing import Dict, List
 
 import eel
 
-from src.py import aggregators
+from src.sammie.py.ModuleConnector import ModuleConnector
 from src.sammie.py.SessionData import SessionData
 
-from src.py.__config import initializeModule
+from src.py.__config import getModuleConnector
 from src.sammie.py.modules.FileLoader import FileLoader
 from src.sammie.py.modules.ModuleBase import ModuleBase
 
@@ -23,8 +23,11 @@ modulesByExecutionKey: Dict[str, ModuleBase] = {}
 #Sessiondata stores all the information produced by Modules
 session: SessionData = SessionData()
 
+#Module Connector initializes modules, aggregators, loaders
+moduleConnector:ModuleConnector = getModuleConnector()
+
 #Loader is a speicifc module, that loads files
-fileLoader: FileLoader = FileLoader(session)
+fileLoader: FileLoader = FileLoader(session, moduleConnector)
 
 #Stores parameters passed to newly initialized modules/steps in the pipeline
 pipelineParams: Dict = {}
@@ -33,7 +36,7 @@ pipelineParams: Dict = {}
 def getModule(moduleID: str, moduleName: str):
     params = pipelineParams[moduleID]
     if moduleID not in modulesById:
-        modulesById[moduleID] = initializeModule(moduleID,moduleName,params,session)
+        modulesById[moduleID] = moduleConnector.initializeModule(moduleID,moduleName,params,session)
 
     return modulesById[moduleID]
 
@@ -81,19 +84,15 @@ def exportData(moduleID:str, pipelinekey:str, path:str, overwrite:bool,exporterA
 
 @eel.expose
 def getAggregateDataInfo(aggregatorID:str, path:str, exporterArgs:Dict = None):
-    aggregatorFun = getattr(aggregators, aggregatorID+'_Info')  # will throw an error if doesnt exist
-    return aggregatorFun(path)
+    return moduleConnector.getAggregatorFileInfo(aggregatorID,path)
 
 @eel.expose
 def resetAggregateData(aggregatorID:str, path:str):
-    """Simply deletes the """
-    aggregatorFun = getattr(aggregators, aggregatorID+'_Reset')  # will throw an error if doesnt exist
-    return aggregatorFun(path)
+    return moduleConnector.resetAggregatorFile(aggregatorID, path)
 
 @eel.expose
 def exportAggregateData(aggregatorID:str, path:str, batchnum:int, exporterArgs:Dict = None):
-    aggregatorFun = getattr(aggregators, aggregatorID)  # will throw an error if doesnt exist
-    return aggregatorFun(path,session,modulesById,batchnum,exporterArgs)
+    return moduleConnector.runAggregator(aggregatorID, path,session,modulesById,batchnum,exporterArgs)
 
 @eel.expose
 def getBatchGlobs(patterns:List[str],allowedExtensions:List[List[str]]):
@@ -112,11 +111,13 @@ def onNewPipelineLoaded(pipelineID:str, pipelineParamsByModuleID:Dict = None):
     global session
     global fileLoader
     global pipelineParams
+    global moduleConnector
     pipelineParams = pipelineParamsByModuleID
     modulesById = {}
     modulesByExecutionKey = {}
     session = SessionData()
-    fileLoader = FileLoader(session)
+    moduleConnector = getModuleConnector()
+    fileLoader = FileLoader(session, moduleConnector)
     print('[EEL] New Pipeline loaded %s'%pipelineID)
     return True
 

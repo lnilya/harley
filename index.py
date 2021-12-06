@@ -1,7 +1,7 @@
 # coding: utf-8
 import sys
 
-from src.py import settings
+from src.sammie.py import settings
 from src.sammie.py import eelutil
 from src.sammie.py.eelinterface import *
 

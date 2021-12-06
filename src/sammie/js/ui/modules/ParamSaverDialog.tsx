@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {ccl, copyRemove} from "../../util";
-import "../../../../scss/modules/ParamSaverDialog.scss";
+import "../../../scss/modules/ParamSaverDialog.scss";
 import {Button, Dialog, TextField} from "@material-ui/core";
 import * as ui from '../../state/uistates'
 import * as alg from '../../state/algstate'

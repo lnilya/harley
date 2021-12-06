@@ -3,6 +3,7 @@ import {useEffect} from "react";
 import * as storage from '../state/persistance'
 import * as eventbus from "../state/eventbus";
 import {EventPayload, EventResult, EventTypes} from "../state/eventbus";
+import {PipelineName} from "../types/datatypes";
 
 const asPrevSettings = atomFamily<boolean,string>({key:'prev_settings',default:false});
 export function useInitalLoadCallback(recoilState:RecoilState<any>, initCallBack:()=>any){
@@ -16,15 +17,14 @@ export function useInitalLoadCallback(recoilState:RecoilState<any>, initCallBack
     
 }
 
-export function useLocalStoreRecoilHook(recoilState:RecoilState<any>,scope:'global'|'pipeline' = 'pipeline', initalLoad:boolean = true){
+export function useLocalStoreRecoilHook(recoilState:RecoilState<any>,scope:'global'|'pipeline' = 'pipeline', initalLoad:boolean = true, pipelineName:PipelineName = null){
     const [curSettings, setCurSettings] = useRecoilState(recoilState);
-    
     //load data on init if necessary
     useEffect(()=>{
         if(!initalLoad) return;
         var data = curSettings;
         if(scope == 'global') data = storage.loadGlobalData(recoilState.key);
-        else if(scope == 'pipeline') data = storage.loadDataForPipeline(recoilState.key);
+        else if(scope == 'pipeline') data = storage.loadDataForPipeline(recoilState.key,pipelineName);
         if(data !== null) setCurSettings(data);
     },[])
     
@@ -32,7 +32,7 @@ export function useLocalStoreRecoilHook(recoilState:RecoilState<any>,scope:'glob
     const writeOut = (data)=>{
         setCurSettings(data)
         if(scope == 'global') storage.saveGlobalData(data,recoilState.key);
-        else if(scope == 'pipeline') storage.saveDataForCurPipeline(data,recoilState.key);
+        else if(scope == 'pipeline') storage.saveDataForCurPipeline(data,recoilState.key,pipelineName);
     }
     
     return [curSettings,writeOut]

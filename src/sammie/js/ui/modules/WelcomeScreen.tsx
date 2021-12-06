@@ -1,6 +1,6 @@
 import React from "react";
 import {ccl} from "../../util";
-import '../../../../scss/modules/WelcomeScreen.scss'
+import '../../../scss/modules/WelcomeScreen.scss'
 import * as ui from '../../state/uistates'
 import {UIScreens} from '../../state/uistates'
 import packageJson from '../../../../../package.json';

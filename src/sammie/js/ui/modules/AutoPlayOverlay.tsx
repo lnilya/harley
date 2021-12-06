@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {cl} from "../../util";
-import '../../../../scss/modules/AutoPlayOverlay.scss'
+import '../../../scss/modules/AutoPlayOverlay.scss'
 import {Backdrop} from "@mui/material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';

@@ -2,7 +2,7 @@ import numpy as np
 
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util.imgutil import getPreviewImage
-from src.py.util.util import parseRanges
+from src.sammie.py.util.util import parseRanges
 
 
 class DVStackerKeys:

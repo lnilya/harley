@@ -7,7 +7,7 @@ import src.sammie.py.util.imgutil as imgutil
 from src.py.modules.FociCandidatesUtil.ContourLoopsInCell import ContourLoopsInCell
 from src.py.modules.FociDetectionUtil.FociDetectorContourResult import FociDetectorContourResult
 from src.sammie.py.util import shapeutil
-from src.py.util.util import MplColorHelper
+from src.sammie.py.util.util import MplColorHelper
 
 
 class ContourLoopDetectorParams:

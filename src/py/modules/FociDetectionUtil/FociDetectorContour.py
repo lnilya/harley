@@ -8,7 +8,7 @@ from src.py.modules.FociDetectionUtil.FociDetectorContourResult import FociDetec
 from src.sammie.py.util import shapeutil
 from src.sammie.py.util.imgutil import addBorder
 from src.sammie.py.util.shapeutil import getPolygonMaskPatch
-from src.py.util.util import MplColorHelper
+from src.sammie.py.util.util import MplColorHelper
 
 
 class FociDetectorContourParams:

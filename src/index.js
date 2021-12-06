@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './scss/index.scss';
+import './sammie/scss/index.scss';
 import App from "./sammie/js/App";
 import './sammie/js/eel/eelJsFunctions'
 import {RecoilRoot} from "recoil";

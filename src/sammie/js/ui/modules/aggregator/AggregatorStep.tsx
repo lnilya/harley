@@ -13,7 +13,7 @@ import TooltipHint from "../../elements/TooltipHint";
 import {useEventBusCallback, useLocalStoreRecoilHook} from "../../uihooks";
 import * as eventbus from "../../../state/eventbus";
 import {EventTypes, ToastEventPayload} from "../../../state/eventbus";
-import "../../../../../scss/modules/aggregator/AggregatorStep.scss";
+import "../../../../scss/modules/aggregator/AggregatorStep.scss";
 import {useDebounce} from "react-use";
 import ConfirmToolTip from "../../elements/ConfirmToolTip";
 

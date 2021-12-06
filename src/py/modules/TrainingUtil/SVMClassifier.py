@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 from src.py.modules.LabelingUtil.LabelingResult import LabelingResult
 from src.py.modules.LabelingUtil.TrainingData import TrainingData
 from src.py.modules.TrainingUtil.DataNormalizers import NormalizerInterface
-from src.py.util import util
+from src.sammie.py.util import util
 from src.py.util.modelutil import getCutoffLevel
 
 

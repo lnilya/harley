@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {ccl, copyRemove} from "../../util";
-import "../../../../scss/modules/ParamLoaderDialog.scss";
+import "../../../scss/modules/ParamLoaderDialog.scss";
 import {Dialog} from "@material-ui/core";
 import * as ui from '../../state/uistates'
 import * as store from '../../state/persistance'

@@ -178,7 +178,7 @@ export async function loadPipeline(pipe: Pipeline) {
         
         updateConnectedValue(allPipelineBatches, [])
         //If we had previously stored any input batches use these
-        var lastStoredBatches: SingleDataBatch[] = storage.loadDataForPipeline(alg.allPipelineBatches.key);
+        var lastStoredBatches: SingleDataBatch[] = storage.loadDataForPipeline(alg.allPipelineBatches.key,pipe.name);
         if (lastStoredBatches?.length > 0)
             updateConnectedValue(ui.overlay, {display: 'overlay', progress: 0, msg: 'Reloading Inputs...'})
         

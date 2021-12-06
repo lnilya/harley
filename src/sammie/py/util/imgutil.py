@@ -10,7 +10,7 @@ from matplotlib.axes import Axes
 from numpngw import write_png
 from numpy import ndarray
 
-from src.py import settings
+from src.sammie.py import settings
 from src.sammie.py import eelutil
 
 

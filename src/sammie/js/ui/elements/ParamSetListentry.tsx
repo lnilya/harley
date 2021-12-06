@@ -1,6 +1,6 @@
 import React from "react";
 import {ParamSet} from "../../state/persistance";
-import "../../../../scss/elements/ParamSetListentry.scss";
+import "../../../scss/elements/ParamSetListentry.scss";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 interface IParamSetListentryProps {
