@@ -3,7 +3,7 @@ import os
 import re
 from typing import Dict, List
 
-from src.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.py import loaders
 
 class FileLoader(ModuleBase):
