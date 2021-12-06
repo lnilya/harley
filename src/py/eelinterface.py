@@ -12,11 +12,21 @@ from src.py.modules.ModuleBase import ModuleBase
 
 executionKey:int = 0
 log = True
+#Stores module instances by their ID
 modulesById: Dict[str, ModuleBase] = {}
+
+#Stores module instances by their Thread Execution key, allows to kill if necessary
 modulesByExecutionKey: Dict[str, ModuleBase] = {}
+
+#Sessiondata stores all the information produced by Modules
 session: SessionData = SessionData()
+
+#Loader is a speicifc module, that loads files
 fileLoader: FileLoader = FileLoader(session)
+
+#Stores parameters passed to newly initialized modules/steps in the pipeline
 pipelineParams: Dict = {}
+
 
 def getModule(moduleID: str, moduleName: str):
 
