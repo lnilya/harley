@@ -38,7 +38,7 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<EelResponse<boolean>>(null);
     const curBatch = useRecoilValue(alg.curLoadedBatch);
-    
+    console.log(`LOADED BI: `, curBatchInfo);
     const missingKeys:string[] = step.requiredInputs.filter((a)=>{return allData[a] == null})
     //find the steps that generate the missing key, for legibility
     const missingSteps = missingKeys.map((k)=>{
@@ -101,7 +101,7 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
     else if(!curFileInfo?.data?.ready) btnTooltip = 'Output path not set correctly';
     
     const mainBtn = <Button onClick={e=>initExport()} color={'primary'}  variant={'contained'}
-                                disabled={loading || !curFileInfo?.data?.ready || missingKeys.length > 0}>Append results of batch {curBatchInfo.batch+1}</Button>
+                                disabled={loading || !curFileInfo?.data?.ready || missingKeys.length > 0}>Append results of batch {curBatchInfo.displayedBatch+1}/{curBatchInfo.totalDispBatches}</Button>
     
     return (
         <div className={'aggregator-step' + cl(missingKeys.length > 0, 'has-missing-data')}>

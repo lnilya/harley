@@ -34,6 +34,8 @@ const DataBatchPreviewImage: React.FC<IDataBatchPreviewImageProps> = ({img, onCl
         </div>)
     }
     
+    if(!img) return content;
+    
     const metaData = Object.keys(img.meta).map((name) => {
             
             //By convention meta fields starting with __ will not be displayed on the frontend.
@@ -45,7 +47,6 @@ const DataBatchPreviewImage: React.FC<IDataBatchPreviewImageProps> = ({img, onCl
             </div>)
         }
     )
-    
     return (<Tooltip title={metaData} arrow placement={'bottom'}>
         {content}
     </Tooltip>);

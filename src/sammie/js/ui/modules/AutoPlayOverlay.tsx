@@ -76,7 +76,7 @@ const AutoPlayOverlay:React.FC<IAutoPlayOverlayProps> = ({className}) => {
             <div className="auto-play-overlay__content bg-bgwhite">
                 <div className="fl-row fl-align-center auto-play-overlay__main pad-50">
                     <span>
-                        {pipeName} {(batchInfo.batch+1)}/{batchInfo.totalDispBatches}
+                        {pipeName} {(batchInfo.displayedBatch+1)}/{batchInfo.totalDispBatches}
                     </span>
                     <div className="fl-grow"/>
                     <div onClick={() => stopAutoExecution()} className={`btn btn-pause` + cl(execState == RunningMode.manual,'disabled')}>
