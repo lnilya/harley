@@ -13,6 +13,7 @@ import {resetAutoExecution} from "./pipelineexec";
 import {EventTypes, fireEvent, ToastEventPayload} from "../state/eventbus";
 import {LocalFile} from "../types/datatypes";
 import {SettingDictionary} from "../modules/paramtypes";
+import * as events from '../state/eventbus'
 
 //***************************************************************/
 //* FUNCTIONS */
@@ -47,8 +48,15 @@ export async function unloadPipeline() {
         //Load data into pipeline locally
         updatePipelineInput(pinp, null, false)
     }
+    
+    updateConnectedValue(alg.curLoadedBatchNumber,-1)
 }
 
+/***
+ * Central Function that loads data into the current pipeline and starts it.
+ * @param batchIndex Index of the batch to load, will be retrieved from recoil state.
+ * @param reloadParameters If true, the parameters associated with this batch will also be loaded into pipeline.
+ */
 export async function loadBatchAndStartPipeline(batchIndex: number, reloadParameters: boolean = true) {
     
     const allPipes = getConnectedValue(ui.allPipelines);
@@ -124,6 +132,8 @@ export async function addBatches(pipe:Pipeline, add: LocalFile[][], removeCurren
                         arrAfterLoading[i].batchParameters = await modBatch(res.data,arrAfterLoading[i].batchParameters,pipe.inputParameters);
                     
                     arrAfterLoading[i].inputs[pinputKey] = {file: lf, ...res.data};
+                }else{
+                    events.showToast(`Error in: ${lf.name}: ${res.error}`,'error')
                 }
             })
             allFiles.push(ld)

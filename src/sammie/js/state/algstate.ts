@@ -99,7 +99,7 @@ export const curPipelineStepParameterValues = selector<SettingDictionary | null>
     }
 });
 /**Values of all parameters of the current step, keys are set inside the steps module definition and should
- * only be relevant to the respective step. Will not contain uiOnly Steps*/
+ * only be relevant to the respective step.*/
 export const curPipelineStepParameterValuesUI = selector<SettingDictionary | null>({
     key: 'cur_params_ui',
     get: ({get}) => {

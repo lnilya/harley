@@ -35,9 +35,7 @@ const Sidebar:React.FC<ISidebarProps> = () => {
         ,1000)
     },[curParams])
     
-    /**
-     * TODO: The Parameter should be changed here, rather than in the ParamComponents This would allow a better control/reduction on repaints
-     * */
+
     const onSetParameter = (conf:Parameter<any>,value:any)=>{
         setPipelineParameterValue(conf,value);
     }

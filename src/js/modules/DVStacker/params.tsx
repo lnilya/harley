@@ -32,8 +32,8 @@ const zstacks = getTextfieldInputParams('zstacks','ZStacks to use',zstackdesc,'Z
 
 /**Parameter UI Definition the user can set in DVStacker*/
 export const parameters:Array<Parameter<any>> = [
-    beh,
     channel,
+    beh,
     zstacks,
 ]
 
@@ -52,7 +52,7 @@ export type Step = PipelineStep<Inputs, Outputs>;
 
 /**Parameter Object of DVStacker*/
 export type Parameters = {
-    stacking:string,
     channel:number,
+    stacking:string,
     zstack:string,
 }

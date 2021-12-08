@@ -12,7 +12,7 @@ import * as server from '../../../eel/eel'
 import {EelResponse} from '../../../eel/eel'
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import ConfirmToolTip from "../../elements/ConfirmToolTip";
-import {addBatches} from "../../../pipelines/pipeline";
+import {addBatches, unloadPipeline} from "../../../pipelines/pipeline";
 import * as store from "../../../state/persistance";
 import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
 
@@ -42,7 +42,7 @@ const BatchCreator: React.FC<IBatchCreatorProps> = ({onDone, className}) => {
     const [tableData, setTableData] = useState([]);
     const [selection, setSelection] = React.useState([]);
     const [allParamSets, setAllParamSets] = useState<ParamSet[]>(() => Object.values(store.loadParameterSets(true)) || []);
-    const [selectedParamSet, setSelectedParamSet] = useState<string>('');
+    const [selectedParamSet, setSelectedParamSet] = useState<string>(PARAM_SET_NAME_CURRENT);
     
     const loadBatches = async () => {
         var allExt = [];
@@ -80,9 +80,13 @@ const BatchCreator: React.FC<IBatchCreatorProps> = ({onDone, className}) => {
     const onApplyFoundFiles = (overwrite: boolean) => {
         const filesToAdd = result.data.filter((e, i) => selection.indexOf(i) != -1)
         addBatches(pipe, filesToAdd, overwrite,selectedParamSet);
+        //since batches have changed we need to unload the currently executed pipeline
+        if(overwrite) unloadPipeline()
         onDone();
     }
     
+    //wether or not all textfields have something put in.
+    const hasAllInput = !pipe.inputs.find((pinp)=>!allInputs[pinp.key])
     const canAdd = selection?.length > 0 && tableData?.length > 0 && selectedParamSet != '';
     
     return (
@@ -147,13 +151,12 @@ const BatchCreator: React.FC<IBatchCreatorProps> = ({onDone, className}) => {
                 </div>
             }
             <div className="batch-creator__btns fl-row fl-align-center">
-                <Button color={'secondary'} variant={'contained'} onClick={loadBatches}>Find Files</Button>
+                <Button color={'secondary'} variant={'contained'} onClick={loadBatches} disabled={!hasAllInput}>Find Files</Button>
                 <div className="fl-grow"/>
                 
                 <span className={'pad-50-right'}>Parameter Set:</span>
                 <FormControl variant="outlined">
                     <NativeSelect value={selectedParamSet} onChange={e => setSelectedParamSet(e.target.value)}>
-                        <option key={'none'} value={''}>Please Select...</option>
                         <option key={'cur'} value={PARAM_SET_NAME_CURRENT}>Current Parameters</option>
                         {allParamSets.map((k, i) => {
                                 return <option key={k.name} value={k.name}>{k.name}</option>
