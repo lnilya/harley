@@ -68,7 +68,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
         
         //save the last used folder for this pipeline input
         if (!res.error) {
-            storage.saveDataForCurPipeline(folder, k + '_folder',pipeName)
+            storage.saveDataForPipeline(folder, k + '_folder',pipeName)
             setCurFolder(folder)
             var liof = folder.lastIndexOf('/')
             if (liof == -1) liof = folder.lastIndexOf('\\')
@@ -110,7 +110,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
     //Change of Filter
     const setAndStoreFilter = (fv: string) => {
         setFilter(fv)
-        storage.saveDataForCurPipeline(fv, k + '_filter',pipeName)
+        storage.saveDataForPipeline(fv, k + '_filter',pipeName)
     }
     
     //Change of file Selection

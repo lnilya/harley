@@ -43,15 +43,13 @@ export function loadGlobalData(key:string){
 //* TIED TO PIPELINE */
 //***************************************************************/
 
-/**Saves arbitrary data that is tied to the cirrent pipeline*/
-export function saveDataForCurPipeline(data:any,key:string,pipeName:string = null){
-    const pipe = pipeName || getConnectedValue(ui.selectedPipelineName)
-    localStorage.setItem(keys.PIPELINE_DATA+'_'+pipe+'_'+key,JSON.stringify(data))
+/**Saves arbitrary data that is tied to the given pipeline*/
+export function saveDataForPipeline(data:any, key:string, pipeName:PipelineName){
+    localStorage.setItem(keys.PIPELINE_DATA+'_'+pipeName+'_'+key,JSON.stringify(data))
 }
-/**Loads arbitrary data that is tied to the current pipeline*/
-export function loadDataForPipeline(key:string, pipe:PipelineName = null){
-    if(!pipe) pipe = getConnectedValue(ui.selectedPipelineName)
-    var res = localStorage.getItem(keys.PIPELINE_DATA+'_'+pipe+'_'+key)
+/**Loads arbitrary data that is tied to the given pipeline*/
+export function loadDataForPipeline(key:string, pipeName:PipelineName){
+    var res = localStorage.getItem(keys.PIPELINE_DATA+'_'+pipeName+'_'+key)
     if(!res) return null;
     return JSON.parse(res)
 }

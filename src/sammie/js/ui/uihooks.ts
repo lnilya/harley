@@ -32,7 +32,7 @@ export function useLocalStoreRecoilHook(recoilState:RecoilState<any>,scope:'glob
     const writeOut = (data)=>{
         setCurSettings(data)
         if(scope == 'global') storage.saveGlobalData(data,recoilState.key);
-        else if(scope == 'pipeline') storage.saveDataForCurPipeline(data,recoilState.key,pipelineName);
+        else if(scope == 'pipeline') storage.saveDataForPipeline(data,recoilState.key,pipelineName);
     }
     
     return [curSettings,writeOut]

@@ -77,7 +77,7 @@ function getPipeline(): Pipeline {
             }
         ],
         inputParameters: [
-            getTextfieldInputParams('1px','1px in nm','How many nanometers correspond to 1px. This is useful for your dataset to have the proper scale and allow downstream processing steps to access this information. If blank no conversion will be used and all downstream values will be in px.','Scale...','40.9',null,false,'number'),
+            getTextfieldInputParams('1px','1px in nm','How many nanometers correspond to 1px. This is useful for your dataset to have the proper scale and allow downstream processing steps to access this information. If blank no conversion will be used and all downstream values will be in px.','Scale...','',null,false,'number'),
         ],
         aggregatorOutputs:[
             {

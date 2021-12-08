@@ -143,7 +143,7 @@ export async function addBatches(pipe:Pipeline, add: LocalFile[][], removeCurren
     var newBatches = lastStoredBatches || [];
     if(!removeCurrent) newBatches = curBatches.concat(lastStoredBatches || []);
     updateConnectedValue(allPipelineBatches, newBatches)
-    storage.saveDataForCurPipeline(newBatches, allPipelineBatches.key)
+    storage.saveDataForPipeline(newBatches, allPipelineBatches.key,pipe.name)
     updateConnectedValue(ui.overlay, null);
 }
 
