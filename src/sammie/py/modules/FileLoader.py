@@ -78,7 +78,7 @@ class FileLoader(ModuleBase):
                     k += [None]
                 else:
                     s = file.split(os.path.sep)
-                    k += [{'name': s[-1], 'folder': os.path.sep.join(s[:-1]), 'path': file}]
+                    k += [{'name': s[-1], 'folder': os.path.sep.join(s[:-1]) + os.path.sep, 'path': file}]
             parsed += [k]
 
         return parsed
