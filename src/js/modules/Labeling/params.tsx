@@ -1,9 +1,9 @@
-import {PipelineImage} from "../../types/datatypes";
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import React from "react";
 import {LabelingResult} from "./server";
-import {getCheckboxParams} from "../_util";
+import {getCheckboxParams} from "../../../sammie/js/modules/paramutil";
 
 /**Name of the module*/
 export const moduleName = 'Labeling'

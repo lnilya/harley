@@ -8,7 +8,7 @@ from numpy import ndarray
 from scipy.ndimage import gaussian_laplace
 from skimage.feature import peak_local_max
 
-import src.py.util.imgutil as imgutil
+import src.sammie.py.util.imgutil as imgutil
 from src.py.modules.FociDetectionUtil.FociAltFilterResult import FociAltFilterResult, FociMinDistGraph
 from src.py.util.util import toc, tic
 
@@ -117,7 +117,7 @@ class ContourPatch:
         bestContour = None
 
         if debug:
-            ax = imgutil.displayImageGrid([self.patch],['Optimizing Contours'])
+            ax = imgutil.displayImageGrid([self.patch], ['Optimizing Contours'])
 
         # start at topmost level -> smallest contour
         # We assume that this should always be a "hit". Then go stepsize down
@@ -451,7 +451,7 @@ class FociAltFilterHessian:
 
         # print('ACCEPTED INDICES: ', result.getAccpetedIndices())
         if debug:
-            ax = imgutil.displayImageGrid([img], cmaps='gray' , windowTitle='Contours Before Split/Merge or Filter')
+            ax = imgutil.displayImageGrid([img], cmaps='gray', windowTitle='Contours Before Split/Merge or Filter')
             for i in result.getAccpetedIndices():
                 b = result[i]
                 ax[0].plot(b['cnt'][:, 1], b['cnt'][:, 0], 'y-')
@@ -511,7 +511,7 @@ class FociAltFilterHessian:
         ax.plot(self.__params.patchSize,self.__params.patchSize,'mx')
         if cnt is not None:
 
-            imgutil.plotContour(ax,cnt, 'r:')
+            imgutil.plotContour(ax, cnt, 'r:')
             cnt = cp.contourToAbsoluteCoords(cnt)
             return cnt,localMax
 
@@ -536,7 +536,7 @@ class FociAltFilterHessian:
         #TEST:
         allContours = []
         allPoints = []
-        ax = imgutil.setUpSubplot(3,3,'Hessian Blobs',list(range(0,10)))
+        ax = imgutil.setUpSubplot(3, 3, 'Hessian Blobs', list(range(0, 10)))
         for i in range(0,len(ax)):
             b = blobs[i,:]
             c,p = self.getHessianContourAround(img,mask,b[0],b[1],b[2],ax[i])
@@ -579,7 +579,7 @@ class FociAltFilterHessian:
         img = img[b:-b, b:-b]
 
         if debug:
-            ax = imgutil.setUpSubplot(2,2,'Result ' + self.debugTitle)
+            ax = imgutil.setUpSubplot(2, 2, 'Result ' + self.debugTitle)
             result.plotDiscardedResult(img,ax[0])
             result.plotResult(img,'')
 

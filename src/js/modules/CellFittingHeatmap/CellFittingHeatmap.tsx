@@ -3,10 +3,10 @@ import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {runCellFittingHeatmap} from "./server";
 import './scss/CellFittingHeatmap.scss'
-import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
-import MasksOverImage, {MaskOverImageMask} from "../../ui/elements/MasksOverImage";
-import DisplayOptions, {DisplayOptionSetting} from "../../ui/modules/DisplayOptions";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import MasksOverImage, {MaskOverImageMask} from "../../../sammie/js/ui/elements/MasksOverImage";
+import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asHeatmap = atomFamily<PipelineImage,string>({key:'cell-fitting-heatmap_heatmap',default:null});

@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 from numpy import ndarray
-import src.py.util.imgutil as imgutil
+import src.sammie.py.util.imgutil as imgutil
 
 class FociMinDistGraph:
 

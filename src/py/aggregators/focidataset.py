@@ -3,19 +3,20 @@ import pickle
 import time
 from typing import Dict
 
-from src.py.SessionData import SessionData
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import shapeutil
+from src.sammie.py.ModuleConnector import AggregatorFileInfo, AggregatorReturn
+from src.sammie.py.SessionData import SessionData
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import shapeutil
 
 
 def __getBaseAggregateFile():
     return {'data':{},'created':time.time()}
 
-def __getDataSetInfoObject(curData):
+def __getDataSetInfoObject(curData) -> AggregatorFileInfo:
     if len(curData['data']) == 0:
-        return {'exists':True, 'info':'File exists, but contains no results yet.', 'ready':True}
+        return AggregatorFileInfo(True,True,'File exists, but contains no results yet.')
 
-    return {'exists':True, 'info':'File contains results from %d batches'%(len(curData['data'])), 'ready':True}
+    return AggregatorFileInfo(True,True,'File contains results from %d batches'%(len(curData['data'])))
 
 def __getBatchData(session:SessionData, modulesById:Dict[str, ModuleBase],scalePxToNm:float = None):
     denoised = "Denoised Image"
@@ -39,25 +40,25 @@ def __getBatchData(session:SessionData, modulesById:Dict[str, ModuleBase],scaleP
 
     return {'images':cellImages, 'scale':scalePxToNm}
 
-def appendToCellSet_Info(destinationPath:str):
+def appendToCellSet_Info(destinationPath:str) -> AggregatorFileInfo:
     filename = os.path.basename(destinationPath)
     ext = filename.split('.')
     if len(ext) > 1:
         ext = ext[-1]
     else:
-        return {'exists':False, 'info': 'Add a file with a *.cells extension.', 'ready': False}
+        return AggregatorFileInfo(False,False,'Add a file with a *.cells extension.')
 
     if ext != 'cells':
-        return {'exists':False, 'info': 'File extension should be *.cells', 'ready': False}
+        return AggregatorFileInfo(False,False,'File extension should be *.cells')
 
     if not os.path.exists(destinationPath):
-        return {'exists':False, 'ready':True,'info':'The selected file will be created on first export.'}
+        return AggregatorFileInfo(False,True,'The selected file will be created on first export.')
 
     try:
         with open(destinationPath, 'rb') as handle:
             curData = pickle.load(handle)
     except:
-        return {'exists':True, 'info':'File exists but is corrupt and can\'t be loaded. It will be overwritten on export.', 'ready':True}
+        return AggregatorFileInfo(True,True,'File exists but is corrupt and can\'t be loaded. It will be overwritten on export.')
 
     return __getDataSetInfoObject(curData)
 
@@ -67,7 +68,7 @@ def appendToCellSet_Reset(destinationPath:str):
 
     return True
 
-def appendToCellSet(destinationPath:str,data:SessionData, modulesById:Dict[str, ModuleBase], batchNum:int, adtlParams:Dict = None):
+def appendToCellSet(destinationPath:str,data:SessionData, modulesById:Dict[str, ModuleBase], batchNum:int, adtlParams:Dict = None)->AggregatorReturn:
     scale = None
     if '1px' in adtlParams: scale = adtlParams['1px']
 
@@ -101,4 +102,4 @@ def appendToCellSet(destinationPath:str,data:SessionData, modulesById:Dict[str, 
     else:
         msg = 'Reset file and added batch %d results to dataset.'%(batchNum)
 
-    return {'msg':msg,'info':__getDataSetInfoObject(curData)}
+    return AggregatorReturn(msg,__getDataSetInfoObject(curData))

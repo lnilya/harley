@@ -2,11 +2,11 @@ import React from "react"
 import * as self from "./params";
 import {atomFamily, useRecoilState} from "recoil";
 import './scss/Threshhold.scss'
-import {PipelineImage} from "../../types/datatypes";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
 import {runThreshhold} from "./server";
-import DisplayOptions, {DisplayOptionSetting} from "../../ui/modules/DisplayOptions";
-import MasksOverImage, {MaskOverImageMask} from "../../ui/elements/MasksOverImage";
-import {useStepHook} from "../_hooks";
+import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
+import MasksOverImage, {MaskOverImageMask} from "../../../sammie/js/ui/elements/MasksOverImage";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 
 const deepEqual = require('deep-equal')
 

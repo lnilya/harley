@@ -1,8 +1,8 @@
-import {PipelineImage} from "../../types/datatypes";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
 import React, {ReactNode} from "react";
-import {getCheckboxParams, getSliderParams} from "../_util";
-import {Condition} from "../_shared";
-import {PipelineStep} from "../../types/pipelinetypes";
+import {getCheckboxParams, getSliderParams} from "../../../sammie/js/modules/paramutil";
+import {Condition} from "../../../sammie/js/modules/paramtypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 
 
 var eccentricity = 'An eccentricity of 0 means the outer shape (convex hull) of a blob is circular. The higher it is the less circular the blob is.'

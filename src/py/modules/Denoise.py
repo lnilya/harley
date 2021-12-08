@@ -1,7 +1,7 @@
 import cv2
 
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util.imgutil import getPreviewImage
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util.imgutil import getPreviewImage
 import src.py.exporters as exporters
 
 class DenoiseKeys:

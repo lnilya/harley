@@ -1,7 +1,7 @@
 import React from "react";
-import {ccl} from "../../util";
-import * as state from './state'
+import {ccl} from "../../../sammie/js/util";
 import './scss/__NAME__.scss'
+
 interface I__NAME__Props{
 	
 	/**Additional classnames for this component*/
@@ -15,7 +15,7 @@ const cl = ccl('__NAME_LC__--')
 const __NAME__:React.FC<I__NAME__Props> = ({className}) => {
 	
 	return (
-		<div className={`__NAME_LC__`}>
+		<div className={`__NAME_LC__ ${className || ''}`}>
 			This is my new __NAME__ component
 		</div>
 	);

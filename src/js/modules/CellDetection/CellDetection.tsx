@@ -3,9 +3,9 @@ import {atomFamily, useRecoilState} from "recoil";
 import {runCellDetection} from "./server";
 import * as self from "./params";
 import './scss/CellDetection.scss'
-import DisplayOptions, {DisplayOptionSetting} from "../../ui/modules/DisplayOptions";
-import {PipelineBlobs} from "../../types/datatypes";
-import {useStepHook} from "../_hooks";
+import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
+import {PipelineBlobs} from "../../../sammie/js/types/datatypes";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 
 interface ICellDetectionProps{}
 

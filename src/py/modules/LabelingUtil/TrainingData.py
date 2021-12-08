@@ -1,26 +1,20 @@
-import glob
-import json
-import pickle
 from math import sqrt
 
 import numpy as np
-from typing import Dict, List
+from typing import List
 
-import gspread
-import imageio
 import skimage
-from matplotlib import patches
 from matplotlib.axes import Axes
 from shapely.geometry import Polygon, Point
 import matplotlib.pyplot as plt
 from skimage.measure._regionprops import RegionProperties
 
-from src.py.util import imgutil, util
+from src.sammie.py.util import imgutil
 
 #Class responsible for loading the TrainingData. = > Human labels and images of cells.
 #Can also pickle everything for easier/faster loading next time.
 from src.py.util.modelutil import getCutoffLevel
-from src.py.util.shapeutil import getPolygonMaskPatch
+from src.sammie.py.util.shapeutil import getPolygonMaskPatch
 
 
 class TrainingData:
@@ -71,8 +65,8 @@ class TrainingData:
             partners = self.identifySplitPartner(cellNum,i)
             c = 'g'
             if len(partners) > 0: c = 'b'
-            imgutil.plotContour(ax, contours[i][0], c+'-')
-            imgutil.plotContour(ax, contours[i][-1], c+':')
+            imgutil.plotContour(ax, contours[i][0], c + '-')
+            imgutil.plotContour(ax, contours[i][-1], c + ':')
 
     def extractCellFeatures(self,img, allLevels: List[List[float]], allContourSet: List[List[np.ndarray]]):
 
@@ -140,8 +134,8 @@ class TrainingData:
         if debug:
             plt.imshow(img,'gray')
             for c in cnts:
-                imgutil.plotContour(plt,c[0])
-                imgutil.plotContour(plt,c[-1],'r-')
+                imgutil.plotContour(plt, c[0])
+                imgutil.plotContour(plt, c[-1], 'r-')
 
 
         #extract the features for new cell and add to dataset

@@ -1,10 +1,8 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil
-from src.py.util.imgutil import getPreviewImage
-from src.py.util.util import parseRanges
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util.imgutil import getPreviewImage
+from src.sammie.py.util.util import parseRanges
 
 
 class DVStackerKeys:

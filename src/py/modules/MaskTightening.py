@@ -1,4 +1,4 @@
-from typing import Tuple, List, Optional
+from typing import List, Optional
 
 import cv2
 import numpy as np
@@ -6,8 +6,8 @@ import skimage.measure
 from skimage.measure._regionprops import RegionProperties
 
 from src.py.modules.FociDetectionUtil.MaskShrink import MaskShrinkParams, MaskShrink
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil, shapeutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import shapeutil
 import src.py.exporters as exporters
 
 class MaskTighteningKeys:
@@ -118,7 +118,7 @@ class MaskTightening(ModuleBase):
 
         for i in self.userAcceptedContours:
             cnt = tightContourList[i]
-            maskPatch,dx,dy = shapeutil.getPolygonMaskPatch(cnt['x'],cnt['y'],0)
-            resImg = shapeutil.addPatchOntoImage(resImg,maskPatch.astype('uint8'),dy,dx,0)
+            maskPatch,dx,dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
+            resImg = shapeutil.addPatchOntoImage(resImg, maskPatch.astype('uint8'), dy, dx, 0)
 
         return exporters.exportBinaryImage(path, resImg.astype('bool'))

@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.interpolate import interpolate
 
-from src.py.util.imgutil import setUpSubplot
+from src.sammie.py.util.imgutil import setUpSubplot
 
 
 #Lienar function for applying force based on a max-distance

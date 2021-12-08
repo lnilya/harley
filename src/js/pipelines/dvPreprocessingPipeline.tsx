@@ -1,16 +1,16 @@
 import DVStacker from "../modules/DVStacker/DVStacker";
 import * as DVStackerParams from "../modules/DVStacker/params";
 import React from "react";
-import {Pipeline} from "../types/pipelinetypes";
-import * as util from './pipelineutil'
-import {suggestModifiedFilename} from './pipelineutil'
+import {Pipeline} from "../../sammie/js/types/pipelinetypes";
+import * as util from '../../sammie/js/pipelines/pipelineutil'
+import {suggestModifiedFilename} from '../../sammie/js/pipelines/pipelineutil'
 import * as DenoiseParams from '../modules/Denoise/params'
 import Denoise from "../modules/Denoise/Denoise";
 import * as MaskTighteningParams from '../modules/MaskTightening/params'
 import MaskTightening from "../modules/MaskTightening/MaskTightening";
 import thumb from "../../assets/images/pp_thumb.jpg";
 import ResponsiveEmbed from 'react-responsive-embed'
-import {getTextfieldInputParams} from "../modules/_util";
+import {getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
 //%NEWMODULE_IMPORT%
 
 const keys = {

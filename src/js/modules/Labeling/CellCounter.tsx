@@ -1,12 +1,12 @@
 import React, {Suspense, useState} from "react";
 import {SeedPolygon, SelectedPolygon, SplitablePolygon, SplitPolygon, SplitSeedPolygon} from "./_polygons";
-import {useToggleKeys} from "../_hooks";
-import {copyChange, doesPolygonContain} from "../../util";
-import {Button} from "@material-ui/core";
-import {PipelineImage, PolygonData} from "../../types/datatypes";
-import PolygonCloud from "../../ui/elements/PolygonCloud";
+import {useToggleKeys} from "../../../sammie/js/modules/modulehooks";
+import {copyChange, doesPolygonContain} from "../../../sammie/js/util";
+import {PipelineImage, PolygonData} from "../../../sammie/js/types/datatypes";
+import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
 import {LabelingResult, SingleCellLabelingData} from "./server";
 import './scss/CellCounter.scss'
+import {Button} from "@mui/material";
 
 interface ICellCounterProps {
     

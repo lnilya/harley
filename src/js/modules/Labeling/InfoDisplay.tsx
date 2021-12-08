@@ -1,8 +1,8 @@
 import React from "react";
-import {ccl} from "../../util";
+import {ccl} from "../../../sammie/js/util";
 import './scss/InfoDisplay.scss'
 import {LabelingResult} from "./server";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 import {printf} from "fast-printf";
 
 export type InfoObject= {

@@ -1,8 +1,8 @@
-import * as eel from "../../eel/eel";
-import {EelResponse} from "../../eel/eel";
-import {deletePipelineData, updatePipelineData} from "../../state/stateutil";
+import * as eel from "../../../sammie/js/eel/eel";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import {deletePipelineData, updatePipelineData} from "../../../sammie/js/state/stateutil";
 import * as self from "./params";
-import {PipelinePolygons} from "../../types/datatypes";
+import {PipelinePolygons} from "../../../sammie/js/types/datatypes";
 
 export type LabelingResult = {
     cellNum:number,

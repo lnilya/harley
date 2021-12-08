@@ -10,9 +10,9 @@ from scipy.interpolate import interpolate
 from scipy.optimize import curve_fit
 from skimage.feature import peak_local_max
 
-from src.py.eeljsinterface import eeljs_sendProgress
-from src.py.util.imgutil import setUpSubplot
-import matplotlib.pyplot as plt
+from src.sammie.py.eeljsinterface import eeljs_sendProgress
+from src.sammie.py.util.imgutil import setUpSubplot
+
 
 ##FITTING FUNCTIONS
 

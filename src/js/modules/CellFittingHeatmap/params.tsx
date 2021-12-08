@@ -1,7 +1,7 @@
-import {PipelineImage} from "../../types/datatypes";
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
-import {getCheckboxParams, getSliderParams} from "../_util";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
+import {getCheckboxParams, getSliderParams} from "../../../sammie/js/modules/paramutil";
 import React from "react";
 
 

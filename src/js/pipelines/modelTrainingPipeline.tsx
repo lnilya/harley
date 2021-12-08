@@ -1,7 +1,7 @@
 import React from "react";
-import * as util from './pipelineutil'
-import {suggestSuffixedFileName} from './pipelineutil'
-import {Pipeline} from "../types/pipelinetypes";
+import * as util from '../../sammie/js/pipelines/pipelineutil'
+import {suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
+import {Pipeline} from "../../sammie/js/types/pipelinetypes";
 import thumb from '../../assets/images/svm_thumb.jpg'
 import * as FociCandidatesParams from '../modules/FociCandidates/params'
 import FociCandidates from "../modules/FociCandidates/FociCandidates";

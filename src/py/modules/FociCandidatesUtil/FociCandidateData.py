@@ -1,12 +1,12 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple
 
 import numpy as np
 from numpy import ndarray
 
-from src.py.eeljsinterface import eeljs_sendProgress
+from src.sammie.py.eeljsinterface import eeljs_sendProgress
 from src.py.modules.FociCandidatesUtil.ContourLoopDetector import ContourLoopDetectorParams, ContourLoopDetector
 from src.py.modules.FociCandidatesUtil.ContourLoopsInCell import ContourLoopsInCell
-from src.py.util import util, imgutil
+from src.sammie.py.util import imgutil
 import matplotlib.pyplot as plt
 
 class FociCandidateData:

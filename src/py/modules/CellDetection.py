@@ -3,8 +3,8 @@ from typing import Tuple
 import numpy as np
 import skimage.measure
 
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import imgutil
 
 
 class CellDetection(ModuleBase):

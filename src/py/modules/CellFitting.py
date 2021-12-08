@@ -1,18 +1,16 @@
-import os
 from typing import List
 
 import cv2
-import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 
 import src.py.modules.CellFittingUtil as cf
-from src.py.eeljsinterface import eeljs_sendProgress
+from src.sammie.py.eeljsinterface import eeljs_sendProgress
 from src.py.exporters.filexporters import exportBinaryImage
 from src.py.modules.CellFittingUtil.DetectedCells import DetectedCells
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import shapeutil
-from src.py.util.imgutil import getPreviewImage, getPreviewHeatMap, setUpSubplot
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import shapeutil
+from src.sammie.py.util.imgutil import getPreviewHeatMap, setUpSubplot
 
 
 class CellFittingKeys:
@@ -85,8 +83,8 @@ class CellFitting(ModuleBase):
         resImg = np.zeros_like(heatmap,dtype='uint8')
         for ap in self.acceptedEllipses:
             el = self.detectedPolygonOutlines[ap]
-            maskPatch,dx,dy = shapeutil.getPolygonMaskPatch(el['x'],el['y'],1)
-            resImg = shapeutil.addPatchOntoImage(resImg,maskPatch.astype('uint8'),dy,dx)
+            maskPatch,dx,dy = shapeutil.getPolygonMaskPatch(el['x'], el['y'], 1)
+            resImg = shapeutil.addPatchOntoImage(resImg, maskPatch.astype('uint8'), dy, dx)
 
         return exportBinaryImage(path, resImg.astype('bool'))
 

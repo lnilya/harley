@@ -2,17 +2,17 @@ import React, {useEffect, useState} from "react"
 import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import './scss/MaskTightening.scss'
-import {useDisplaySettings, useStepHook, useToggleKeys} from "../_hooks";
-import {PipelinePolygons} from "../../types/datatypes";
-import ErrorHint from "../../ui/elements/ErrorHint";
-import {EelResponse} from "../../eel/eel";
-import PolygonCloud from "../../ui/elements/PolygonCloud";
-import {cl, copyRemove} from "../../util";
-import DisplayOptions from "../../ui/modules/DisplayOptions";
-import MasksOverImage, {MaskOverImageMask} from "../../ui/elements/MasksOverImage";
-import ImageBorder from "../../ui/elements/ImageBorder";
+import {useDisplaySettings, useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
+import {PipelinePolygons} from "../../../sammie/js/types/datatypes";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
+import {cl, copyRemove} from "../../../sammie/js/util";
+import DisplayOptions from "../../../sammie/js/ui/modules/DisplayOptions";
+import MasksOverImage, {MaskOverImageMask} from "../../../sammie/js/ui/elements/MasksOverImage";
+import ImageBorder from "../../../sammie/js/ui/elements/ImageBorder";
 import * as server from './server'
-import ButtonIcon from "../../ui/elements/ButtonIcon";
+import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 import styled from "@emotion/styled";
 
 

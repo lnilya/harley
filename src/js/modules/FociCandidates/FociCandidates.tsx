@@ -4,14 +4,14 @@ import * as server from "./server";
 import {FociInCell} from "./server";
 import * as self from "./params";
 import './scss/FociCandidates.scss'
-import {useStepHook, useToggleKeys} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
-import {cl} from "../../util";
-import PolygonCloud from "../../ui/elements/PolygonCloud";
+import {useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
+import {cl} from "../../../sammie/js/util";
+import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
 import styled from "@emotion/styled";
-import ButtonIcon from "../../ui/elements/ButtonIcon";
+import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 
 
 export const MinPolygon = styled.polygon({

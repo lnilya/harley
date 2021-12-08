@@ -7,7 +7,7 @@ from numpy import ndarray
 import skimage.filters
 from skimage.segmentation import active_contour
 
-from src.py.util.imgutil import setUpSubplot
+from src.sammie.py.util.imgutil import setUpSubplot
 
 
 class MaskShrinkParams:

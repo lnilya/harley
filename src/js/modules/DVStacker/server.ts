@@ -1,8 +1,8 @@
-import {PipelineImage} from "../../types/datatypes";
-import * as eel from "../../eel/eel";
-import {EelResponse} from "../../eel/eel";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import * as eel from "../../../sammie/js/eel/eel";
+import {EelResponse} from "../../../sammie/js/eel/eel";
 import * as self from "./params";
-import {updatePipelineData} from "../../state/stateutil";
+import {updatePipelineData} from "../../../sammie/js/state/stateutil";
 
 export type DVStackerResult = {
     z:PipelineImage[],

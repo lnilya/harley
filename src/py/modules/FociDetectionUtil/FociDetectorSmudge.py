@@ -16,7 +16,7 @@ from skimage.feature._hessian_det_appx import _hessian_matrix_det
 from skimage.measure._regionprops import RegionProperties
 from skimage.segmentation import active_contour, watershed
 from scipy.interpolate import interpolate
-from src.py.util.imgutil import displayImageGrid, setUpSubplot, addBorder
+from src.sammie.py.util.imgutil import displayImageGrid, setUpSubplot, addBorder
 from src.py.util.util import tic, toc
 from scipy import ndimage as ndi
 

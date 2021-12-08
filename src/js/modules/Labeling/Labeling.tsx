@@ -1,18 +1,18 @@
 import React, {useState} from "react"
 import {atomFamily, useRecoilState} from "recoil";
-import * as eventbus from "../../state/eventbus";
+import * as eventbus from "../../../sammie/js/state/eventbus";
 import * as self from "./params";
 import {generateDatasetForCell, labelCell, LabelingResult, SingleCellLabelingData} from "./server";
 import './scss/Labeling.scss'
-import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import CellCounter from "./CellCounter";
-import ButtonIcon from "../../ui/elements/ButtonIcon";
-import {Button} from "@material-ui/core";
+import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
+import {Button} from "@mui/material";
 import HelpDialogue from "./HelpDialogue";
-import {copyChange} from "../../util";
+import {copyChange} from "../../../sammie/js/util";
 import InfoDisplay from "./InfoDisplay";
 
 function getNextLabel(allImgs:PipelineImage[], results:LabelingResult[], random:boolean){

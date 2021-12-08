@@ -3,12 +3,12 @@ import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {DVStackerResult, runDVStacker} from "./server";
 import './scss/DVStacker.scss'
-import {useStepHook} from "../_hooks";
-import {PipelineImage} from "../../types/datatypes";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css';
-import {EelResponse} from "../../eel/eel";
-import ErrorHint from "../../ui/elements/ErrorHint";
+import {EelResponse} from "../../../sammie/js/eel/eel";
+import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 
 interface IDVStackerProps{}
 /**PERSISTENT UI STATE DEFINITIONS*/

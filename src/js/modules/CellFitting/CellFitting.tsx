@@ -3,13 +3,13 @@ import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import {runCellFitting, selectCellFittingResults} from "./server";
 import './scss/CellFitting.scss'
-import {useStepHook, useToggleKeys} from "../_hooks";
-import {PipelineImage, PipelinePolygons} from "../../types/datatypes";
-import DisplayOptions, {DisplayOptionSetting} from "../../ui/modules/DisplayOptions";
-import MasksOverImage, {MaskOverImageMask} from "../../ui/elements/MasksOverImage";
-import PolygonCloud from "../../ui/elements/PolygonCloud";
-import {cl} from "../../util";
-import ButtonIcon from "../../ui/elements/ButtonIcon";
+import {useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
+import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
+import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
+import MasksOverImage, {MaskOverImageMask} from "../../../sammie/js/ui/elements/MasksOverImage";
+import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
+import {cl} from "../../../sammie/js/util";
+import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 import styled from "@emotion/styled";
 
 /**PERSISTENT UI STATE DEFINITIONS*/

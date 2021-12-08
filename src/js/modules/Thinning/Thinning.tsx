@@ -3,10 +3,10 @@ import {atomFamily, useRecoilState} from "recoil";
 import {runThinning} from "./server";
 import * as self from "./params";
 import './scss/Thinning.scss'
-import DisplayOptions, {DisplayOptionSetting} from "../../ui/modules/DisplayOptions";
-import MasksOverImage, {MaskOverImageMask} from "../../ui/elements/MasksOverImage";
-import {PipelineImage} from "../../types/datatypes";
-import {useStepHook} from "../_hooks";
+import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
+import MasksOverImage, {MaskOverImageMask} from "../../../sammie/js/ui/elements/MasksOverImage";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 
 interface IThinningProps{}
 

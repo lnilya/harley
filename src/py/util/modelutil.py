@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 from shapely.geometry import Polygon
 
-from src.py.util import imgutil
+from src.sammie.py.util import imgutil
 
 
 def getCutoffLevel(levels:np.ndarray, contours:List[np.ndarray], debug:bool = False):
@@ -27,7 +27,7 @@ def getCutoffLevel(levels:np.ndarray, contours:List[np.ndarray], debug:bool = Fa
     optimalLevel = np.interp(radiusAppx[bestRad], radiusAppx, intensity)
 
     if debug:
-        ax = imgutil.setUpSubplot(1,3,axisTitles=['Intensity (Inverted Area)','Sec. Der. of Intensity','Original Area Function'])
+        ax = imgutil.setUpSubplot(1, 3, axisTitles=['Intensity (Inverted Area)', 'Sec. Der. of Intensity', 'Original Area Function'])
         ax[2].plot(levels,area,'r-')
         ax[0].plot(radiusAppx,intensity,'r-')
         ax[1].plot(radiusAppx,intensityGradient,'r-')

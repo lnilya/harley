@@ -3,9 +3,8 @@ import skimage.filters
 from skimage import exposure
 
 from src.py.exporters.filexporters import exportBinaryImage
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil
-import src.py.exporters as export
+from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import imgutil
 
 
 class Threshhold(ModuleBase):

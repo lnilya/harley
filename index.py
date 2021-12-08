@@ -1,8 +1,9 @@
 # coding: utf-8
 import sys
 
-from src.py import eelutil, settings
-from src.py.eelinterface import *
+from src.sammie.py import settings
+from src.sammie.py import eelutil
+from src.sammie.py.eelinterface import *
 
 if __name__ == '__main__':
     if '--develop' in sys.argv:

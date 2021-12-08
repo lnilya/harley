@@ -1,8 +1,8 @@
-import {PipelineEllipses, PipelineImage} from "../../types/datatypes";
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
+import {PipelineEllipses, PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import React from "react";
-import {getCheckboxParams, getSliderParams, getTitleSeparatorParams} from "../_util";
+import {getCheckboxParams, getSliderParams, getTitleSeparatorParams} from "../../../sammie/js/modules/paramutil";
 
 /**Name of the module*/
 export const moduleName = 'MaskTightening'

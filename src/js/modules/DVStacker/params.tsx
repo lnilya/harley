@@ -1,8 +1,8 @@
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
-import {getDropdownParams, getTextfieldInputParams} from "../_util";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
+import {getDropdownParams, getTextfieldInputParams} from "../../../sammie/js/modules/paramutil";
 import React from "react";
-import {PipelineImage} from "../../types/datatypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
 
 /**Name of the module*/
 export const moduleName = 'DVStacker'

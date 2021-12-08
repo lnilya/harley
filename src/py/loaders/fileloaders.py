@@ -7,7 +7,7 @@ from PIL import Image,ImageSequence
 from mrc import mrc
 
 from src.py.loaders.fileloaderutil import __normImage
-from src.py.util.imgutil import getPreviewImage, getTransparentMask
+from src.sammie.py.util.imgutil import getPreviewImage, getTransparentMask
 
 
 class LoaderResult:

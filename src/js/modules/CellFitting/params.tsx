@@ -1,7 +1,7 @@
-import {PipelineEllipses, PipelineImage} from "../../types/datatypes";
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
-import {getSliderParams} from "../_util";
+import {PipelineEllipses, PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
+import {getSliderParams} from "../../../sammie/js/modules/paramutil";
 import React from "react";
 
 export const moduleName = 'CellFitting'
