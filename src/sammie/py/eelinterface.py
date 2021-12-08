@@ -84,7 +84,7 @@ def exportData(moduleID:str, pipelinekey:str, path:str, overwrite:bool,exporterA
 
 @eel.expose
 def getAggregateDataInfo(aggregatorID:str, path:str, exporterArgs:Dict = None):
-    return moduleConnector.getAggregatorFileInfo(aggregatorID,path)
+    return moduleConnector.getAggregatorFileInfo(aggregatorID,path).toDict()
 
 @eel.expose
 def resetAggregateData(aggregatorID:str, path:str):
@@ -92,7 +92,7 @@ def resetAggregateData(aggregatorID:str, path:str):
 
 @eel.expose
 def exportAggregateData(aggregatorID:str, path:str, batchnum:int, exporterArgs:Dict = None):
-    return moduleConnector.runAggregator(aggregatorID, path,session,modulesById,batchnum,exporterArgs)
+    return moduleConnector.runAggregator(aggregatorID, path,session,modulesById,batchnum,exporterArgs).toDict()
 
 @eel.expose
 def getBatchGlobs(patterns:List[str],allowedExtensions:List[List[str]]):

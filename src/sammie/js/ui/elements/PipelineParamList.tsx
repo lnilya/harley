@@ -46,6 +46,10 @@ const PipelineParamList:React.FC<IPipelineParamListProps> = ({batchIdx,className
                 {pipe.inputParameters.map((s)=>{
                     let vis = s.conditional(thisBatch.batchParameters);
                     if( vis == 'hide') return null;
+                    
+                    //may happen if recoil update is not done in one chunk
+                    if(!thisBatch.batchParameters[s.key]) return  null;
+                    
                     const params = {onParameterChanged:onParameterChanged, key:s.key, conf:s,
                         curVal:thisBatch.batchParameters[s.key], disabled: vis == 'disable',
                     

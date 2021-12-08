@@ -1,6 +1,5 @@
 import time
 from typing import List
-import matplotlib as mpl
 
 from matplotlib import pyplot as plt, cm
 
@@ -8,6 +7,7 @@ startTimes = []
 
 
 def tic():
+    """Measures times passed. call tic() before start and toc() when finished to get a trace of elapsed time."""
     global startTimes
     startTimes += [time.time()]
 

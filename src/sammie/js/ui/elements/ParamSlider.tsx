@@ -39,12 +39,9 @@ const ParamSlider: React.FC<ISliderSettingProps> = ({onParameterChanged,tooltipP
     
     const inputLabels = ['From:', 'To:']
     
-    const onBlurIn = ()=>{
-        setActive(true)
-    }
-    const onBlurOut = ()=>{
-        setActive(false)
-    }
+    const onBlurIn = ()=>setActive(true)
+    const onBlurOut = ()=>setActive(false)
+    
     useEffect(()=>{
         if(!isActive)
             onParameterChanged(conf,curSliderVal)
@@ -54,7 +51,6 @@ const ParamSlider: React.FC<ISliderSettingProps> = ({onParameterChanged,tooltipP
     const onKeyUpInput = (e)=>{
         if(e.keyCode == 13)e.target.blur();
     }
-    
     return (<div className={'param param-slider' + cl(disabled, 'is-disabled') + cls(conf.input.invert, 'inverted')}>
         <div className="fl-row-between">
             <div className="param__name">{conf.display.title}</div>

@@ -1,12 +1,7 @@
-from typing import Tuple
-
-import numpy as np
-import skimage.measure
-import src.py.exporters as exporters
-from src.py.modules.ModuleBase import ModuleBase
-from src.py.util import imgutil
+from src.sammie.py.modules.ModuleBase import ModuleBase
 
 class __NAME__Keys:
+    """Convenience class to access the keys as named entities rather than in an array"""
     inSomeInputKey: str
     outSomeOutputKey: str
 
@@ -23,21 +18,39 @@ class __NAME__(ModuleBase):
         self.log = '__NAME__'
         self.trace('initialized')
 
-    def unpackParams(self,border,intensityRange):
-        #unpack and possibly parse/cast all parameters
-        return border[0],intensityRange
+    def unpackParams(self,paramName1,paramName2,**other):
+        """unpack and possibly parse/cast all parameters coming from JS. The parameters from JS are defined in the params.tsx file of the respective step.
+        The arrive as a dictionary on the py side and sometimes need some parsing. In any way this function provides a simple method to extract
+        these parameters as named variables rather than using params['paramName1'] you can run it through this function."""
+        #
+        #respective
+        return paramName1[0],paramName2
 
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = __NAME__Keys(inputkeys, outputkeys)
-        border, intensityRange = self.unpackParams(**params)
 
+        #This is a stub and simply displays best practices on how to structure this function. Feel free to change it
         if action == 'apply':
 
-            inputImg = self.session.getData(self.keys.inSomeInputKey) #binaryMask
-            self.onGeneratedData(self.keys.outSomeOutputKey, inputImg, params)
+            #Parse Parameters out of the dictionary arriving from JS
+            param1, param2 = self.unpackParams(**params)
 
+            #get the input that this step is working on
+            someInput = self.session.getData(self.keys.inPreprocessedImg)
+
+            #do something with it...
+
+            #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
+            #of the UI.
+            self.onGeneratedData(self.keys.outBorderedImage, someInput, params)
+
+            #Generate an output that will go to javascript for displaying on the UI side
             return {'demoResult':'Somethign for JS'}
 
     def exportData(self, key: str, path: str, **args):
-        #Example for exporting, allexporters are inside exporters package
-        exporters.exportBinaryImage(path, self.session.getData(key))
+        #Get the data that needs to be exported
+        data = self.session.getData(key)
+
+        #Write a file with this data or postprocess it in some way
+        #...
+

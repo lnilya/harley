@@ -1,10 +1,11 @@
+import React from "react";
 import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
 import * as alg from "../../../sammie/js/state/algstate";
 import * as ui from "../../../sammie/js/state/uistates";
 import * as eventbus from "../../../sammie/js/state/eventbus";
 import * as self from "./params";
 import * as server from "./server";
-import './scss/NewModule.scss'
+import './scss/__NAME__.scss'
 import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import {EelResponse} from "../../../sammie/js/eel/eel";

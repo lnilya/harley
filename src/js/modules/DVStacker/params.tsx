@@ -1,7 +1,7 @@
 import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
-import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import {getDropdownParams, getTextfieldInputParams} from "../../../sammie/js/modules/paramutil";
 import React from "react";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import {PipelineImage} from "../../../sammie/js/types/datatypes";
 
 /**Name of the module*/

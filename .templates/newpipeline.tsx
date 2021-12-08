@@ -2,7 +2,6 @@ import React from "react";
 import * as util from '../../sammie/js/pipelines/pipelineutil'
 import {suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
 import {Pipeline} from "../../sammie/js/types/pipelinetypes";
-import thumb from '../../assets/images/svm_thumb.jpg'
 import ResponsiveEmbed from 'react-responsive-embed'
 //%NEWMODULE_IMPORT%
 
@@ -66,9 +65,9 @@ function getPipeline(): Pipeline {
         
         //Info for user
         descriptions:{
-            title:'Model Training',
+            title:'__NAME__',
             description:'This description appears in switch pipeline screen.',
-            thumb:<img src={thumb}/>,
+            //thumb:<img src={thumb}/>, //an optional thumb image to appear in switch pipeline screen
             helpscreen:helpScreen
         }
     }

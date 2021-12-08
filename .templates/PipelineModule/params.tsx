@@ -1,6 +1,6 @@
-import {PipelineImage} from "../../types/datatypes";
-import {PipelineStep} from "../../types/pipelinetypes";
-import {Parameter} from "../_shared";
+import {Parameter} from "../../../sammie/js/modules/paramtypes";
+import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 import React from "react";
 
 /**Name of the module*/

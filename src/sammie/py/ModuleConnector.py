@@ -10,11 +10,25 @@ class AggregatorFileInfo:
     ready: bool  # Wether or not the filename/path are valid, regardless wether it exists
     info: str  # Info regarding the file, displayed to the user (e.g. "file contains already 4 batches" or "file doesnt exists")
 
+    def __init__(self, exists:bool, ready:bool, info:str):
+        self.exists = exists
+        self.ready = ready
+        self.info = info
+
+
+    def toDict(self):
+        return {'info':self.info, 'exists':self.exists, 'ready':self.ready}
 
 class AggregatorReturn:
     msg: str  # Message to be displayed in a toast in the aggregator screen upon success
     info: AggregatorFileInfo  # Info on the file after successful aggergation
 
+    def __init__(self, msg:str, info:AggregatorFileInfo):
+        self.msg = msg
+        self.info = info
+
+    def toDict(self):
+        return {'info':self.info.toDict(), 'msg':self.msg}
 
 class LoaderResult:
     """Result of loading a file, consisting of a preview/metadata for JS and whatever data is to be pushed into the pipeline"""
