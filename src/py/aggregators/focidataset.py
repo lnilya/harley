@@ -3,6 +3,7 @@ import pickle
 import time
 from typing import Dict
 
+from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.ModuleConnector import AggregatorFileInfo, AggregatorReturn
 from src.sammie.py.SessionData import SessionData
 from src.sammie.py.modules.ModuleBase import ModuleBase
@@ -27,18 +28,21 @@ def __getBatchData(session:SessionData, modulesById:Dict[str, ModuleBase],scaleP
 
     cellImages = []
 
-    for i in modulesById['MaskTightening'].userAcceptedContours:
-        cnt = tightContourList[i]
-        maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
-        img = denoisedImage[dy:dy+maskPatch.shape[0],dx:dx+maskPatch.shape[1]]
-        minIntensity = img[maskPatch].min()
-        maxIntensity = img[maskPatch].max()
-        img = (img - minIntensity) / (maxIntensity - minIntensity)
-        img[maskPatch == False] = 0
+    acceptedContourList = [tightContourList[i] for i in modulesById['MaskTightening'].userAcceptedContours]
 
-        cellImages += [img]
+    # for i in modulesById['MaskTightening'].userAcceptedContours:
+    #     cnt = tightContourList[i]
+    #     maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
+    #     img = denoisedImage[dy:dy+maskPatch.shape[0],dx:dx+maskPatch.shape[1]]
+    #     minIntensity = img[maskPatch].min()
+    #     maxIntensity = img[maskPatch].max()
+    #     img = (img - minIntensity) / (maxIntensity - minIntensity)
+    #     img[maskPatch == False] = 0
+    #
+    #     cellImages += [img]
 
-    return {'images':cellImages, 'scale':scalePxToNm}
+    # We store the source image and the contours the user accepted in this dataset.
+    return CellsDataset(denoisedImage,acceptedContourList,scalePxToNm)
 
 def appendToCellSet_Info(destinationPath:str) -> AggregatorFileInfo:
     filename = os.path.basename(destinationPath)
