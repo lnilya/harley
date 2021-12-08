@@ -18,6 +18,7 @@ import {EventTypes} from '../../../state/eventbus';
 import {cl} from "../../../util";
 import ReplayCircleFilledIcon from '@mui/icons-material/ReplayCircleFilled';
 import PipelineParamList from "../../elements/PipelineParamList";
+import DataBatchPreviewImage from "./DataBatchPreviewImage";
 
 
 interface IDataBatchProps {
@@ -92,22 +93,12 @@ const DataBatch: React.FC<IDataBatchProps> = ({
                     </Tooltip>
                 </div>
                 <div className="fl-row-start pad-50-excepttop">
-                    {curPipeline.inputs.map((i, k) => {
-                        if (!batch.inputs[i.key]){
-                            return (
-                                <div key={k} className="data-batch__preview pad-100" onClick={e => onOpenSelectionDialogue(i)}>
-                                    Add<br/>{i.title}
-                                </div>
-                            );
-                        }else{
-                            return (<div key={i.title} className="data-batch__preview selected"
-                                         onClick={e => onOpenSelectionDialogue(i)}>
-                                    <img src={batch.inputs[i.key].previewURL} alt=""/>
-                                    <span>{batch.inputs[i.key].file.name}</span>
-                                </div>
-                            );
-                        }
-                    })}
+                    {curPipeline.inputs.map((i, k) =>
+                        <DataBatchPreviewImage key={i.title}
+                                               img={batch.inputs[i.key]}
+                                                      onClick={()=>onOpenSelectionDialogue(i)}
+                                                      title={i.title}/>
+                    )}
                 </div>
                 {curPipeline?.inputParameters?.length && <PipelineParamList batchIdx={batchIdx}/>}
             </div>
