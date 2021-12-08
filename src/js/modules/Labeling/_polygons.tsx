@@ -39,3 +39,10 @@ export const SplitPolygon = styled.polygon({
     }
 })
 
+export const OutlinePolygonLabeling = styled.polygon({
+    stroke:'#d3c000',
+    strokeWidth:0.2,
+    fill:'none',
+    strokeDasharray:'0.5 1'
+})
+

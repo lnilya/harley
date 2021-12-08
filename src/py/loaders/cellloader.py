@@ -42,11 +42,14 @@ def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[in
 
     #Merge all batch images into a single one
     allImages = []
+    allContours = []
     for i in curData['data']:
         cdi:CellsDataset = curData['data'][i]
-        allImages += cdi.getSingleCellImages()
+        imgs,cnts = cdi.getSingleCellImagesAndContours(3)
+        allImages += imgs
+        allContours += cnts
 
-    data = {'imgs':allImages}
+    data = {'imgs':allImages,'contours':allContours}
     meta = {'Cells':len(allImages), 'Batches':len(curData['data'])}
     scale = [curData['data'][i].scale for i in curData['data'] if curData['data'][i].scale is not None]
     if len(scale) > 0:

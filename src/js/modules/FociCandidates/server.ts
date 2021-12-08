@@ -8,12 +8,22 @@ export type FociInCell = {
     fociMax:PipelinePolygons, //Contour loops of maximal length
     fociMin:PipelinePolygons, //Outlines loops of minimal length
 }
-export async function loadCellImages(curParams:self.Parameters,curStep:self.Step):Promise<EelResponse<PipelineImage[]>>{
-    var res:EelResponse<PipelineImage[]> =
-        await eel.runStep<PipelineImage[]>(self.moduleName,'generateImages',curParams,curStep)
+export type CellImageResponse = {
+    imgs:PipelineImage[],
+    contours:PipelinePolygons
+}
+export async function loadCellImages(curParams:self.Parameters,curStep:self.Step):Promise<EelResponse<CellImageResponse>>{
+    var res:EelResponse<CellImageResponse> =
+        await eel.runStep<CellImageResponse>(self.moduleName,'generateImages',curParams,curStep)
     
-    if(res.error) deletePipelineData(curStep.outputKeys.cellImages);
-    else updatePipelineData(curStep.outputKeys.cellImages,res.data);
+    if(res.error) {
+        deletePipelineData(curStep.outputKeys.cellImages);
+        deletePipelineData(curStep.outputKeys.cellContours);
+    }
+    else {
+        updatePipelineData(curStep.outputKeys.cellImages, res.data.imgs);
+        updatePipelineData(curStep.outputKeys.cellContours, res.data.contours);
+    }
     
     return res
 }

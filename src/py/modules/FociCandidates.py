@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 import numpy as np
 import src.py.exporters as exporters
@@ -36,9 +36,9 @@ class FociCandidates(ModuleBase):
 
         if action == 'generateImages':
             allCells:List[np.ndarray] = self.session.getData(self.keys.inCells)['imgs'] #List of images with cells
+            allContours:List[Dict] = self.session.getData(self.keys.inCells)['contours'] #List of images with cells
 
             #add a border to prevent problems with contours landing outside of image
-            allCells = [addBorder(i,3) for i in allCells]
 
             self.fociData = FociCandidateData(allCells)
 
@@ -46,7 +46,7 @@ class FociCandidates(ModuleBase):
             previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i) for i, img in enumerate(allCells)]
 
             self.onGeneratedData(self.keys.outFoci, self.fociData, params)
-            return previews
+            return {'imgs':previews,'contours':allContours}
 
         elif action == 'apply':
             fociSize,granularity,cellNum = self.unpackParams(**params)

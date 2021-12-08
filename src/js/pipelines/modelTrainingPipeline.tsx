@@ -17,6 +17,7 @@ const inputKeys = {
 }
 const dataKeys = {
     cellImages: 'Cell Images',
+    cellContours: 'Cell Contours',
     candidateSizes: 'Candidate Sizes',
     foci: 'Foci',
     labels: 'Labels',
@@ -38,14 +39,14 @@ function getPipeline(): Pipeline {
             renderer: <FociCandidates/>,
             parameters:FociCandidatesParams.parameters,
             inputKeys:{dataset:inputKeys.dataset},
-            outputKeys:{cellImages:dataKeys.cellImages,sizes:dataKeys.candidateSizes}
+            outputKeys:{cellImages:dataKeys.cellImages,sizes:dataKeys.candidateSizes, cellContours:dataKeys.cellContours}
         } as FociCandidatesParams.Step,
         { 
             title:'Labeling',
             moduleID:'Labeling',
             renderer: <Labeling/>,
             parameters:LabelingParams.parameters,
-            inputKeys:{cellImages:dataKeys.cellImages, sizes:dataKeys.candidateSizes},
+            inputKeys:{cellImages:dataKeys.cellImages, sizes:dataKeys.candidateSizes,cellContours:dataKeys.cellContours},
             outputKeys:{labels:dataKeys.labels, trainingData:dataKeys.trainingData}
         } as LabelingParams.Step,
         { 

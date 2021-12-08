@@ -111,7 +111,7 @@ const Labeling:React.FC<ILabelingProps> = () => {
         {!error && curLabelingData &&
             <>
                 <InfoDisplay result={results} totalCells={curInputs.cellImages.length}/>
-                <CellCounter onNext={onLabeled} cellImg={curInputs.cellImages[curCell]} curCell={curLabelingData}/>
+                <CellCounter cellContour={curInputs.cellContours[curCell]} onNext={onLabeled} cellImg={curInputs.cellImages[curCell]} curCell={curLabelingData}/>
                 <div className="pad-100-top col-white text-center">
                     <div className={'pad-50-ver'}>
                         Hold <ButtonIcon btnText={'1'}/> to reveal all foci locations and <ButtonIcon btnText={'2'}/> to hide all selected foci.

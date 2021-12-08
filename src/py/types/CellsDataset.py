@@ -1,8 +1,9 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import numpy as np
 
 from src.sammie.py.util import shapeutil
+from src.sammie.py.util.imgutil import addBorder
 
 
 class CellsDataset:
@@ -17,9 +18,11 @@ class CellsDataset:
         self.contours = contours
         self.scale = scale
 
-    def getSingleCellImages(self)->List[np.ndarray]:
-        """Retrieves a List of single cell images from the contours"""
+    def getSingleCellImagesAndContours(self, border:int = 3)->Tuple[List[np.ndarray],List[Dict]]:
+        """Retrieves a List of single cell images from the contours and adds a
+        black border if desired."""
         cellImages = []
+        cellContours = []
         for cnt in self.contours:
             maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
             img = self.img[dy:dy+maskPatch.shape[0],dx:dx+maskPatch.shape[1]]
@@ -28,6 +31,12 @@ class CellsDataset:
             img = (img - minIntensity) / (maxIntensity - minIntensity)
             img[maskPatch == False] = 0
 
-            cellImages += [img]
+            cellContour = {'x':(np.array(cnt['x']) + border - dx).tolist(),
+                           'y':(np.array(cnt['y']) + border - dy).tolist()}
 
-        return cellImages
+            if border > 0:
+                img = addBorder(img,border)
+            cellImages += [img]
+            cellContours += [cellContour]
+
+        return cellImages,cellContours
