@@ -7,8 +7,13 @@ import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatype
 export type FociDetectionModelResult = {
     /**Images of the cells*/
     imgs:PipelineImage[],
+    /**Contours for Cells*/
+    contours:PipelinePolygons,
     /**Foci in each cell at optimal outline*/
     foci:PipelinePolygons[]
+    
+    /**Cells included in export*/
+    cellsInExport:number[],
     /**Foci Indices selected by user in each cell at optimal outline*/
     selection:number[][]
     /**Foci indices selected by model  in each cell at optimal outline*/

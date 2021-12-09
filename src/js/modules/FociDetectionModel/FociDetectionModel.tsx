@@ -29,7 +29,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
     const runMainAlgorithm = async (params:self.Parameters,step:self.Step)=>{
         const res = await runFociDetectionModel(params,step,curBatch.batchParameters['cellstoprocess']);
         setError(res.error ? res : null)
-        setIncludedCells(!res.error ? res.data.imgs.map((v,i)=>i) : null)
+        setIncludedCells(!res.error ? res.data.cellsInExport : null)
         setSelectedFoci(!res.error ? res.data.selection: null)
         setModelFoci(!res.error ? res.data.modelSelection: null)
         setResult(!res.error ? res.data : null)
@@ -41,7 +41,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
     const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
-        {msg: 'Running Detection', display: "overlay", progress:0});
+        {msg: 'Running Detection', display: "overlay", progress:0},true);
     
     /**UI SPECIFIC STATE*/
     const [result,setResult] = useRecoilState(asResult(curStep.moduleID))
@@ -67,7 +67,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
         changeFociSelection(curParams,curStep,nv)
     }
     
-	return (<div className={'foci-detection-model margin-100-neg pad-100 ' + cl(modKeys['1'],'mod-1') + cl(modKeys['2'],'mod-2')}>
+	return (<div className={'foci-detection-model margin-100-neg pad-100 ' + cl(modKeys['1'],'mod-1') + cl(modKeys['2'],'mod-2') + cl(curParams.showoutlines, 'show-outlines')}>
 	    {error && <ErrorHint error={error}/> }
         {!error && result &&
             <>
@@ -80,6 +80,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
                 <div className={`grid cols-${curParams.fociperrow} half-gap`}>
                     {result.imgs.map((img,i)=>{
                         return <CellResult key={i} img={img} foci={result.foci[i]}
+                                           cellOutline={result.contours[i]}
                                            modelSelection={modelFoci[i]}
                                            onChangeSelection={(v)=>onFociToggle(i,v)}
                                            curSelection={selectedFoci[i]}

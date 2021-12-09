@@ -1,7 +1,9 @@
 import os.path
 import pickle
 import time
-from typing import Dict
+from typing import Dict, List
+
+import numpy as np
 
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.ModuleConnector import AggregatorFileInfo, AggregatorReturn
@@ -107,3 +109,15 @@ def appendToCellSet(destinationPath:str,data:SessionData, modulesById:Dict[str, 
         msg = 'Reset file and added batch %d results to dataset.'%(batchNum)
 
     return AggregatorReturn(msg,__getDataSetInfoObject(curData))
+
+def resetFociInCellSet(curData):
+    for d in curData['data']:
+        curData['data'][d].removeFociContours()
+
+def addFocusToCellSet(curData, batchNum:int, cellNum:int, fociList:List[np.ndarray]):
+    """Adds foci to a data batch. curData has the same structures as exporte dby this aggregator"""
+    if batchNum not in curData['data']:
+        raise RuntimeError('Invaldi batchnum (%d) provided for export fo cell (%d)'%(batchNum,cellNum))
+
+    ds:CellsDataset = curData['data'][batchNum]
+    ds.addFociContourForCell(cellNum,fociList)

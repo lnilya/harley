@@ -67,6 +67,17 @@ function getPipeline(): Pipeline {
                     pipelineInputKey: inputKeys.dataset,
                     transform: suggestSuffixedFileName('_foci', 'csv')
                 },
+                exporterParams:{csv:true}
+            },
+            {
+                requiredInput: dataKeys.foci,
+                title:'Labeled Dataset',
+                description:'This output is a copy of the original dataset enriched with the foci you identified. You can therefore safely overwrite the old dataset file.\nDoing this allows you to use two dataset files in the colocalisation pipeline later on.',
+                suggestDestinationOutput: {
+                    pipelineInputKey: inputKeys.dataset,
+                    transform: suggestSuffixedFileName('', 'cells')
+                },
+                exporterParams:{csv:false}
             }
         ],
         descriptions: {

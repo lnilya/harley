@@ -1,18 +1,21 @@
 import React from "react";
 import {cl, copyRemove} from "../../../sammie/js/util";
 import './scss/CellResult.scss'
-import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
+import {PipelineImage, PipelinePolygons, PolygonData} from "../../../sammie/js/types/datatypes";
 import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
 import styled from "@emotion/styled";
 import {Autorenew, Cancel, DeleteForever, RestoreFromTrash, Visibility, VisibilityOff} from "@mui/icons-material";
 import ToolTipIconButton from "../../../sammie/js/ui/elements/ToolTipIconButton";
 import _ from "lodash";
+import {OutlinePolygonLabeling} from "../Labeling/_polygons";
+import {OutlinePolygon} from "../FociCandidates/FociCandidates";
 
 interface ICellResultProps{
 	
 	/**Additional classnames for this component*/
 	className?:string,
     img:PipelineImage,
+    cellOutline:PolygonData
     foci:PipelinePolygons,
     curSelection:number[], //foci as modified by user later on
     modelSelection:number[], //foci as selected by model
@@ -41,7 +44,7 @@ const AvailablePolygon = styled.polygon({
         opacity:1,
     }
 })
-const CellResult:React.FC<ICellResultProps> = ({modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className}) => {
+const CellResult:React.FC<ICellResultProps> = ({cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className}) => {
 	const selFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? null : pd)
 	const avFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? pd : null)
     const onToggleFoci = (f:number)=>{
@@ -59,6 +62,7 @@ const CellResult:React.FC<ICellResultProps> = ({modelSelection, onChangeSelectio
 		<div className={`cell-result ${className || ''} ` + cl(excluded,'is-excluded')}>
 			<div className="rel lh-0">
                 <img src={img.url} />
+                <PolygonCloud className={'outline'} polygons={[cellOutline]} canvasDim={img} PolyComp={OutlinePolygon}/>
                 {selFoci.length > 0 && !excluded &&
                     <PolygonCloud className={'selected-foci'} onClick={onToggleFoci} polygons={selFoci} canvasDim={img} PolyComp={SelectedPolygon}/>
                 }
