@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from src.sammie.py.util import shapeutil
@@ -40,6 +41,23 @@ class CellsDataset:
         if self.fociContours is None: self.fociContours = [None]*len(self.contours)
 
         self.fociContours[cellNum] = contours
+
+    def getMask(self):
+        mask = np.zeros_like(self.img)
+        for c in self.contours:
+            maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(c['x'], c['y'], 0)
+            mask = shapeutil.addPatchOntoImage(mask, maskPatch, dy, dx, 0)
+        return mask
+
+    def similarityToDataSet(self, ds:'CellsDataset'):
+        #Similarity measure is done by creating binary masks for each dataset and measuring the overlap
+
+        mask1 = self.getMask()
+        mask2 = ds.getMask()
+        total = np.count_nonzero(mask1) + np.count_nonzero(mask2)
+        overlap = np.count_nonzero(mask1 * mask2)*2
+
+        return overlap/total
 
     def getSingleCellImagesAndContours(self, border:int = 3)->Tuple[List[np.ndarray],List[Dict]]:
         """Retrieves a List of single cell images from the contours and adds a
