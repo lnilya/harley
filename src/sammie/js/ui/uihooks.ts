@@ -1,5 +1,7 @@
-import {atomFamily, RecoilState, useRecoilState} from "recoil";
+import {atomFamily, RecoilState, useRecoilState, useRecoilValue} from "recoil";
 import {useEffect} from "react";
+import * as alg from '../state/algstate'
+import * as ui from '../state/uistates'
 import * as storage from '../state/persistance'
 import * as eventbus from "../state/eventbus";
 import {EventPayload, EventResult, EventTypes} from "../state/eventbus";
@@ -19,6 +21,9 @@ export function useInitalLoadCallback(recoilState:RecoilState<any>, initCallBack
 
 export function useLocalStoreRecoilHook(recoilState:RecoilState<any>,scope:'global'|'pipeline' = 'pipeline', initalLoad:boolean = true, pipelineName:PipelineName = null){
     const [curSettings, setCurSettings] = useRecoilState(recoilState);
+    if(scope == 'pipeline' && pipelineName == null)
+        pipelineName = useRecoilValue(ui.selectedPipelineName);
+    
     //load data on init if necessary
     useEffect(()=>{
         if(!initalLoad) return;
