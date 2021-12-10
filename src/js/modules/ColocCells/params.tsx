@@ -18,10 +18,10 @@ export const parameters:Array<Parameter<any>> = [
 ];
 
 /**Typing for ColocCells Inputs - Define Input Types/Names of this Pipeline step here.*/
-export type Inputs = {in:PipelineImage }
+export type Inputs = {alignedDatasets:number[]}
 
 /**Typing for ColocCells Outputs - Define Output Types/Names of this Pipeline step here.*/
-export type Outputs = {out:PipelineImage}
+export type Outputs = {includedCells:any}
 
 /**Shorthand for the PipelineStep of ColocCells*/
 export type Step = PipelineStep<Inputs, Outputs>;

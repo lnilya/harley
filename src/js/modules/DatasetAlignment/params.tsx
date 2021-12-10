@@ -23,7 +23,7 @@ export const parameters:Array<Parameter<any>> = [
 export type Inputs = {set0:any, set1:any }
 
 /**Typing for DatasetAlignment Outputs - Define Output Types/Names of this Pipeline step here.*/
-export type Outputs = {alignment:any}
+export type Outputs = {alignedDatasets:any}
 
 /**Shorthand for the PipelineStep of DatasetAlignment*/
 export type Step = PipelineStep<Inputs, Outputs>;

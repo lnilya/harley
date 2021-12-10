@@ -17,11 +17,12 @@ const inputKeys = {
 }
 const dataKeys = {
     matchedDatasets: 'Matched Datasets', //example, some step for example adds these two images into one.
+    includedCells: 'Included Cells', //example, some step for example adds these two images into one.
 }
 
 const helpScreen = <div>
     Todo: Create Help Video for Colocalization
-    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen />
+    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen/>
 </div>
 
 
@@ -38,21 +39,21 @@ function getPipeline(): Pipeline {
                 moduleID: 'DatasetAlignment',
                 renderer: <DatasetAlignment/>,
                 parameters: DatasetAlignmentParams.parameters,
-                inputKeys: {set1:inputKeys.dataset1, set0:inputKeys.dataset2},
-                outputKeys: {alignment:dataKeys.matchedDatasets}
+                inputKeys: {set0: inputKeys.dataset1, set1: inputKeys.dataset2},
+                outputKeys: {alignedDatasets: dataKeys.matchedDatasets}
             } as DatasetAlignmentParams.Step,
-            { 
-            title:'ColocCells',
-            moduleID:'ColocCells',
-            renderer: <ColocCells/>,
-            parameters:ColocCellsParams.parameters,
-            inputKeys:{},
-            outputKeys:{}
-        } as ColocCellsParams.Step,
-        //%NEWMODULE_STEP%
+            {
+                title: 'ColocCells',
+                moduleID: 'ColocCells',
+                renderer: <ColocCells/>,
+                parameters: ColocCellsParams.parameters,
+                inputKeys: {alignedDatasets:dataKeys.matchedDatasets},
+                outputKeys: {includedCells:dataKeys.includedCells}
+            } as ColocCellsParams.Step,
+            //%NEWMODULE_STEP%
         ],
         
-        disableBatchMode:true, //wether or not batch mode is allowed.
+        disableBatchMode: true, //wether or not batch mode is allowed.
         
         name: 'Colocalization', //name of your pipeline
         
@@ -87,11 +88,11 @@ function getPipeline(): Pipeline {
         ],
         
         //Info for user
-        descriptions:{
-            title:'Colocalization',
-            description:'After processing two datasets through the Foci Detection Pipeline you can load them here and perform differen colocalization measures.',
+        descriptions: {
+            title: 'Colocalization',
+            description: 'After processing two datasets through the Foci Detection Pipeline you can load them here and perform differen colocalization measures.',
             //thumb:<img src={thumb}/>, //an optional thumb image to appear in switch pipeline screen
-            helpscreen:helpScreen
+            helpscreen: helpScreen
         }
     }
 }

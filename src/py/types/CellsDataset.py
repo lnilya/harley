@@ -42,7 +42,18 @@ class CellsDataset:
 
         self.fociContours[cellNum] = contours
 
+    def getLabels(self):
+        """Label Mask where 0 is background and i>0 is otuline for cell i-1"""
+        mask = np.zeros_like(self.img,dtype='int')
+        for i,c in enumerate(self.contours):
+            maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(c['x'], c['y'], 0)
+            h,w = maskPatch.shape
+            mask[dy:dy+h,dx:dx+w][maskPatch] = i+1
+
+        return mask
+
     def getMask(self):
+        """Binary mask with all cells"""
         mask = np.zeros_like(self.img)
         for c in self.contours:
             maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(c['x'], c['y'], 0)

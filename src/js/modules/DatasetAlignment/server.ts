@@ -18,8 +18,8 @@ export async function setAlignment(curParams:self.Parameters, curStep:self.Step,
     var res:EelResponse<boolean> = await eel.runStepAsync<boolean>(self.moduleName,'align', {...curParams, alignment:alignment},curStep)
     
     //update pipeline, on error, delete the output again.
-    if(res.error) deletePipelineData(curStep.outputKeys.alignment);
-    else updatePipelineData(curStep.outputKeys.alignment, alignment);
+    if(res.error) deletePipelineData(curStep.outputKeys.alignedDatasets);
+    else updatePipelineData(curStep.outputKeys.alignedDatasets, alignment);
     
     return res
 }
@@ -28,8 +28,8 @@ export async function preloadDataset(curParams:self.Parameters, curStep:self.Ste
     //Run the algorithm associated with this module in python
     var res:EelResponse<DatasetPreviewResult> = await eel.runStepAsync<DatasetPreviewResult>(self.moduleName,'preload',curParams,curStep)
     //update pipeline, on error, delete the output again.
-    if(res.error) deletePipelineData(curStep.outputKeys.alignment);
-    else updatePipelineData(curStep.outputKeys.alignment, res.data.suggestedAlignment);
+    if(res.error) deletePipelineData(curStep.outputKeys.alignedDatasets);
+    else updatePipelineData(curStep.outputKeys.alignedDatasets, res.data.suggestedAlignment);
     
     return res
 }

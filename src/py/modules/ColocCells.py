@@ -1,17 +1,24 @@
+from typing import List, Tuple
+
+from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners
+from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util.imgutil import getPreviewImage
+
 
 class ColocCellsKeys:
     """Convenience class to access the keys as named entities rather than in an array"""
-    inSomeInputKey: str
-    outSomeOutputKey: str
+    inAlignedDatasets: str
+    outIncludedCells: str
 
     def __init__(self, inputs, outputs):
-        self.inSomeInputKey = inputs[0]
-        self.outSomeOutputKey = outputs[0]
+        self.inAlignedDatasets = inputs[0]
+        self.outIncludedCells = outputs[0]
 
 class ColocCells(ModuleBase):
 
     keys: ColocCellsKeys
+    alignedDataSets:List[Tuple[CellsDataset,CellsDataset]]
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -32,11 +39,27 @@ class ColocCells(ModuleBase):
         #This is a stub and simply displays best practices on how to structure this function. Feel free to change it
         if action == 'apply':
 
-            #Parse Parameters out of the dictionary arriving from JS
-            param1, param2 = self.unpackParams(**params)
-
             #get the input that this step is working on
-            someInput = self.session.getData(self.keys.inPreprocessedImg)
+            self.alignedDataSets = self.session.getData(self.keys.inAlignedDatasets)
+
+            self.cellPartners = []
+            for ds1,ds2 in self.alignedDataSets:
+                self.cellPartners += [identifyCellPartners(ds1,ds2)]
+
+
+            allCellImgs = []
+            allContours = []
+            for ds1,ds2 in self.alignedDataSets:
+                imgs,contours = ds1.getSingleCellImagesAndContours()
+                allCellImgs += imgs
+                allContours += contours
+
+            #generate previews for cell images
+            self.previews = [getPreviewImage(img, self.keys.outIncludedCells + '_%d' % i) for i, img in
+                             enumerate(allCellImgs)]
+
+
+            #Identify and extract single cell Images and foci contours
 
             #do something with it...
 
