@@ -163,7 +163,15 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
         };
 }
 
-export function useDisplaySettings(step:PipelineStep<any,any>, settings:Record<string,(p:string) => RecoilState<boolean>>){
+/**
+ * Hook for use with DisplayOption Component. Will create state for the given display options. The result can then be
+ * used in the DisplayOptions component.
+ * @param step The step, needed for module ID
+ * @param settings settings of desired checkboxes
+ * @return Array, first element will be a DisplayOptionSetting[], to be passed to components, then getter, setter functions for the respective elements
+ * @see DisplayOptions
+ */
+export function useDisplaySettings(step:PipelineStep<any,any>, settings:Record<string,(p:string) => RecoilState<boolean>>):Array<any>{
     var displayOptions:DisplayOptionSetting[] = [];
     var res = []
     for (let s in settings){

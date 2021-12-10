@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners
+from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners, getColocImages
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util.imgutil import getPreviewImage
@@ -25,13 +25,22 @@ class ColocCells(ModuleBase):
         self.log = 'ColocCells'
         self.trace('initialized')
 
-    def unpackParams(self,paramName1,paramName2,**other):
+    def unpackParams(self,color,**other):
         """unpack and possibly parse/cast all parameters coming from JS. The parameters from JS are defined in the params.tsx file of the respective step.
         The arrive as a dictionary on the py side and sometimes need some parsing. In any way this function provides a simple method to extract
         these parameters as named variables rather than using params['paramName1'] you can run it through this function."""
         #
         #respective
-        return paramName1[0],paramName2
+
+        c = [None,None]
+        if color[0] == 'r': c[0] = (255,0,0)
+        elif color[0] == 'g': c[0] = (0,255,0)
+        elif color[0] == 'b': c[0] = (0,0,255)
+        if color[1] == 'r': c[1] = (255,0,0)
+        elif color[1] == 'g': c[1] = (0,255,0)
+        elif color[1] == 'b': c[1] = (0,0,255)
+
+        return c
 
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = ColocCellsKeys(inputkeys, outputkeys)
@@ -39,24 +48,24 @@ class ColocCells(ModuleBase):
         #This is a stub and simply displays best practices on how to structure this function. Feel free to change it
         if action == 'apply':
 
+            col = self.unpackParams(**params)
+
             #get the input that this step is working on
             self.alignedDataSets = self.session.getData(self.keys.inAlignedDatasets)
 
+            #Identify which cell numbers correspond to which in two aligned batches
             self.cellPartners = []
+            self.cellImages = []
+            self.cellContours = []
+            self.cellFoci = []
             for ds1,ds2 in self.alignedDataSets:
-                self.cellPartners += [identifyCellPartners(ds1,ds2)]
-
-
-            allCellImgs = []
-            allContours = []
-            for ds1,ds2 in self.alignedDataSets:
-                imgs,contours = ds1.getSingleCellImagesAndContours()
-                allCellImgs += imgs
-                allContours += contours
-
-            #generate previews for cell images
-            self.previews = [getPreviewImage(img, self.keys.outIncludedCells + '_%d' % i) for i, img in
-                             enumerate(allCellImgs)]
+                p = identifyCellPartners(ds1,ds2)
+                self.cellPartners += [p]
+                p1 = [i for i,j in p] #cellnumbers in ds1
+                p2 = [j for i,j in p] #cellnumbers in ds2
+                self.cellContours += ds1.getSingleCellContours(p1)
+                self.cellImages += getColocImages(ds1,ds2,p,self.keys.outIncludedCells,col)
+                self.cellFoci += [ds1.getFociContours(p1),ds2.getFociContours(p2)]
 
 
             #Identify and extract single cell Images and foci contours
@@ -65,10 +74,10 @@ class ColocCells(ModuleBase):
 
             #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
             #of the UI.
-            self.onGeneratedData(self.keys.outBorderedImage, someInput, params)
+            # self.onGeneratedData(self.keys.outBorderedImage, someInput, params)
 
             #Generate an output that will go to javascript for displaying on the UI side
-            return {'demoResult':'Somethign for JS'}
+            return {'foci':self.cellFoci, 'imgs':self.cellImages,'cnts':self.cellContours, 'selected':list(range(0,len(self.cellContours)))}
 
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported

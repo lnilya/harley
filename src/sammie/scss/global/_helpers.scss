@@ -14,6 +14,9 @@ $colClasses: (main:$colMain,
 	.bg-#{$slug}{
 		background-color:$col;
 	}
+	.bg-#{$slug}-imp{
+		background-color:$col !important;
+	}
 }
 
 .col-white{

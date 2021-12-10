@@ -17,21 +17,21 @@ import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 export const MinPolygon = styled.polygon({
     fill:'#9ACD3266',
     stroke:'greenyellow',
-    strokeWidth:0.2,
+    strokeWidth:1,
     '&:hover':{
         fill:'#9ACD32EE',
     }
 })
 export const OutlinePolygon = styled.polygon({
     stroke:'#d3c000',
-    strokeWidth:0.4,
+    strokeWidth:1,
     fill:'none',
-    strokeDasharray:'0.5 1'
+    strokeDasharray:'2 4'
 })
 export const MaxPolygon = styled.polygon({
     fill:'#ff000011',
     stroke:'red',
-    strokeWidth:0.2,
+    strokeWidth:1,
     '&:hover':{
         fill:'#ff000099',
     }

@@ -196,3 +196,8 @@ body.admin-bar {
 	align-items: center;
 }
 
+
+.stick-to-all{
+	@include stick-to($fix-all);
+	position: absolute !important;
+}

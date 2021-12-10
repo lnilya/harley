@@ -52,7 +52,8 @@ class DatasetAlignment(ModuleBase):
             self.batches1:List[CellsDataset] = [d1['rawData']['data'][i] for i in d1['rawData']['data']]
             self.batches2:List[CellsDataset] = [d2['rawData']['data'][i] for i in d2['rawData']['data']]
             # self.batches2[2].contours = self.batches2[2].contours[20:30]
-            # self.batches2 = self.batches2[1:2]
+            self.batches2 = self.batches2[1:2]
+            self.batches1 = self.batches1[1:2]
 
             #Create a similarity matrix between batches of datasets
             simMatrix = np.zeros((len(self.batches1),len(self.batches2)))

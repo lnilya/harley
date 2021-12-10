@@ -14,7 +14,7 @@ export const SelectedPolygon = styled.polygon({
     cursor:'not-allowed',
     stroke:'#ff00ff',
     fill:'none',
-    strokeWidth:0.3,
+    strokeWidth:1.5,
     '&:hover':{
         fill:'#ff00ff66',
     }
@@ -22,9 +22,9 @@ export const SelectedPolygon = styled.polygon({
 export const SplitablePolygon = styled.polygon({
     cursor:'col-resize',
     stroke:'#ff00ff',
-    strokeDasharray:1.5,
+    strokeDasharray:4,
     fill:'none',
-    strokeWidth:0.3,
+    strokeWidth:1.5,
     '&:hover':{
         fill:'#ff00ff66',
     }
@@ -33,7 +33,7 @@ export const SplitPolygon = styled.polygon({
     cursor:'not-allowed',
     stroke:'#ff7700',
     fill:'none',
-    strokeWidth:0.5,
+    strokeWidth:1.5,
     '&:hover':{
         fill:'#ff770066',
     }
@@ -41,8 +41,8 @@ export const SplitPolygon = styled.polygon({
 
 export const OutlinePolygonLabeling = styled.polygon({
     stroke:'#d3c000',
-    strokeWidth:0.2,
+    strokeWidth:1,
     fill:'none',
-    strokeDasharray:'0.5 1'
+    strokeDasharray:'2 4'
 })
 

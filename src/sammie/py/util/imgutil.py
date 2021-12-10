@@ -45,9 +45,19 @@ def getPreviewHeatMap(img: np.ndarray, key: str, force: bool = True, cmap: str =
 
 # Will retrieve the JS preview image url for a given array and key.
 # will not resave if force is set to false and the preview image is already available.
-def getPreviewImage(img: np.ndarray, key: str, force: bool = True):
+def getPreviewImage(img: np.ndarray, key: str, force: bool = True, inColor:Tuple[int,int,int] = None, normalize:bool = False):
     relPath = os.path.join(settings.TMP_FOLDER, key + '.jpg')
     absPath = eelutil.getFilePath(relPath)
+
+    if normalize:
+        img = norm(img)
+
+    if inColor:
+        nimg = np.zeros((img.shape[0],img.shape[1],3),'uint8')
+        nimg[:,:,0] = (inColor[0] * img).astype('uint8')
+        nimg[:,:,1] = (inColor[1] * img).astype('uint8')
+        nimg[:,:,2] = (inColor[2] * img).astype('uint8')
+        img = nimg
 
     if not os.path.exists(absPath) or force:
         imageio.imsave(absPath, img)
@@ -58,6 +68,44 @@ def getPreviewImage(img: np.ndarray, key: str, force: bool = True):
         'h': img.shape[0]
     }
 
+def joinChannels(key:str, intensity1:np.ndarray, col1: Tuple[int,int,int], intensity2:np.ndarray, col2: Tuple[int,int,int], normalizeIntensityImage:bool = True):
+
+    if normalizeIntensityImage:
+        intensity1 = norm(intensity1,(0,1))
+        intensity2 = norm(intensity2,(0,1))
+
+    colImg = np.zeros((intensity1.shape[0],intensity1.shape[1],3),dtype='float')
+    colImg[:, :, 0] = intensity1*col1[0] + intensity2*col2[0]
+    colImg[:, :, 1] = intensity1*col1[1] + intensity2*col2[1]
+    colImg[:, :, 2] = intensity1*col1[2] + intensity2*col2[2]
+
+    colImg[colImg < 0] = 0
+    colImg[colImg > 255] = 255
+
+    return  getPreviewImage(colImg.astype('uint8'),key)
+
+
+def makeSemiTransparent(intensityImg:np.ndarray, fillColor: Tuple[int,int,int], key:str, normalizeIntensityImage:bool = True):
+    """uses the intensity image as an alpha channel and fills the image with the fillColor"""
+    if normalizeIntensityImage:
+        intensityImg = norm(intensityImg,(0,255),'uint8')
+
+    colImg = np.zeros((intensityImg.shape[0],intensityImg.shape[1],4),dtype='uint8')
+    colImg[:, :, 0] = fillColor[0]
+    colImg[:, :, 1] = fillColor[1]
+    colImg[:, :, 2] = fillColor[2]
+    colImg[:, :, 3] = intensityImg
+
+    relPath = os.path.join(settings.TMP_FOLDER, key + '.png')
+    absPath = eelutil.getFilePath(relPath)
+
+    write_png(absPath, colImg)
+
+    return {
+        'url': eelutil.getFileURL(relPath, True),
+        'w': colImg.shape[0],
+        'h': colImg.shape[1]
+    }
 
 def getTransparentMask(binaryMask: np.ndarray, fillColor: Tuple, key: str, force: bool = False):
     relPath = os.path.join(settings.TMP_FOLDER, key + '.png')
