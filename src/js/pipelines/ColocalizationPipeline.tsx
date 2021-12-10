@@ -7,6 +7,8 @@ import ResponsiveEmbed from 'react-responsive-embed'
 import * as DatasetAlignmentParams from '../modules/DatasetAlignment/params'
 import DatasetAlignment from "../modules/DatasetAlignment/DatasetAlignment";
 import {LocalFileWithPreview, PipelineData, PipelineDataKey} from "../../sammie/js/types/datatypes";
+import * as ColocCellsParams from '../modules/ColocCells/params'
+import ColocCells from "../modules/ColocCells/ColocCells";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -14,7 +16,7 @@ const inputKeys = {
     dataset2: 'Labeled Dataset 2',//these are example inputs
 }
 const dataKeys = {
-    step1: 'Added Images', //example, some step for example adds these two images into one.
+    matchedDatasets: 'Matched Datasets', //example, some step for example adds these two images into one.
 }
 
 const helpScreen = <div>
@@ -37,9 +39,17 @@ function getPipeline(): Pipeline {
                 renderer: <DatasetAlignment/>,
                 parameters: DatasetAlignmentParams.parameters,
                 inputKeys: {set1:inputKeys.dataset1, set0:inputKeys.dataset2},
-                outputKeys: {}
+                outputKeys: {alignment:dataKeys.matchedDatasets}
             } as DatasetAlignmentParams.Step,
-            //%NEWMODULE_STEP%
+            { 
+            title:'ColocCells',
+            moduleID:'ColocCells',
+            renderer: <ColocCells/>,
+            parameters:ColocCellsParams.parameters,
+            inputKeys:{},
+            outputKeys:{}
+        } as ColocCellsParams.Step,
+        //%NEWMODULE_STEP%
         ],
         
         disableBatchMode:true, //wether or not batch mode is allowed.
@@ -64,7 +74,7 @@ function getPipeline(): Pipeline {
         //Define what the outputs of this Pipeline are
         outputs: [
             // {
-            //     requiredInput: dataKeys.step1,
+            //     requiredInput: dataKeys.matchedDatasets,
             //     title:'Sum of Two images',
             //     description:'This is the description that appears in the Export file screen.',
             //

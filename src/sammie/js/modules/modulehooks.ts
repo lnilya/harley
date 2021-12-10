@@ -61,6 +61,13 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
         useEffect(() => {
             if (onInputChange && lastRunSettings && curInputs && !deepEqual(lastRunSettings.inputs, curInputs))
                 onInputChange(curInputs,lastRunSettings.inputs);
+            
+            //Small caveat. Empty paramaters will lead to Sidebar not being rendered
+            //this will prevent it from triggering a parameter change event, which in turn would call the inital
+            //algorithm run. Therefore we simply add a clause here.
+            if(Object.keys(curParams).length == 0)
+                runAlgorithmInPipeline()
+            
         }, [])
         
         //Wrapper for running the Algorithm, will test if inputs or parameters have changed.

@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 import numpy as np
@@ -11,16 +12,19 @@ class DatasetAlignmentKeys:
     """Convenience class to access the keys as named entities rather than in an array"""
     inDs0: str
     inDs1: str
-    # outSomeOutputKey: str
+    outAlignment: str
 
     def __init__(self, inputs, outputs):
         self.inDs0 = inputs[0]
         self.inDs1 = inputs[1]
-        # self.outSomeOutputKey = outputs[0]
+        self.outAlignment = outputs[0]
 
 class DatasetAlignment(ModuleBase):
 
     keys: DatasetAlignmentKeys
+    batches1 :List[CellsDataset]
+    batches2 :List[CellsDataset]
+    alignment :List[int]
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -44,24 +48,38 @@ class DatasetAlignment(ModuleBase):
             d1 = self.session.getData(self.keys.inDs0)
             d2 = self.session.getData(self.keys.inDs1)
 
-            #Create a similarity matrix between batches of datasets
-            batches1:List[CellsDataset] = d1['rawData']['data']
-            batches2:List[CellsDataset] = d2['rawData']['data']
+            #Get Batches as lists
+            self.batches1:List[CellsDataset] = [d1['rawData']['data'][i] for i in d1['rawData']['data']]
+            self.batches2:List[CellsDataset] = [d2['rawData']['data'][i] for i in d2['rawData']['data']]
+            # self.batches2[2].contours = self.batches2[2].contours[0:10]
+            # self.batches2 = self.batches2[1:2]
 
-            simMatrix = np.zeros((len(batches1),len(batches2)))
+            #Create a similarity matrix between batches of datasets
+            simMatrix = np.zeros((len(self.batches1),len(self.batches2)))
             preview1 = []
             preview2 = []
-            for i,cb1 in enumerate(batches1):
-                preview1 += [getPreviewImage(batches1[cb1].img,'%s_%d'%(self.keys.inDs0,i))]
-                for j,cb2 in enumerate(batches2):
-                    if i == 0: preview2 += [getPreviewImage(batches2[cb2].img,'%s_%d'%(self.keys.inDs1,j))]
-                    simMatrix[i,j] = batches1[cb1].similarityToDataSet(batches2[cb2])
+            for i,cb1 in enumerate(self.batches1):
+                preview1 += [{'img':getPreviewImage(cb1.img, '%s_%d' % (self.keys.inDs0, i)),
+                              'contours':cb1.contours}]
+                for j,cb2 in enumerate(self.batches2):
+                    if i == 0: preview2 += [{'img':getPreviewImage(cb2.img, '%s_%d' % (self.keys.inDs1, j)),
+                                             'contours':cb2.contours}]
+                    simMatrix[i,j] = cb1.similarityToDataSet(cb2)
 
+            #suggest an alignment
+            self.alignment = []
+            for i in range(0,len(preview1)):
+                j = np.argmax(simMatrix[i,:])
+                #Do not suggest if overlap is less than 90%, it should actually be 100%
+                if simMatrix[i,j] < 0.9: self.alignment += [-1]
+                else: self.alignment += [int(j)]
 
-            return {'similarity':simMatrix.tolist(), 'previews1':preview1, 'previews2':preview2}
+            return {'similarity':simMatrix.tolist(), 'previews1':preview1, 'previews2':preview2, 'suggestedAlignment':self.alignment}
 
-        elif action == 'apply':
-            return {}
+        elif action == 'align':
+            self.alignment = params['alignment']
+            self.onGeneratedData(self.keys.outAlignment,self.alignment,params)
+            return True
 
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported
