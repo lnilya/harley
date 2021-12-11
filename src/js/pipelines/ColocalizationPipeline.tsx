@@ -9,6 +9,7 @@ import DatasetAlignment from "../modules/DatasetAlignment/DatasetAlignment";
 import {LocalFileWithPreview, PipelineData, PipelineDataKey} from "../../sammie/js/types/datatypes";
 import * as ColocCellsParams from '../modules/ColocCells/params'
 import ColocCells from "../modules/ColocCells/ColocCells";
+import {getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -25,6 +26,11 @@ const helpScreen = <div>
     <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen/>
 </div>
 
+/**Type for the Input Parameter of the whole pipeline*/
+export type ColocalizationInputParams = {
+    name0:string,
+    name1:string
+}
 
 function getPipeline(): Pipeline {
     
@@ -86,7 +92,10 @@ function getPipeline(): Pipeline {
             //     },
             // }
         ],
-        
+        inputParameters:[
+            getTextfieldInputParams('name0','Name Channel 1','You can give a name to Dataset 1, e.g. "Stress Granules". This will make the evaluation more legible.','Name...',''),
+            getTextfieldInputParams('name1','Name Channel 2','You can give a name to Dataset21, e.g. "P-Bodies". This will make the evaluation more legible.','Name...','')
+        ],
         //Info for user
         descriptions: {
             title: 'Colocalization',

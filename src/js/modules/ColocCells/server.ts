@@ -11,6 +11,12 @@ export type ColocCellsResult = {
     selected:number[],
     foci:[PipelinePolygons[],PipelinePolygons[]]
 }
+export async function runCellSelection(curParams:self.Parameters, curStep:self.Step, selectedCells:number[]):Promise<EelResponse<boolean>>{
+    
+    var res:EelResponse<boolean> = await eel.runStep<boolean>(self.moduleName,'select', {...curParams, select:selectedCells},curStep)
+    
+    return res
+}
 export async function runColocCells(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<ColocCellsResult>>{
     
     //Run the algorithm associated with this module in python

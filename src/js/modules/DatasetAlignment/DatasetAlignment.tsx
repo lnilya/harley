@@ -4,6 +4,7 @@ import * as alg from "../../../sammie/js/state/algstate";
 import * as ui from "../../../sammie/js/state/uistates";
 import * as eventbus from "../../../sammie/js/state/eventbus";
 import * as self from "./params";
+import * as parent from "../../pipelines/ColocalizationPipeline";
 import * as server from "./server";
 import './scss/DatasetAlignment.scss'
 import {useStepHook} from "../../../sammie/js/modules/modulehooks";
@@ -40,7 +41,7 @@ const DatasetAlignment:React.FC<IDatasetAlignmentProps> = () => {
     };
     
     /**CORE HOOK FOR SETTING UP STATE*/
-    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
+    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step,parent.ColocalizationInputParams>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
         {msg: 'Running DatasetAlignment', display: "overlay"});
@@ -68,7 +69,11 @@ const DatasetAlignment:React.FC<IDatasetAlignmentProps> = () => {
         {!error && datasets && alignment &&
             <>
                 <div className="grid cols-2 no-gap titles pad-50-bottom">
-                    {Object.keys(allInputs).map((k)=><h3 key={k}>{allInputs[k].file.name}</h3>)}
+                    {Object.keys(allInputs).map((k)=> {
+                        const n = allInputs[k].file.name
+                        if(curBatch.batchParameters)
+                        return <h3 key={k}>{allInputs[k].file.name}</h3>
+                    })}
                 </div>
                 {alignment.map((p2, p1) => {
                     const dr = p2 == -1 ? null : datasets.previews2[p2]

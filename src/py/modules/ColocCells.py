@@ -46,7 +46,9 @@ class ColocCells(ModuleBase):
         self.keys = ColocCellsKeys(inputkeys, outputkeys)
 
         #This is a stub and simply displays best practices on how to structure this function. Feel free to change it
-        if action == 'apply':
+        if action == 'select':
+            selectedCells = params['select']
+        elif action == 'apply':
 
             col = self.unpackParams(**params)
 
