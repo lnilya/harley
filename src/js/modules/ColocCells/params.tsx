@@ -22,7 +22,7 @@ export const parameters:Array<Parameter<any>> = [
 export type Inputs = {alignedDatasets:number[]}
 
 /**Typing for ColocCells Outputs - Define Output Types/Names of this Pipeline step here.*/
-export type Outputs = {includedCells:any}
+export type Outputs = {colocCells:any}
 
 /**Shorthand for the PipelineStep of ColocCells*/
 export type Step = PipelineStep<Inputs, Outputs>;

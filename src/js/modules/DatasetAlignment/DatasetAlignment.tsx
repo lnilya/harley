@@ -41,7 +41,7 @@ const DatasetAlignment:React.FC<IDatasetAlignmentProps> = () => {
     };
     
     /**CORE HOOK FOR SETTING UP STATE*/
-    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step,parent.ColocalizationInputParams>(asLastRunSettings,
+    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step,parent.ColocalizationBatchParameters>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
         {msg: 'Running DatasetAlignment', display: "overlay"});
@@ -69,10 +69,11 @@ const DatasetAlignment:React.FC<IDatasetAlignmentProps> = () => {
         {!error && datasets && alignment &&
             <>
                 <div className="grid cols-2 no-gap titles pad-50-bottom">
-                    {Object.keys(allInputs).map((k)=> {
-                        const n = allInputs[k].file.name
-                        if(curBatch.batchParameters)
-                        return <h3 key={k}>{allInputs[k].file.name}</h3>
+                    {Object.keys(allInputs).map((k,i)=> {
+                        var n = allInputs[k].file.name
+                        if(curBatch.batchParameters['name'+i])
+                            n = printf('%s (%s)',curBatch.batchParameters['name'+i],n)
+                        return <h3 key={k}>{n}</h3>
                     })}
                 </div>
                 {alignment.map((p2, p1) => {

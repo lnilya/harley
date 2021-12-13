@@ -60,15 +60,14 @@ const ColocCells:React.FC<IColocCellsProps> = () => {
     
     const [displayOptions,cellBorders,scb,grayscale] = useDisplaySettings(curStep,{'Show Cell Borders':asShowOutline,'Show Grayscale':asUseGrayscale})
     
-    const onCellInclusionToggle = (idx:number) => {
+    const onCellInclusionToggle = async (idx:number) => {
         if(selected.indexOf(idx) == -1)
             var na = [...selected, idx];
         else
             na = copyRemove(selected,idx);
         
         setSelection(na)
-        
-        // changeCellSelection(curParams,curStep,na)
+        await server.runCellSelection(curParams,curStep,na)
     };
     
     

@@ -32,6 +32,7 @@ var template = {
 var params = {
     modulename: '',
     modulefolder: '',
+    pipe:''
 }
 
 async function askInput() {
@@ -40,8 +41,10 @@ async function askInput() {
     pipefiles = pipefiles.filter((fn)=>excludedInPipelineFolder.indexOf(fn) == -1)
     pipefiles = pipefiles.map((f)=>f.split('.')[0])
     var pipeline = await input.select(`Choose Pipeline to add the module to`, pipefiles);
-    pipeline = pipelineJSFolder + pipeline + '.tsx'
 
+    params.pipe = pipeline.split('Pipeline').join('')
+
+    pipeline = pipelineJSFolder + pipeline + '.tsx'
     params.modulename = await input.text('Name of the Module?', {default: 'Module'});
     if (fs.existsSync(moduleFolderJS + params.modulename)) {
         const overwrite = await input.confirm(`${params.modulename} exists, overwrite?`);
@@ -95,6 +98,8 @@ function renameFiles() {
 /**Will replace placeholders*/
 function replacePlaceholders() {
     var replacements = [
+        {regex: /__PIPE__/g, replacement: params.pipe},
+        {regex: /__PIPE_FILE__/g, replacement: params.pipe+'Pipeline'},
         {regex: /__NAME__/g, replacement: params.modulename},
         {regex: /__NAME_LC__/g, replacement: toSnakeCase(params.modulename)}
     ];

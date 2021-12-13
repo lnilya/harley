@@ -60,7 +60,7 @@ const ColocCellResult:React.FC<IColocCellResultProps> = ({colorSet, foci0, foci1
             </div>
             <div className="coloc-cell-result__footer">
                 {!excluded &&
-                    <ToolTipIconButton onClick={onToggleCellInclusion} className={'del-btn'}  Icon={VisibilityOff} tooltipText={'Exclude this cell from examination'} tooltipDelay={1000}/>
+                    <ToolTipIconButton onClick={onToggleCellInclusion} className={'del-btn'}  Icon={VisibilityOff} color={'white'} tooltipText={'Exclude this cell from examination'} tooltipDelay={1000}/>
                 }
                 
                 {excluded &&

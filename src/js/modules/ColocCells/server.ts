@@ -15,6 +15,10 @@ export async function runCellSelection(curParams:self.Parameters, curStep:self.S
     
     var res:EelResponse<boolean> = await eel.runStep<boolean>(self.moduleName,'select', {...curParams, select:selectedCells},curStep)
     
+    //update pipeline, on error, delete the output again.
+    if(res.error) deletePipelineData(curStep.outputKeys.colocCells);
+    else updatePipelineData(curStep.outputKeys.colocCells,selectedCells);
+    
     return res
 }
 export async function runColocCells(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<ColocCellsResult>>{
@@ -23,8 +27,8 @@ export async function runColocCells(curParams:self.Parameters, curStep:self.Step
     var res:EelResponse<ColocCellsResult> = await eel.runStep<ColocCellsResult>(self.moduleName,'apply',curParams,curStep)
 
     //update pipeline, on error, delete the output again.
-    // if(res.error) deletePipelineData(curStep.outputKeys.out);
-    // else updatePipelineData(curStep.outputKeys.out,res.data);
+    if(res.error) deletePipelineData(curStep.outputKeys.colocCells);
+    else updatePipelineData(curStep.outputKeys.colocCells,res.data.selected);
 
     return res
 }

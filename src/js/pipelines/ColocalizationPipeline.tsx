@@ -10,6 +10,8 @@ import {LocalFileWithPreview, PipelineData, PipelineDataKey} from "../../sammie/
 import * as ColocCellsParams from '../modules/ColocCells/params'
 import ColocCells from "../modules/ColocCells/ColocCells";
 import {getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
+import * as ColocGraphsParams from '../modules/ColocGraphs/params'
+import ColocGraphs from "../modules/ColocGraphs/ColocGraphs";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -18,7 +20,8 @@ const inputKeys = {
 }
 const dataKeys = {
     matchedDatasets: 'Matched Datasets', //example, some step for example adds these two images into one.
-    includedCells: 'Included Cells', //example, some step for example adds these two images into one.
+    colocCells: 'Included Cells', //example, some step for example adds these two images into one.
+    graphData: 'Graph Data', //example, some step for example adds these two images into one.
 }
 
 const helpScreen = <div>
@@ -27,9 +30,10 @@ const helpScreen = <div>
 </div>
 
 /**Type for the Input Parameter of the whole pipeline*/
-export type ColocalizationInputParams = {
-    name0:string,
-    name1:string
+export type ColocalizationBatchParameters = {
+    name0: string,
+    name1: string
+    '1px': number
 }
 
 function getPipeline(): Pipeline {
@@ -53,9 +57,17 @@ function getPipeline(): Pipeline {
                 moduleID: 'ColocCells',
                 renderer: <ColocCells/>,
                 parameters: ColocCellsParams.parameters,
-                inputKeys: {alignedDatasets:dataKeys.matchedDatasets},
-                outputKeys: {includedCells:dataKeys.includedCells}
+                inputKeys: {alignedDatasets: dataKeys.matchedDatasets},
+                outputKeys: {colocCells: dataKeys.colocCells}
             } as ColocCellsParams.Step,
+            {
+                title: 'ColocGraphs',
+                moduleID: 'ColocGraphs',
+                renderer: <ColocGraphs/>,
+                parameters: ColocGraphsParams.parameters,
+                inputKeys: {colocCells: dataKeys.colocCells},
+                outputKeys: {graphdata: dataKeys.graphData}
+            } as ColocGraphsParams.Step,
             //%NEWMODULE_STEP%
         ],
         
@@ -69,7 +81,8 @@ function getPipeline(): Pipeline {
                 key: inputKeys.dataset1,
                 title: 'Labeled Dataset 1', description: datasetDesc,
                 loaders: {'cells': 'loadCells'}, //this loader does not exist and is just for Demo purposes
-                postProcessForJS: util.postProcessForImage //postprocessing
+                postProcessForJS: util.postProcessForImage, //postprocessing
+                modifyBatchParameters:util.mergeMetaInformationWithBatchSettings
             },
             {
                 key: inputKeys.dataset2,
@@ -92,9 +105,10 @@ function getPipeline(): Pipeline {
             //     },
             // }
         ],
-        inputParameters:[
-            getTextfieldInputParams('name0','Name Channel 1','You can give a name to Dataset 1, e.g. "Stress Granules". This will make the evaluation more legible.','Name...',''),
-            getTextfieldInputParams('name1','Name Channel 2','You can give a name to Dataset21, e.g. "P-Bodies". This will make the evaluation more legible.','Name...','')
+        inputParameters: [
+            getTextfieldInputParams('name0', 'Name Channel 1', 'You can give a name to Dataset 1, e.g. "Stress Granules". This will make the evaluation more legible.', 'Name...', ''),
+            getTextfieldInputParams('name1', 'Name Channel 2', 'You can give a name to Dataset21, e.g. "P-Bodies". This will make the evaluation more legible.', 'Name...', ''),
+            getTextfieldInputParams('1px','1px in nm','How many nanometers correspond to 1px. This is useful for your dataset to have the proper scale and allow downstream processing steps to access this information. If blank no conversion will be used and all downstream values will be in px.','Scale...','',null,false,'number'),
         ],
         //Info for user
         descriptions: {

@@ -18,6 +18,11 @@ const helpScreen = <div>
     <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen />
 </div>
 
+/**Optional Typing for the */
+export type __NAME__BatchParameters = {
+
+}
+
 function getPipeline(): Pipeline {
     
     const datasetDesc = 'This description appears in the file loader when loading this file.'
@@ -61,6 +66,10 @@ function getPipeline(): Pipeline {
                     transform:suggestSuffixedFileName('_sum','png')
                 },
             }
+        ],
+        inputParameters:[
+            /**If the single datbatches in this pipeline require inputs they go here.
+             * The keys should be the same as defined by the __NAME__BatchParameters type above.*/
         ],
         
         //Info for user

@@ -36,6 +36,9 @@ section.container.hidden {
 .site-block {
 	max-width: $maxContainerWidth;
 
+	&.medium {
+		max-width: ($maxContainerWidth + $maxContainerWidthNarrow)/2;
+	}
 	&.narrow {
 		max-width: $maxContainerWidthNarrow;
 

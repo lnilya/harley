@@ -9,16 +9,17 @@ import {OverlayState} from "../types/uitypes";
 import {abortStep} from "../eel/eel";
 import {PipelineStep} from "../types/pipelinetypes";
 import {DisplayOptionSetting} from "../ui/modules/DisplayOptions";
+import {ParameterKey} from "./paramtypes";
 
 const deepEqual = require('deep-equal')
 
-export type StepState<InputType, ParameterType, Step> = {
+export type StepState<InputType, ParameterType, Step, BatchParams> = {
     curParams: ParameterType,
     curInputs: InputType,
     curStep: Step,
     isRunning: boolean,
     setOverlay:SetterOrUpdater<OverlayState>,
-    curBatch: SingleDataBatch
+    curBatch: SingleDataBatch<BatchParams>
 }
 type AtomFamily<P> = (param: P) => RecoilState<P>
 
@@ -32,19 +33,19 @@ type AtomFamily<P> = (param: P) => RecoilState<P>
  * @param overlayMessageOnRun
  * @param canAbort If true the UI will display some sort of abort button. The abortID of the process is the moduleID, which is the default parameter for runStep.
  */
-export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, any>>(
+export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, any>, BatchParamType = Record<ParameterKey, any>>(
     settingsAtomFamily: AtomFamily<any>,
     onInputChange: (newParams?:Inputs, oldParams?:Inputs) => any,
     runMainAlgorithm: (params: Parameters, step: Step) => true|Promise<true|{error:string}>,
     overlayMessageOnRun?: OverlayState,
     canAbort:boolean = false,
     paramChangeListener:Record<string, (newValue,oldValue)=>void> = null
-    ): StepState<Inputs, Parameters, Step> {
+    ): StepState<Inputs, Parameters, Step, BatchParamType> {
     
         const curParams:Parameters = useRecoilValue(alg.curPipelineStepParameterValues) as Parameters;
         const curInputs:Inputs = useRecoilValue(alg.curPipelineStepInputData) as unknown as Inputs;
         const curStep:Step = useRecoilValue(ui.curPipelineStep) as unknown as Step;
-        const curBatch:SingleDataBatch = useRecoilValue(alg.curLoadedBatch);
+        const curBatch:SingleDataBatch<BatchParamType> = useRecoilValue(alg.curLoadedBatch) as SingleDataBatch<BatchParamType>;
         const [overlay, setOverlay] = useRecoilState(ui.overlay);
         const [lastRunSettings, setLastRunSettings] = useRecoilState(settingsAtomFamily(curStep.moduleID));
         
@@ -74,7 +75,7 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
         const runAlgorithm:eventbus.ListenerFunction<void,eventbus.RunPipelineStepSyncResult> = async () => {
             console.log(`[${curStep.moduleID}] RUNNING STEP`);
             
-            if (overlay != null) return {moduleID:curStep.moduleID, success:false, error: 'Cant run algorithm while overlay is active or somethign else is running'};
+            if (overlay != null) return {moduleID:curStep.moduleID, success:false, error: 'Can\'t run algorithm while overlay is active or something else is running'};
             var changedInputs = !deepEqual(curInputs, lastRunSettings?.inputs);
     
             var changedParams = false;

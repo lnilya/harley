@@ -1,9 +1,13 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
+
+from numpy.core.records import ndarray
+from shapely.geometry import Polygon
 
 from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners, getColocImages
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util.imgutil import getPreviewImage
+import numpy as np
 
 
 class ColocCellsKeys:
@@ -19,6 +23,10 @@ class ColocCells(ModuleBase):
 
     keys: ColocCellsKeys
     alignedDataSets:List[Tuple[CellsDataset,CellsDataset]]
+    cellImages:List[Tuple[ndarray,ndarray,ndarray,ndarray]] #PreviewImages for each cell, both channels, mix and coloc only
+    cellContours:List[Dict] #Outlines of each cell
+    cellFoci:Tuple[List[List[Dict]],List[List[Dict]]] #For each channel, each cell a list of contours
+    selectedCells:List[int] #Indices of cells selected
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -42,12 +50,28 @@ class ColocCells(ModuleBase):
 
         return c
 
+    def addGeneratedData(self,params):
+
+        #Parse into polygons
+        foci0 = []
+        foci1 = []
+        for i in self.selectedCells:
+            foci0 += [[Polygon(np.array([focus['x'],focus['y']]).T) for focus in self.cellFoci[0][i]]]
+            foci1 += [[Polygon(np.array([focus['x'],focus['y']]).T) for focus in self.cellFoci[1][i]]]
+
+        """Add the selected cells' foci into the pipeline for coloc analysis"""
+        self.onGeneratedData(self.keys.outIncludedCells,
+                             [ foci0, foci1 ]
+                             ,params)
+
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = ColocCellsKeys(inputkeys, outputkeys)
 
         #This is a stub and simply displays best practices on how to structure this function. Feel free to change it
         if action == 'select':
-            selectedCells = params['select']
+            self.selectedCells = params['select']
+            self.addGeneratedData(params)
+            return True
         elif action == 'apply':
 
             col = self.unpackParams(**params)
@@ -56,30 +80,22 @@ class ColocCells(ModuleBase):
             self.alignedDataSets = self.session.getData(self.keys.inAlignedDatasets)
 
             #Identify which cell numbers correspond to which in two aligned batches
-            self.cellPartners = []
             self.cellImages = []
             self.cellContours = []
             self.cellFoci = []
             for ds1,ds2 in self.alignedDataSets:
                 p = identifyCellPartners(ds1,ds2)
-                self.cellPartners += [p]
                 p1 = [i for i,j in p] #cellnumbers in ds1
                 p2 = [j for i,j in p] #cellnumbers in ds2
                 self.cellContours += ds1.getSingleCellContours(p1)
                 self.cellImages += getColocImages(ds1,ds2,p,self.keys.outIncludedCells,col)
                 self.cellFoci += [ds1.getFociContours(p1),ds2.getFociContours(p2)]
 
-
-            #Identify and extract single cell Images and foci contours
-
-            #do something with it...
-
-            #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
-            #of the UI.
-            # self.onGeneratedData(self.keys.outBorderedImage, someInput, params)
+            self.selectedCells = list(range(0,len(self.cellContours)))
+            self.addGeneratedData(params)
 
             #Generate an output that will go to javascript for displaying on the UI side
-            return {'foci':self.cellFoci, 'imgs':self.cellImages,'cnts':self.cellContours, 'selected':list(range(0,len(self.cellContours)))}
+            return {'foci':self.cellFoci, 'imgs':self.cellImages,'cnts':self.cellContours, 'selected':self.selectedCells}
 
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported
