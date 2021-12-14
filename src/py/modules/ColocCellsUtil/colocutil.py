@@ -10,6 +10,7 @@ from src.sammie.py.util.imgutil import makeSemiTransparent, getPreviewImage, joi
 def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]],key:str, color:List[Tuple[int,int,int]], border:int = 3):
     """Preview Images are generated as the overlap area of the two cell images and exported as semi transparent masks"""
     allImgs = []
+    allImgsNumpy = []
     for p1,p2 in partners:
         maskPatch1, dx1, dy1 = shapeutil.getPolygonMaskPatch(d1.contours[p1]['x'], d1.contours[p1]['y'], 0)
         maskPatch2, dx2, dy2 = shapeutil.getPolygonMaskPatch(d1.contours[p2]['x'], d1.contours[p2]['y'], 0)
@@ -37,7 +38,7 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
                      mix, #COLOC ONLY IMAGE
                      joinChannels('%s_j_%d' % (key, p1), img1, color[0], img2, color[1], True) #MIXED IMAGE
                      )]
-        allImgsNumpy = [img1,img2,imgMix]
+        allImgsNumpy += [[img1,img2,imgMix]]
 
     return allImgs,allImgsNumpy
 

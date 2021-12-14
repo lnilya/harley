@@ -84,6 +84,7 @@ class ColocCells(ModuleBase):
 
             #Identify which cell numbers correspond to which in two aligned batches
             self.cellImages = []
+            self.rawImages = []
             self.cellContours = []
             self.cellFoci = [[],[]]
             dsnum = 0
@@ -95,6 +96,7 @@ class ColocCells(ModuleBase):
                 colocImgs = getColocImages(ds1,ds2,p,'%s_%d'%(self.keys.outIncludedCells,dsnum),col)
                 dsnum += 1
                 self.cellImages += colocImgs[0]
+                self.rawImages += colocImgs[1]
                 self.cellFoci[0] += ds1.getFociContours(p1)
                 self.cellFoci[1] += ds2.getFociContours(p2)
             self.selectedCells = list(range(0,len(self.cellContours)))
@@ -109,7 +111,7 @@ class ColocCells(ModuleBase):
         res = {
             'fociInChannel0':data[0],
             'fociInChannel1':data[1],
-            'imgs': [img for i,img in enumerate(self.cellImages) if i in self.selectedCells]
+            'imgs': [img for i,img in enumerate(self.rawImages) if i in self.selectedCells]
         }
         with open(path, 'wb') as handle:
             pickle.dump(res, handle, protocol=pickle.HIGHEST_PROTOCOL)
