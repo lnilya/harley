@@ -1,11 +1,14 @@
+import pickle
 from typing import List, Tuple, Dict
 
+import matplotlib.pyplot as plt
 from numpy.core.records import ndarray
 from shapely.geometry import Polygon
 
 from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners, getColocImages
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.modules.ModuleBase import ModuleBase
+from src.sammie.py.util import imgutil
 from src.sammie.py.util.imgutil import getPreviewImage
 import numpy as np
 
@@ -82,15 +85,18 @@ class ColocCells(ModuleBase):
             #Identify which cell numbers correspond to which in two aligned batches
             self.cellImages = []
             self.cellContours = []
-            self.cellFoci = []
+            self.cellFoci = [[],[]]
+            dsnum = 0
             for ds1,ds2 in self.alignedDataSets:
                 p = identifyCellPartners(ds1,ds2)
                 p1 = [i for i,j in p] #cellnumbers in ds1
                 p2 = [j for i,j in p] #cellnumbers in ds2
                 self.cellContours += ds1.getSingleCellContours(p1)
-                self.cellImages += getColocImages(ds1,ds2,p,self.keys.outIncludedCells,col)
-                self.cellFoci += [ds1.getFociContours(p1),ds2.getFociContours(p2)]
-
+                colocImgs = getColocImages(ds1,ds2,p,'%s_%d'%(self.keys.outIncludedCells,dsnum),col)
+                dsnum += 1
+                self.cellImages += colocImgs[0]
+                self.cellFoci[0] += ds1.getFociContours(p1)
+                self.cellFoci[1] += ds2.getFociContours(p2)
             self.selectedCells = list(range(0,len(self.cellContours)))
             self.addGeneratedData(params)
 
@@ -100,7 +106,13 @@ class ColocCells(ModuleBase):
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported
         data = self.session.getData(key)
-
+        res = {
+            'fociInChannel0':data[0],
+            'fociInChannel1':data[1],
+            'imgs': [img for i,img in enumerate(self.cellImages) if i in self.selectedCells]
+        }
+        with open(path, 'wb') as handle:
+            pickle.dump(res, handle, protocol=pickle.HIGHEST_PROTOCOL)
         #Write a file with this data or postprocess it in some way
         #...
 

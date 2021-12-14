@@ -37,8 +37,9 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
                      mix, #COLOC ONLY IMAGE
                      joinChannels('%s_j_%d' % (key, p1), img1, color[0], img2, color[1], True) #MIXED IMAGE
                      )]
+        allImgsNumpy = [img1,img2,imgMix]
 
-    return allImgs
+    return allImgs,allImgsNumpy
 
 
 def identifyCellPartners(d1:CellsDataset,d2:CellsDataset):

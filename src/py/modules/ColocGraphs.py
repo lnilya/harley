@@ -1,3 +1,4 @@
+import json
 from typing import List, Dict
 
 import matplotlib.pyplot as plt
@@ -37,33 +38,6 @@ class ColocGraphs(ModuleBase):
         #respective
         return paramName1[0],paramName2
 
-    def __calculateFociCenters(self,channels:List[List[List[Dict]]]):
-        res = []
-        for ch in channels:
-            resCh = []
-            for cell in ch:
-                resCell = []
-                for focus in cell:
-                    resCell += [[np.mean(focus['x']),np.mean(focus['y'])]]
-                resCh += [np.array(resCell)]
-            res += [resCh]
-
-        return res
-    def __calculateFociRadiae(self,channels:List[List[List[Dict]]]):
-        res = []
-        for ch in channels:
-            resCh = []
-            for cell in ch:
-                resCell = []
-                for focus in cell:
-                    rad = contourLength(np.array([focus['x'],focus['y']]).T)/(2*np.pi)
-                    resCell += [rad]
-                    # imgutil.plotContour(plt,np.array([focus['x'],focus['y']]))
-                resCh += [np.array(resCell)]
-            res += [resCh]
-
-        return res
-
     def __getDistToNearestNeighbor(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
         distancesFwd = [] #will contain nearest neighbour distances src->dist if foci are NOT overlapping
         distancesBck = [] #will contain nearest neighbout distances dist->src if not overlapping
@@ -99,9 +73,6 @@ class ColocGraphs(ModuleBase):
                         overlapRelFwd += [ar / f1.area]
                         overlapRelBck += [ar / f2.area]
 
-            #For the relative we first compute fociSizes for each foci1 foci
-            # nearestNeighbourDistancesRel = [n / fociSrcRadius[c][i] for i,n in enumerate(nearestNeighbourDistances)]
-            # distancesRel += nearestNeighbourDistancesRel
 
         return distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck
 
@@ -126,21 +97,12 @@ class ColocGraphs(ModuleBase):
             for c in channel0: num0 += len(c)
             for c in channel1: num1 += len(c)
 
-            # poly = self.__parseFociToPoly(foci)
-
-            # centers = self.__calculateFociCenters(foci)
-            # radiae = self.__calculateFociRadiae(foci)
             distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck = self.__getDistToNearestNeighbor(channel0,channel1,scale)
-            # nndistAbs1To0,nndistRel1to0 = self.__getDistToNearestNeighbor(centers[0],centers[1],radiae[0])
-            k = 0
-            #do something with it...
-
             #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
             #of the UI.
-            self.onGeneratedData(self.keys.outGraphData, {}, params)
 
             #Generate an output that will go to javascript for displaying on the UI side
-            return {
+            json = {
                 'nn':{'fwd':distancesFwd,'bck':distancesBck},
                 'overlap': {'abs':overlap,'fwd':overlapRelFwd,'bck':overlapRelBck},
                 'stats':{
@@ -149,10 +111,21 @@ class ColocGraphs(ModuleBase):
                     'num1':num1
                 }
             }
+            self.onGeneratedData(self.keys.outGraphData, json, params)
+            return json
 
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported
         data = self.session.getData(key)
+        data['explanation'] = 'Data for nn (Nearest Neighbour) and overlap. Absolute values are either in px or nm^2 depending wether the scale has been provided initially.' \
+                              'fwd and bck are relative percentage value. nn-fwd means distance from channel0 to 1, nn-bck means distance from channel1 to 0. ' \
+                              'Overlap fwd means overlapArea / channel0 foci area, and bck overlapArea / channel1 foci area'
+        # Serializing json
+        json_object = json.dumps(data, indent=4)
+
+        # Writing to sample.json
+        with open(path, "w") as outfile:
+            outfile.write(json_object)
 
         #Write a file with this data or postprocess it in some way
         #...

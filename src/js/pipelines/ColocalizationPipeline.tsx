@@ -1,7 +1,7 @@
 import React from "react";
 import * as util from '../../sammie/js/pipelines/pipelineutil'
 import * as server from '../../sammie/js/eel/eel'
-import {suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
+import {suggestModifiedFilename, suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
 import {Pipeline} from "../../sammie/js/types/pipelinetypes";
 import ResponsiveEmbed from 'react-responsive-embed'
 import * as DatasetAlignmentParams from '../modules/DatasetAlignment/params'
@@ -53,7 +53,7 @@ function getPipeline(): Pipeline {
                 outputKeys: {alignedDatasets: dataKeys.matchedDatasets}
             } as DatasetAlignmentParams.Step,
             {
-                title: 'ColocCells',
+                title: 'Cell Overview',
                 moduleID: 'ColocCells',
                 renderer: <ColocCells/>,
                 parameters: ColocCellsParams.parameters,
@@ -61,7 +61,7 @@ function getPipeline(): Pipeline {
                 outputKeys: {colocCells: dataKeys.colocCells}
             } as ColocCellsParams.Step,
             {
-                title: 'ColocGraphs',
+                title: 'Graphs',
                 moduleID: 'ColocGraphs',
                 renderer: <ColocGraphs/>,
                 parameters: ColocGraphsParams.parameters,
@@ -93,17 +93,29 @@ function getPipeline(): Pipeline {
         ],
         //Define what the outputs of this Pipeline are
         outputs: [
-            // {
-            //     requiredInput: dataKeys.matchedDatasets,
-            //     title:'Sum of Two images',
-            //     description:'This is the description that appears in the Export file screen.',
-            //
-            //     //Should define a suggestion function for naming the output, makes it a lot easier for user to store files.
-            //     suggestDestinationOutput:{
-            //         pipelineInputKey:inputKeys.img1,
-            //         transform:suggestSuffixedFileName('_sum','png')
-            //     },
-            // }
+            {
+                requiredInput: dataKeys.graphData,
+                title:'JSON Graph Data',
+                description:'Data used to generate the histograms. In JSON format.',
+                suggestDestinationOutput:{
+                    pipelineInputKey:inputKeys.dataset1,
+                    transform:suggestModifiedFilename(/(.*)\..*/g,'Graphs_$1.json'),
+                },
+            },
+            {
+                requiredInput: dataKeys.colocCells,
+                title:'Raw Data',
+                description:<>
+                        A Python <a href={"https://docs.python.org/3/library/pickle.html"} target={'_blank'} rel={'noreferrer'}>pickle</a> of foci as <a href="https://shapely.readthedocs.io/en/stable/manual.html#polygons" target={'_blank'} rel={'noreferrer'}>Shapely Polygon</a> instances
+                        sorted by channel and cells. Images of single cells are included as well as displayed in the Cell Overview Step
+                        Only cells selected in in Cell Overview step are included. For any post processing of colocalization.
+                    </>,
+                //Should define a suggestion function for naming the output, makes it a lot easier for user to store files.
+                suggestDestinationOutput:{
+                    pipelineInputKey:inputKeys.dataset1,
+                    transform:suggestModifiedFilename(/(.*)\..*/g,'Foci_$1.pickle'),
+                },
+            }
         ],
         inputParameters: [
             getTextfieldInputParams('name0', 'Name Channel 1', 'You can give a name to Dataset 1, e.g. "Stress Granules". This will make the evaluation more legible.', 'Name...', ''),

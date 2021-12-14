@@ -44,6 +44,7 @@ const Box = (props: { name0: string,name1:string, result: ColocGraphsResult,i:nu
     const n = result.stats[i == 0 ? 'num0' : 'num1']
     const percOverlap = result.overlap.abs.length / n
     const avgOverlap = mean(result.overlap[i == 0 ? 'fwd':'bck'])
+    const numInclusion = result.overlap[i == 0 ? 'fwd':'bck'].filter(o => o > 0.95).length / n
     const avgDist = mean(result.nn[i == 0 ? 'fwd':'bck'])
     
     var avgDistFormat:string = '%.2f'
@@ -57,6 +58,12 @@ const Box = (props: { name0: string,name1:string, result: ColocGraphsResult,i:nu
                 <div className="box-row">
                     <span>Overlapping {name1}</span>
                     <span>{printf('%.2f %% (%d)', percOverlap * 100, percOverlap*n)}</span>
+                </div>
+            </Tooltip>
+            <Tooltip title={`Percentage of ${name0} fully included (overlap of >95% of ${name0} area) in ${name1}.`}  placement={'bottom'}>
+                <div className="box-row">
+                    <span>Fully included in {name1}</span>
+                    <span>{printf('%.2f %% (%d)', numInclusion * 100, numInclusion*n)}</span>
                 </div>
             </Tooltip>
             <Tooltip title={`Average percentage of area of ${name0} covered by ${name1}. A value of 100% means that the focus is fully included.`} placement={'bottom'}>
