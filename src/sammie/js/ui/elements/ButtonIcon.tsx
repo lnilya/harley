@@ -15,7 +15,7 @@ interface IButtonIconProps{
 const ButtonIcon:React.FC<IButtonIconProps> = ({icon,btnText, className}) => {
 	
 	return (
-		<div className={`button-icon`}>
+		<div className={`button-icon ${className || ''}`}>
             <div className="fl-row">
                 {icon &&
                     <img src={icon} alt=""/>

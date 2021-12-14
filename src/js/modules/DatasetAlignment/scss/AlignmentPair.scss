@@ -1,0 +1,63 @@
+
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.alignment-pair{
+
+	&__check{
+		//width: 150px !important;
+		//height: 150px !important;
+		font-size: 2.5em !important;
+		padding: 15px;
+		border: 2px solid white !important;
+		background-color: white;
+		border-radius: 50%;
+		&.success{
+			background-color: $colSuccess;
+		}
+		&.warning{
+			background-color: $colError;
+		}
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
+		z-index: 3;
+	}
+
+	.polygon-cloud{
+		@include stick-to($fix-all)
+	}
+	.left{
+		box-sizing: border-box;
+		border-right: 1px solid white;
+	}
+	.right{
+		box-sizing: border-box;
+		border-left: 1px solid white;
+	}
+	.hint{
+		position: absolute;
+		left: 50%;
+		top:50%;
+		font-weight: bold;
+		transform: translate(-50%,-50%);
+		max-width: 80%;
+		line-height: 1.6;
+		text-align: center;
+	}
+	&__selector{
+		.batch-num{
+			padding: 5px;
+			line-height: 1.4375em;
+			//color: $colMain;
+		}
+		background-color: $colWhite;
+		padding: 5px;
+		border-radius: 4px;
+		position: absolute;
+		left:50%;
+		bottom: 20px;
+		transform: translateX(-50%);
+	}
+}

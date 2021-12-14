@@ -5,7 +5,7 @@ import {FociInCell} from "./server";
 import * as self from "./params";
 import './scss/FociCandidates.scss'
 import {useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
-import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
 import {EelResponse} from "../../../sammie/js/eel/eel";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import {cl} from "../../../sammie/js/util";
@@ -17,15 +17,21 @@ import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 export const MinPolygon = styled.polygon({
     fill:'#9ACD3266',
     stroke:'greenyellow',
-    strokeWidth:0.2,
+    strokeWidth:1,
     '&:hover':{
         fill:'#9ACD32EE',
     }
 })
+export const OutlinePolygon = styled.polygon({
+    stroke:'#d3c000',
+    strokeWidth:1,
+    fill:'none',
+    strokeDasharray:'2 4'
+})
 export const MaxPolygon = styled.polygon({
     fill:'#ff000011',
     stroke:'red',
-    strokeWidth:0.2,
+    strokeWidth:1,
     '&:hover':{
         fill:'#ff000099',
     }
@@ -33,6 +39,7 @@ export const MaxPolygon = styled.polygon({
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asCellImages = atomFamily<PipelineImage[],string>({key:'foci-candidates-images',default:null});
+const asCellContours = atomFamily<PipelinePolygons,string>({key:'foci-candidates-contours',default:null});
 const asSelectedResult = atomFamily<FociInCell,string>({key:'foci-in-cell',default:null});
 const asSelectedCell = atomFamily<number,string>({key:'foci-candidates-selcell',default:-1});
 const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'foci-candidates_initial',default:null});
@@ -53,14 +60,17 @@ const FociCandidates:React.FC<IFociCandidatesProps> = () => {
         var loadCell = selectedCell;
         if(cellImages == null){ //Images need to be loaded first
             const res = await server.loadCellImages(curParams,curStep)
-            setCellImages(res.error ? null : res.data)
+            setCellImages(res.error ? null : res.data.imgs)
+            setCellContours(res.error ? null : res.data.contours)
             if(res.error) return res;
             //Load a random cell
-            loadCell = Math.floor(Math.random()*res.data.length)
+            loadCell = Math.floor(Math.random()*res.data.imgs.length)
             setSelCell(loadCell)
         }else{
             //remove the overlay, to prevent it from coming when selected Cell outlines are reloaded
             setOverlay(null)
+            const res = await server.runFociCandidates(curParams,curStep,selectedCell)
+            if(!res.error) setFociInSelCell(res.data)
         }
         
         return true;
@@ -85,6 +95,7 @@ const FociCandidates:React.FC<IFociCandidatesProps> = () => {
     
     /**UI SPECIFIC STATE*/
     const [cellImages,setCellImages] = useRecoilState(asCellImages(curStep.moduleID))
+    const [cellContours,setCellContours] = useRecoilState(asCellContours(curStep.moduleID))
     const [selectedCell,setSelectedCell] = useRecoilState(asSelectedCell(curStep.moduleID))
     const [fociInSelCell,setFociInSelCell] = useRecoilState(asSelectedResult(curStep.moduleID))
     const [error,setError] = useState<EelResponse<any>>(null)
@@ -116,6 +127,8 @@ const FociCandidates:React.FC<IFociCandidatesProps> = () => {
                         {fociInSelCell && !hideMask['2'] &&
                             <PolygonCloud polygons={fociInSelCell.fociMin} PolyComp={MinPolygon} canvasDim={cellImages[selectedCell]}/>
                         }
+                        
+                        <PolygonCloud polygons={[cellContours[selectedCell]]} PolyComp={OutlinePolygon} canvasDim={cellImages[selectedCell]}/>
                         <img src={cellImages[selectedCell].url} />
                     </div>
                 }

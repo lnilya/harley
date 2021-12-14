@@ -31,12 +31,12 @@ export const allPipelineInputs = connectedAtom<Record<PipelineDataKey,LocalFileW
 // export const allPipelineAggregatePaths = connectedAtom<Record<PipelineDataAggregatorID,LocalFilePath>>({key:'all_pl_aggregates',default:{}});
 
 
-export type SingleDataBatch = {
+export type SingleDataBatch<BatchParamType = Record<ParameterKey, any>> = {
     /**Files loaded into this batch*/
     inputs: Record<PipelineDataKey,LocalFileWithPreview>,
     
     /**Parameters for this batch*/
-    batchParameters: Record<ParameterKey, any>,
+    batchParameters: BatchParamType,
     
     /**Name of settings set in this batch*/
     settingsSetName:string

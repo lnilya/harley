@@ -3,6 +3,7 @@ import cellDetectionPipeline from "./cellDetectionPipeline";
 import preprocessingPipeline from "./dvPreprocessingPipeline";
 import fociDetectionPipeline from "./fociDetectionPipeline";
 import modelPipeline from "./modelTrainingPipeline";
+import colocPipeline from "./ColocalizationPipeline";
 
 
 /**Main Function to initialize pipelines*/
@@ -11,5 +12,6 @@ export function getPipelineDefinitions() {
     const dvs: Pipeline = preprocessingPipeline()
     const fds: Pipeline = fociDetectionPipeline()
     const svm: Pipeline = modelPipeline()
-    return [cd,dvs,svm,fds];
+    const clc: Pipeline = colocPipeline()
+    return [cd,dvs,svm,fds,clc];
 }

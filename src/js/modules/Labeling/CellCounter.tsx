@@ -1,5 +1,12 @@
 import React, {Suspense, useState} from "react";
-import {SeedPolygon, SelectedPolygon, SplitablePolygon, SplitPolygon, SplitSeedPolygon} from "./_polygons";
+import {
+    OutlinePolygonLabeling,
+    SeedPolygon,
+    SelectedPolygon,
+    SplitablePolygon,
+    SplitPolygon,
+    SplitSeedPolygon
+} from "./_polygons";
 import {useToggleKeys} from "../../../sammie/js/modules/modulehooks";
 import {copyChange, doesPolygonContain} from "../../../sammie/js/util";
 import {PipelineImage, PolygonData} from "../../../sammie/js/types/datatypes";
@@ -13,6 +20,7 @@ interface ICellCounterProps {
     /**Additional classnames for this component*/
     className?: string,
     cellImg:PipelineImage,
+    cellContour:PolygonData
     curCell:SingleCellLabelingData,
     
     onNext:(res:LabelingResult) => void
@@ -26,7 +34,7 @@ const pxPerLoop = 10
  */
 
 
-const CellCounter: React.FC<ICellCounterProps> = ({onNext, className,cellImg,curCell}) => {
+const CellCounter: React.FC<ICellCounterProps> = ({cellContour, onNext, className,cellImg,curCell}) => {
     
     const [loading, setLoading] = useState(true);
     const [curSelectedFoci, setCurSelFoci] = useState<number[]>([])
@@ -153,6 +161,7 @@ const CellCounter: React.FC<ICellCounterProps> = ({onNext, className,cellImg,cur
                     <img src={cellImg.url} alt=""/>
                     {curCell &&
                     <>
+                        <PolygonCloud polygons={[cellContour]} canvasDim={cellImg} PolyComp={OutlinePolygonLabeling}/>
                         <PolygonCloud onClick={onUnSelectSeed} className={''} polygons={selectedOutlines} canvasDim={cellImg} PolyCompFactory={selectedOutlinesStyle}/>
                         <PolygonCloud polygons={splittingSeeds} canvasDim={cellImg} PolyComp={SplitSeedPolygon}/>
                         <PolygonCloud onMouseDown={onMouseDownIn} onClick={onSelectSeed}
@@ -161,6 +170,7 @@ const CellCounter: React.FC<ICellCounterProps> = ({onNext, className,cellImg,cur
                     </>
                     }
                 </div>
+                
                 <div className="hide smallhint pad-100-ver">Num Foci: {numSelected}</div>
                 <div className="fl-col fl-grow pad-100-top">
                     <div className="fl-row-end full-w margin-50-top margin-100-bottom">

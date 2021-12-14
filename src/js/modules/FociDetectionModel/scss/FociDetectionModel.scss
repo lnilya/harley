@@ -8,6 +8,11 @@
 			display: none;
 		}
 	}
+	&:not(.show-outlines){
+		.polygon-cloud.outline{
+			display: none;
+		}
+	}
 	&.mod-2{
 		.polygon-cloud.available-foci{
 			svg polygon{

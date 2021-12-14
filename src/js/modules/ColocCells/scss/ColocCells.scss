@@ -1,0 +1,15 @@
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.coloc-cells{
+	&:not(.show-borders){
+		.polygon-cloud{
+			display: none;
+		}
+	}
+	&.use-grayscale{
+		img{
+			filter: grayscale(100%) !important;
+		}
+	}
+}

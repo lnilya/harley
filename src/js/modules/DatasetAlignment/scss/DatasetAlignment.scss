@@ -1,0 +1,15 @@
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.dataset-alignment{
+	.titles {
+		background-color: black;
+		position: sticky;
+		top: $topBarHeight;
+		z-index: 2;
+		> *{
+			color:white;
+			text-align: center;
+		}
+	}
+}

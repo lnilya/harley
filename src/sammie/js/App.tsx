@@ -57,7 +57,7 @@ const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
                 {openPopup == UIPopups.paramsave && <ParamSaverDialog/>}
                 <MainMenu onChangeOpenState={s=>setSideMenuOpen(s)}/>
                 <Header/>
-                {curStep &&  <ProgressOverlay sidebarActive={uiStep == UIScreens.pipeline}/> }
+                {curStep &&  <ProgressOverlay sidebarActive={showSidebar}/> }
                 {showSidebar && <Sidebar/>}
                 <div className={`inner`}>
                     <div className={`main pad-100 rel` + cl(showSidebar, 'has-sidebar')}>

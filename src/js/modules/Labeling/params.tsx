@@ -1,4 +1,4 @@
-import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
 import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import React from "react";
@@ -15,7 +15,7 @@ export const parameters:Array<Parameter<any>> = [
 ]
 
 /**Typing for Labeling Inputs*/
-export type Inputs = {sizes:[number,number], cellImages:PipelineImage[] }
+export type Inputs = {sizes:[number,number], cellImages:PipelineImage[], cellContours:PipelinePolygons }
 
 /**Typing for Labeling Outputs*/
 export type Outputs = {labels:LabelingResult[], trainingData:any}

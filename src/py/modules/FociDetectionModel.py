@@ -1,11 +1,13 @@
 import csv
-from typing import List, Set
+import pickle
+from typing import List, Set, Dict
 
 import numpy as np
 import skimage.measure
 from shapely.geometry import Polygon
 from skimage.measure._regionprops import RegionProperties
 
+from src.py.aggregators.focidataset import addFocusToCellSet, resetFociInCellSet
 from src.sammie.py.eeljsinterface import eeljs_sendProgress
 from src.py.modules.FociCandidatesUtil.FociCandidateData import FociCandidateData
 from src.py.modules.LabelingUtil import LabelingResult
@@ -34,6 +36,7 @@ class FociDetectionModel(ModuleBase):
     keys: FociDetectionModelKeys
     classifier: SVMClassifier
     trainingData: TrainingData
+    cellContours: List[Dict]
     cellInidices: Set
     loadedPortion:float
     cellsInExport: Set
@@ -79,22 +82,20 @@ class FociDetectionModel(ModuleBase):
 
                 #get all images
                 allCellImages: List[np.ndarray] = self.session.getData(self.keys.inDataset)['imgs']  # List of images with cells
+                self.cellContours = self.session.getData(self.keys.inDataset)['contours']  # List of images with cells
 
                 #pick a portion of dataset
                 nc = int(len(allCellImages) * self.loadedPortion/100.0)
                 if nc < 1: nc  = 1
-                if nc > len(allCellImages)-1: nc  = len(allCellImages)-1
+                if nc > len(allCellImages): nc  = len(allCellImages)
                 allCellImages = allCellImages[0:nc]
-
-                # add a border to prevent problems with contours landing outside of image
-                allCellImages = [addBorder(i, 3) for i in allCellImages]
 
                 self.cellInidices = set(range(0, len(allCellImages)))
                 self.cellsInExport = set(range(0,len(allCellImages)))
 
                 #Generate the contour loops candidates
                 fociData = FociCandidateData(allCellImages)
-                fociData.extractContours(model['extractionparams']['fociSize'],
+                fociData.extractContours(self.abortSignal, model['extractionparams']['fociSize'],
                                               model['extractionparams']['granularity'][0],
                                          progressMsg='1/2 Extracting Contour Candidates')
 
@@ -106,6 +107,8 @@ class FociDetectionModel(ModuleBase):
                     #Add the cells to the training set and extract features
                     self.trainingData.addCell(allCellImages[i], cnt['foci'])
                     eeljs_sendProgress(i / len(self.cellInidices), '2/2 Extracting Foci Features')
+                    if self.abortSignal():
+                        raise RuntimeError('Aborted execution.')
 
                 #Make predictions for all foci, for the user to be able to select it
                 self.allPossibleContourSelections = []
@@ -115,6 +118,8 @@ class FociDetectionModel(ModuleBase):
                     for f,cnt in enumerate(allContoursInCell):
                         sel += [getCutoffLevel(self.trainingData.contourLevels[c][f],cnt)[1]]
                     self.allPossibleContourSelections += [sel]
+                    if self.abortSignal():
+                        raise RuntimeError('Aborted execution.')
 
                 #Predict the foci using the model
                 eeljs_sendProgress(-1,'Classifying Foci')
@@ -152,7 +157,12 @@ class FociDetectionModel(ModuleBase):
 
             self.onGeneratedData(self.keys.outFoci, {'foci':adjustedChoices, 'selection':self.userSelectedFociPerCell}, params)
 
-            return {'imgs': self.previews, 'foci':allFoci, 'modelSelection':self.modelSelectedFociPerCell, 'selection':self.userSelectedFociPerCell}
+            return {'imgs': self.previews,
+                    'foci':allFoci,
+                    'cellsInExport':list(self.cellsInExport),
+                    'contours': self.cellContours,
+                    'modelSelection':self.modelSelectedFociPerCell,
+                    'selection':self.userSelectedFociPerCell}
 
     def getFociWithSizeAdjustment(self,adjFactor:float):
         adjustedChoices = []
@@ -174,7 +184,7 @@ class FociDetectionModel(ModuleBase):
 
         return adjustedChoices
 
-    def exportData(self, key: str, path: str, **args):
+    def __exportCSV(self, key:str, path:str,**args):
         scale = args['1px'] if '1px' in args else 1
 
         with open(path, 'w', newline='') as csvfile:
@@ -211,3 +221,39 @@ class FociDetectionModel(ModuleBase):
                                  self.trainingData.contourLevels[c][f][lvl]])
 
                     nf += 1
+
+    def __exportDataSetWithLabels(self,key:str,path:str,**args):
+        #Get the raw contents of the inital dataset file
+        data = self.session.getData(self.keys.inDataset)
+
+        rawPickle = data['rawData']
+        convertFun = data['convertIndex']
+
+        #Get the foci and cell selections
+        d = self.session.getData(self.keys.outFoci)
+        adjustedFociChoices = d['foci']
+        selectedChoices = d['selection']
+
+        resetFociInCellSet(rawPickle)
+        for i, c in enumerate(list(self.cellsInExport)):
+            #Gather all foci in this cell
+            cc = adjustedFociChoices[c]
+            selFoci = selectedChoices[c]
+            fociInCell = []
+            for f, lvl in enumerate(cc):
+                if f not in selFoci: continue
+                fociInCell += [self.trainingData.contours[c][f][lvl]]
+
+            #Get the location of the cell in dataset
+            batchNum,cellNumInBatch = convertFun(c)
+            addFocusToCellSet(rawPickle,batchNum,cellNumInBatch,fociInCell)
+
+        with open(path, 'wb') as handle:
+            pickle.dump(rawPickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    def exportData(self, key: str, path: str, csv:bool, **args):
+        if csv:
+            self.__exportCSV(key,path,**args)
+        else:
+            self.__exportDataSetWithLabels(key,path,**args)
+

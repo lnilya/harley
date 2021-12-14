@@ -28,7 +28,7 @@ const ToolTipIconButton:React.FC<IToolTipIconButtonProps> = ({tooltipPlacement, 
  
 	return (
         <Tooltip title={tooltipText} enterDelay={tooltipDelay} arrow placement={tooltipPlacement}>
-            <Icon className={className} onClick={onClick}/>
+            <Icon className={'tool-tip-icon-button '+ className} onClick={onClick} sx={color ? {color:color} : {}}/>
         </Tooltip>
 	);
 }

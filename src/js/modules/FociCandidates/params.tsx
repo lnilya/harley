@@ -1,4 +1,4 @@
-import {PipelineImage} from "../../../sammie/js/types/datatypes";
+import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
 import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import React from "react";
@@ -26,7 +26,11 @@ export const parameters:Array<Parameter<any>> = [
 export type Inputs = {dataset:PipelineImage[] }
 
 /**Typing for FociCandidates Outputs*/
-export type Outputs = {cellImages:PipelineImage[], sizes:[number,number]}
+export type Outputs = {
+    cellImages:PipelineImage[],
+    cellContours:PipelinePolygons,
+    sizes:[number,number]
+}
 
 /**Shorthand for the PipelineStep of FociCandidates*/
 export type Step = PipelineStep<Inputs, Outputs>;

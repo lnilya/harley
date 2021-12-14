@@ -6,6 +6,7 @@ import * as eventbus from "../../../sammie/js/state/eventbus";
 import * as self from "./params";
 import * as server from "./server";
 import './scss/__NAME__.scss'
+import * as parent from "../../pipelines/__PIPE_FILE__";
 import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import {EelResponse} from "../../../sammie/js/eel/eel";
@@ -37,7 +38,7 @@ const __NAME__:React.FC<I__NAME__Props> = () => {
     };
     
     /**CORE HOOK FOR SETTING UP STATE*/
-    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step>(asLastRunSettings,
+    const {curInputs,curStep,curParams,isRunning,curBatch} = useStepHook<self.Inputs, self.Parameters,self.Step,parent.__PIPE__BatchParameters>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
         {msg: 'Running __NAME__', display: "overlay"});

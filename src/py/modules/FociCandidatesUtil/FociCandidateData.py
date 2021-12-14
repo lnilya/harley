@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 
 import numpy as np
 from numpy import ndarray
@@ -52,7 +52,7 @@ class FociCandidateData:
 
         return r.getJSLabelingContours(numLevelsPerFoci)
 
-    def extractContours(self,circRange:Tuple[int,int], granularity:int, forCells:List[int] = None, progressMsg:str = 'Extracting Contour Candidates'):
+    def extractContours(self,abortSignal:Callable, circRange:Tuple[int,int], granularity:int, forCells:List[int] = None, progressMsg:str = 'Extracting Contour Candidates'):
         """Extracts all contours in the dataset"""
         cldp = ContourLoopDetectorParams(circRange,granularity)
         cld = ContourLoopDetector(cldp)
@@ -64,3 +64,6 @@ class FociCandidateData:
             img = self.images[c]
             eeljs_sendProgress(i/len(forCells),progressMsg)
             self.allContours += [cld.run(img)]
+
+            if abortSignal():
+                raise RuntimeError('Aborted execution.')

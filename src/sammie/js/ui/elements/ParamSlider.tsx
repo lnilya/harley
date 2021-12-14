@@ -59,7 +59,7 @@ const ParamSlider: React.FC<ISliderSettingProps> = ({onParameterChanged,tooltipP
         </div>
         {curSliderVal.length == 1 &&
         <div className={`fl-row param-slider__slider is-single`}>
-            <Slider value={curSliderVal[0]} min={conf.input.min} max={conf.input.max} step={conf.input.stepsize}
+            <Slider size={'small'} value={curSliderVal[0]} min={conf.input.min} max={conf.input.max} step={conf.input.stepsize}
                     onChange={(e, v) => setVal(v)} onMouseDown={onBlurIn} onChangeCommitted={onBlurOut}/>
 
             <Input value={curSliderVal[0]} inputProps={ip} onChange={ipchange(0)}
@@ -69,7 +69,7 @@ const ParamSlider: React.FC<ISliderSettingProps> = ({onParameterChanged,tooltipP
         {curSliderVal.length == 2 &&
         <>
             <div className={`fl-row param-slider__slider `}>
-                <Slider value={[...curSliderVal]} min={conf.input.min} max={conf.input.max} step={conf.input.stepsize}
+                <Slider size={'small'} value={[...curSliderVal]} min={conf.input.min} max={conf.input.max} step={conf.input.stepsize}
                         onChange={(e, v) => setVal(v)}
                         onMouseDown={onBlurIn} onChangeCommitted={onBlurOut}/>
             </div>

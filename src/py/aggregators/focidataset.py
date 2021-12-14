@@ -1,8 +1,11 @@
 import os.path
 import pickle
 import time
-from typing import Dict
+from typing import Dict, List
 
+import numpy as np
+
+from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.ModuleConnector import AggregatorFileInfo, AggregatorReturn
 from src.sammie.py.SessionData import SessionData
 from src.sammie.py.modules.ModuleBase import ModuleBase
@@ -27,18 +30,21 @@ def __getBatchData(session:SessionData, modulesById:Dict[str, ModuleBase],scaleP
 
     cellImages = []
 
-    for i in modulesById['MaskTightening'].userAcceptedContours:
-        cnt = tightContourList[i]
-        maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
-        img = denoisedImage[dy:dy+maskPatch.shape[0],dx:dx+maskPatch.shape[1]]
-        minIntensity = img[maskPatch].min()
-        maxIntensity = img[maskPatch].max()
-        img = (img - minIntensity) / (maxIntensity - minIntensity)
-        img[maskPatch == False] = 0
+    acceptedContourList = [tightContourList[i] for i in modulesById['MaskTightening'].userAcceptedContours]
 
-        cellImages += [img]
+    # for i in modulesById['MaskTightening'].userAcceptedContours:
+    #     cnt = tightContourList[i]
+    #     maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
+    #     img = denoisedImage[dy:dy+maskPatch.shape[0],dx:dx+maskPatch.shape[1]]
+    #     minIntensity = img[maskPatch].min()
+    #     maxIntensity = img[maskPatch].max()
+    #     img = (img - minIntensity) / (maxIntensity - minIntensity)
+    #     img[maskPatch == False] = 0
+    #
+    #     cellImages += [img]
 
-    return {'images':cellImages, 'scale':scalePxToNm}
+    # We store the source image and the contours the user accepted in this dataset.
+    return CellsDataset(denoisedImage,acceptedContourList,scalePxToNm)
 
 def appendToCellSet_Info(destinationPath:str) -> AggregatorFileInfo:
     filename = os.path.basename(destinationPath)
@@ -103,3 +109,15 @@ def appendToCellSet(destinationPath:str,data:SessionData, modulesById:Dict[str, 
         msg = 'Reset file and added batch %d results to dataset.'%(batchNum)
 
     return AggregatorReturn(msg,__getDataSetInfoObject(curData))
+
+def resetFociInCellSet(curData):
+    for d in curData['data']:
+        curData['data'][d].removeFociContours()
+
+def addFocusToCellSet(curData, batchNum:int, cellNum:int, fociList:List[np.ndarray]):
+    """Adds foci to a data batch. curData has the same structures as exporte dby this aggregator"""
+    if batchNum not in curData['data']:
+        raise RuntimeError('Invaldi batchnum (%d) provided for export fo cell (%d)'%(batchNum,cellNum))
+
+    ds:CellsDataset = curData['data'][batchNum]
+    ds.addFociContourForCell(cellNum,fociList)

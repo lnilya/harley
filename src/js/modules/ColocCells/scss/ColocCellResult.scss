@@ -1,0 +1,51 @@
+
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.coloc-cell-result{
+	width: 100%;
+	background-color: black;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	overflow: hidden;
+	.img-container{
+		img{
+			//filter: grayscale(100%);
+			width: 100%;
+			transition: all 0.3s;
+		}
+	}
+	.del-btn{
+		cursor: pointer;
+		transition: all 0.2s;
+		&:hover{
+			transform: scale(1.1);
+		}
+	}
+	&__footer{
+		padding: 5px 10px;
+		border-top:1px solid $colBGDark;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	&.is-excluded{
+		//background-color: #B30A07;
+		.coloc-cell-result__footer{
+			z-index: 2;
+			background-color: #B30A07;
+			span{
+				color: $colWhite;
+			}
+		}
+		.polygon-cloud{
+			display: none !important;
+		}
+		img{
+			opacity: 0.6;
+			filter: blur(5px);
+		}
+	}
+}

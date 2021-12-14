@@ -65,5 +65,20 @@ class HarleyModuleConnector(ModuleConnector):
         elif moduleName == 'FociDetectionModel':
             from src.py.modules.FociDetectionModel import FociDetectionModel
             return FociDetectionModel(moduleID, session)
+        elif moduleName == 'DatasetAlignment':
+            from src.py.modules.DatasetAlignment import DatasetAlignment
+            return DatasetAlignment(moduleID,session)
+        elif moduleName == 'ColocCells':
+            from src.py.modules.ColocCells import ColocCells
+            return ColocCells(moduleID,session)
+        elif moduleName == 'ColocGraphs':
+            from src.py.modules.ColocGraphs import ColocGraphs
+            return ColocGraphs(moduleID,session)
+        elif moduleName == 'ColocGraphs':
+            from src.py.modules.ColocGraphs import ColocGraphs
+            return ColocGraphs(moduleID,session)
+        elif moduleName == 'ColocGraphs':
+            from src.py.modules.ColocGraphs import ColocGraphs
+            return ColocGraphs(moduleID,session)
         # %NEW_MODULE%
         # Keep the New Module Comment at this location, for automatically adding new modules via scripts. Do not delete it, or the script will not work.

@@ -1,6 +1,25 @@
-.display-options{
+.display-options {
 	position: sticky;
 	top: 33px;
 	z-index: 2;
 	background-color: white;
+
+	&__mods {
+		.btnicon {
+			cursor: help;
+			display: inline-block;
+			font-size: 11px;
+			padding: 4px 10px;
+			border-radius: 3px;
+			line-height: 1;
+			justify-content: center;
+			font-weight: bold;
+			background: $colBGMedium;
+			&.active{
+				background: $colMain;
+			}
+			color: $colWhite;
+			margin-left: $defaultPadding/2;
+		}
+	}
 }
