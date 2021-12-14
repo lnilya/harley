@@ -1,6 +1,12 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.0
+Major: 
+- Added Colocalization pipeline to Harley
+Minor:
+- Varius small bugfixes in UI 
+- 
 ### Version: 1.0.1
 Major:
 - Added possibility to manually add/remove foci after model detection
