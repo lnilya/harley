@@ -24,8 +24,9 @@ class FileLoader(ModuleBase):
         p1Re = fromPattern.replace('**', '(---)') \
             .replace('*', '(---)'). \
             replace('**', '(---)') \
-            .replace('(---)', '(.*?)')
-        return [[f] + list(re.search(p1Re, f).groups()) for f in files]
+            .replace('(---)', '(.*?)').replace(os.path.sep,'|')
+
+        return [[f] + list(re.search(p1Re, f.replace(os.path.sep,'|')).groups()) for f in files]
 
     def __findInFileList(self, fileList, patternList: List[str] = None):
         # fileList is the form [filename,wildcard1,wildcard2...] while patternList is [wildcard1,wildcard2...]
