@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="104px" height="64px" viewBox="0 0 104 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>graph-overlap</title>
+    <g id="Elements" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="graph-overlap" transform="translate(0.081509, 0.000000)">
+            <circle id="Oval" fill="#232C36" cx="31.9184907" cy="31.9184907" r="31.9184907"></circle>
+            <circle id="Oval" fill="#A2AAB6" cx="71.9184907" cy="31.9184907" r="31.9184907"></circle>
+            <path d="M51.9185853,7.041638 C59.1863925,12.8921386 63.8369814,21.862213 63.8369814,31.9184907 C63.8369814,41.9747684 59.1863925,50.9448428 51.9185853,56.7953434 C44.6505889,50.9448428 40,41.9747684 40,31.9184907 C40,21.8704762 44.6429494,12.9068806 51.9004857,7.05606625 Z" id="Combined-Shape" fill="#FF7F50"></path>
+        </g>
+    </g>
+</svg>

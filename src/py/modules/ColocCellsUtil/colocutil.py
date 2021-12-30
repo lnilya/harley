@@ -1,6 +1,7 @@
 from typing import Tuple, List
 
 import numpy as np
+from scipy.stats import pearsonr
 
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.util import shapeutil
@@ -11,6 +12,7 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
     """Preview Images are generated as the overlap area of the two cell images and exported as semi transparent masks"""
     allImgs = []
     allImgsNumpy = []
+    allCorrelations = []
     for p1,p2 in partners:
         maskPatch1, dx1, dy1 = shapeutil.getPolygonMaskPatch(d1.contours[p1]['x'], d1.contours[p1]['y'], 0)
         maskPatch2, dx2, dy2 = shapeutil.getPolygonMaskPatch(d1.contours[p2]['x'], d1.contours[p2]['y'], 0)
@@ -23,6 +25,7 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
         #Intensity images for each cell individually
         img1 = np.copy(d1.img[dy:h,dx:w])
         img2 = np.copy(d2.img[dy:h,dx:w])
+        allCorrelations += [pearsonr(img1[maskPatch1 == True].flat,img2[maskPatch2 == True].flat)]
         img1[maskPatch1 == False] = 0
         img2[maskPatch2 == False] = 0
         if border > 0:
@@ -40,7 +43,7 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
                      )]
         allImgsNumpy += [[img1,img2,imgMix]]
 
-    return allImgs,allImgsNumpy
+    return allImgs,allImgsNumpy,allCorrelations
 
 
 def identifyCellPartners(d1:CellsDataset,d2:CellsDataset):

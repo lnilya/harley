@@ -3,6 +3,7 @@ from typing import List, Tuple, Dict
 
 import matplotlib.pyplot as plt
 from numpy.core.records import ndarray
+from scipy.stats import pearsonr
 from shapely.geometry import Polygon
 
 from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners, getColocImages
@@ -87,6 +88,7 @@ class ColocCells(ModuleBase):
             self.rawImages = []
             self.cellContours = []
             self.cellFoci = [[],[]]
+            self.pcc = []
             dsnum = 0
             for ds1,ds2 in self.alignedDataSets:
                 p = identifyCellPartners(ds1,ds2)
@@ -99,11 +101,17 @@ class ColocCells(ModuleBase):
                 self.rawImages += colocImgs[1]
                 self.cellFoci[0] += ds1.getFociContours(p1)
                 self.cellFoci[1] += ds2.getFociContours(p2)
+                self.pcc += colocImgs[2]
             self.selectedCells = list(range(0,len(self.cellContours)))
             self.addGeneratedData(params)
 
             #Generate an output that will go to javascript for displaying on the UI side
-            return {'foci':self.cellFoci, 'imgs':self.cellImages,'cnts':self.cellContours, 'selected':self.selectedCells}
+            return {'foci':self.cellFoci,
+                    'imgs':self.cellImages,
+                    'pccs':self.pcc,
+                    'cnts':self.cellContours,
+                    'cellAreas':[Polygon(np.array([p['x'],p['y']]).T).area for p in self.cellContours],
+                    'selected':self.selectedCells}
 
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported

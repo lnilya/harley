@@ -77,6 +77,10 @@ em{
 	font-size: 12px;
 }
 .text-underline{ text-decoration: underline;}
+.text-tooltip{
+	cursor: help;
+	text-decoration: underline dotted;
+}
 .text-bold{ font-weight: bold;}
 .text-reg{ font-weight: normal !important;}
 .text-left{ text-align: left; }

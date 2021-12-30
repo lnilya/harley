@@ -1,24 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
 import * as alg from "../../../sammie/js/state/algstate";
-import * as ui from "../../../sammie/js/state/uistates";
-import * as eventbus from "../../../sammie/js/state/eventbus";
+import {SingleDataBatch} from "../../../sammie/js/state/algstate";
 import * as self from "./params";
 import * as server from "./server";
+import {ColocGraphsResult} from "./server";
 import './scss/ColocGraphs.scss'
 import * as parent from "../../pipelines/ColocalizationPipeline";
+import {ColocalizationBatchParameters} from "../../pipelines/ColocalizationPipeline";
 import {useStepHook} from "../../../sammie/js/modules/modulehooks";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import {EelResponse} from "../../../sammie/js/eel/eel";
-import {LocalFileWithPreview, PipelineDataKey, PipelineImage} from "../../../sammie/js/types/datatypes";
-import {useState} from "react";
-import {ColocGraphsResult} from "./server";
-import {hist} from "../../util/math";
-import {Area, Bar, BarChart, CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import {LocalFileWithPreview, PipelineDataKey} from "../../../sammie/js/types/datatypes";
 import FlexBinChart from "./FlexBinChart";
-import {SingleDataBatch} from "../../../sammie/js/state/algstate";
-import {ColocalizationBatchParameters} from "../../pipelines/ColocalizationPipeline";
 import ColocOverview from "./ColocOverview";
+import CentroidTitleImage from '../../../assets/images/graph-centroid.svg'
+import OverlapTitleImage from '../../../assets/images/graph-overlap.svg'
+import ContourTitleImage from '../../../assets/images/graph-contour.svg'
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<ColocGraphsResult, string>({key: 'coloc-graphs_result', default: null});
@@ -75,6 +73,7 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         var format = {}
         
         var overlapData = {}
+        var centroidData = {}
         
         
         overlapData[`As % of ${n0} area`] = result.overlap.fwd
@@ -91,6 +90,12 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         nnData[`From ${n1} to ${n0}`] = result.nn.bck
         format[`From ${n0} to ${n1}`] = {format:'%d', dataKey:'xinterval'}
         format[`From ${n1} to ${n0}`] = {format:'%d', dataKey:'xinterval'}
+        
+        centroidData[`From ${n0} to ${n1}`] = result.nncentroid.fwd;
+        centroidData[`From ${n1} to ${n0}`] = result.nncentroid.bck;
+        var formatCentroid = {}
+        formatCentroid[`From ${n0} to ${n1}`] = {format:'%d', dataKey:'xinterval'}
+        formatCentroid[`From ${n1} to ${n0}`] = {format:'%d', dataKey:'xinterval'}
     }
     
     return (<div className={'coloc-graphs'}>
@@ -98,10 +103,12 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         {!error && result &&
         <div className={'site-block medium'}>
             <ColocOverview result={result} name0={n0} name1={n1} className={'pad-200-bottom'}/>
-            <FlexBinChart format={format} className={'pad-200-bottom'} data={nnData} title={'Distance to Nearest Neighbour in ' + units}
-                          explanation={'Histogram of distances of one type of foci to the nearest neighbour of the other type. Only cells where both type of foci are present are counted. Distances are only calculated for foci that do not overlap the other type.'}/>
-            <FlexBinChart format={format} className={'pad-200-bottom'} data={overlapData} title={'Overlap'}
+            <FlexBinChart titleImg={ContourTitleImage}  format={format} className={'pad-200-bottom'} data={nnData} title={'Contour Distance to non-overlapping Nearest Neighbour in ' + units}
+                          explanation={'Histogram of distances of one type of foci to the nearest neighbour of the other type. This gives a contour to contour distance, which means that it is only calculated for foci that are non overlapping. Overlapping foci end up in the overlap graph.'}/>
+            <FlexBinChart titleImg={OverlapTitleImage}  format={format} className={'pad-200-bottom'} data={overlapData} title={'Overlap'}
                           explanation={'Area of overlap for Foci of the two types. Either as absolute area measurements (e.g. in nm²) or as a percentage of the size of the overlapping focus (0-1).'}/>
+            <FlexBinChart  titleImg={CentroidTitleImage} format={formatCentroid} className={'pad-200-bottom'} data={centroidData} title={'Centroid Distance to Nearest Neighbour in ' + units}
+                          explanation={'Histogram of distances centroid to centroid from one focus to its nearest neighbour (in the other channel). As opposed to contour distance, centroid to centroid distances are calculated for all foci, regardless of the overlap they have.'}/>
         </div>
         }
     </div>);

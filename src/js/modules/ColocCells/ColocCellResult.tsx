@@ -8,6 +8,8 @@ import {OutlinePolygon} from "../FociCandidates/FociCandidates";
 import ToolTipIconButton from "../../../sammie/js/ui/elements/ToolTipIconButton";
 import {Autorenew, Cancel, Visibility, VisibilityOff} from "@mui/icons-material";
 import styled from "@emotion/styled";
+import {printf} from "fast-printf";
+import {Tooltip} from "@mui/material";
 
 interface IColocCellResultProps{
 	
@@ -20,6 +22,7 @@ interface IColocCellResultProps{
     onToggleCellInclusion:()=>any
     foci0:PipelinePolygons
     foci1:PipelinePolygons,
+    pcc:[number,number],
     colorSet:string
 }
 
@@ -43,7 +46,7 @@ const ctop = {r:RedPolygon,g:GreenPolygon,b:BluePolygon}
  * ColocCellResult
  * @author Ilya Shabanov
  */
-const ColocCellResult:React.FC<IColocCellResultProps> = ({colorSet, foci0, foci1, onToggleCellInclusion, excluded, cnt,imgIdx, res,className}) => {
+const ColocCellResult:React.FC<IColocCellResultProps> = ({pcc,colorSet, foci0, foci1, onToggleCellInclusion, excluded, cnt,imgIdx, res,className}) => {
  
  
 	return (
@@ -67,6 +70,11 @@ const ColocCellResult:React.FC<IColocCellResultProps> = ({colorSet, foci0, foci1
                     <Visibility onClick={onToggleCellInclusion} className={'del-btn'} sx={{ color: 'white' }} />
                 }
                 {excluded && <span>Excluded</span>}
+                {!excluded &&
+                    <Tooltip title={`Pearson correlation coefficient in this cell (p = ${pcc[1]})`} arrow>
+                        <span className={'text-tooltip'}> r = {printf('%.3f',pcc[0])}</span>
+                    </Tooltip>
+                }
                 {/*{!excluded && curSelection.length == 0 && <span className={'no-foci'}>No Foci</span>}*/}
                 {/*{!excluded && curSelection.length > 0 && <span>{curSelection.length} Foci</span>}*/}
                 

@@ -8,8 +8,10 @@ export type ColocSingleCellImages = [PipelineImage,PipelineImage,PipelineImage,P
 export type ColocCellsResult = {
     imgs:ColocSingleCellImages[]
     cnts:PolygonData[],
+    cellAreas:number[],
     selected:number[],
     foci:[PipelinePolygons[],PipelinePolygons[]]
+    pccs:[number,number][]
 }
 export async function runCellSelection(curParams:self.Parameters, curStep:self.Step, selectedCells:number[]):Promise<EelResponse<boolean>>{
     

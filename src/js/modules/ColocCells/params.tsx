@@ -16,6 +16,7 @@ export const parameters:Array<Parameter<any>> = [
      */
      getDropdownParams('color','Color Combination','Colors to use to visualize the channels.','rg',{rg:'Red-Green', rb:'Red-Blue',gb:'Green-Blue',gr:'Green-Red', br:'Blue-Red',bg:'Blue-Green'}),
      getSliderParams('cellsperrow','Cells per Row','Number of cells displayed in a row. The less dispalyed, the bigger the magnification.',3,8,1,4,false,null,true),
+     getDropdownParams('sorting','Cell Sorting','Order of sorting in the UI','pcc',{none:'No Particular Sorting', pcc:'by Pearson Correlation',nf:'By Total Number of Foci', nf1:'By Number of Foci Channel 1', nf2:'By Number of Foci Channel 2', cellsize:'By Cell Area'},null,true),
 ];
 
 /**Typing for ColocCells Inputs - Define Input Types/Names of this Pipeline step here.*/
@@ -31,6 +32,7 @@ export type Step = PipelineStep<Inputs, Outputs>;
 export type Parameters = {
     color:string,
     cellsperrow:[number],
+    sorting:'none'|'pcc'|'nf'|'nf1'|'nf2'|'cellsize',
     //A few example data types:
     /*
     dropdown:'blue'|'yellow'

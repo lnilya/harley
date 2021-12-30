@@ -18,6 +18,8 @@ interface IFlexBinChartProps {
     /**Explanation texts either one for all data, or by data*/
     explanation: ReactNode | Record<string, ReactNode>,
     format?: Record<string, XAxisProps>
+    
+    titleImg?:any
 }
 
 /**
@@ -25,18 +27,20 @@ interface IFlexBinChartProps {
  * @author Ilya Shabanov
  */
 const cl = ccl('flex-bin-chart--')
-const FlexBinChart: React.FC<IFlexBinChartProps> = ({format, data, title, explanation, className}) => {
+const FlexBinChart: React.FC<IFlexBinChartProps> = ({titleImg,format, data, title, explanation, className}) => {
     
     const [dataKey, setDatakey] = useState<string>(Object.keys(data)[0]);
     const [numBins, setNumBins] = useState<number>(10);
     const curFormat = format ? (format[dataKey] || {}) : {}
     const bins = hist(data[dataKey], numBins, curFormat)
     const curEx = typeof explanation === 'string' ? explanation : explanation[dataKey];
-    
     return (
         
         <div className={`flex-bin-chart ${className || ''}`}>
-            <h3>{title}</h3>
+            <h3>
+                <img src={titleImg} className={'flex-bin-chart__title-img'}/>
+                {title}
+            </h3>
             <div className="fl-row fl-align-center flex-bin-chart__title pad-100-ver">
                 <div className="lbl">View:</div>
                 <FormControl variant="outlined">

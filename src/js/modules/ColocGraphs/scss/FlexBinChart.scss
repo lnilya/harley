@@ -12,6 +12,16 @@
 	.recharts-responsive-container{
 		flex-grow: 1;
 	}
+	h3{
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	&__title-img{
+		max-height: 30px;
+		margin-right: 20px;
+	}
 	&__title{
 		line-height: 1;
 		h3{

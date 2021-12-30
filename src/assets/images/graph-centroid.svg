@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="144px" height="64px" viewBox="0 0 144 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>graph-centroid</title>
+    <g id="Elements" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-5" transform="translate(0.081509, 0.000000)">
+            <circle id="Oval" fill="#232C36" cx="31.9184907" cy="31.9184907" r="31.9184907"></circle>
+            <circle id="Oval" fill="#A2AAB6" cx="111.918491" cy="31.9184907" r="31.9184907"></circle>
+            <g id="Group-4" transform="translate(27.918491, 28.271901)" fill="#FF7F50">
+                <rect id="Rectangle" x="4" y="2.14658932" width="80" height="3"></rect>
+                <circle id="Oval" cx="3.64658932" cy="3.64658932" r="3.64658932"></circle>
+                <circle id="Oval" cx="83.6465893" cy="3.64658932" r="3.64658932"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

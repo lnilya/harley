@@ -38,9 +38,17 @@ class ColocGraphs(ModuleBase):
         #respective
         return paramName1[0],paramName2
 
+
+
+
+    def __getCellCorrelations(self, src:List[np.ndarray],dest:List[np.ndarray]):
+
+        pass
     def __getDistToNearestNeighbor(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
         distancesFwd = [] #will contain nearest neighbour distances src->dist if foci are NOT overlapping
         distancesBck = [] #will contain nearest neighbout distances dist->src if not overlapping
+        centroidDistancesFwd = [] #will contain nearest neighbour distances src->dist
+        centroidDistancesBck = [] #will contain nearest neighbout distances dist->src
         overlap = [] #Overlapping area in px^2 * scale^2
         overlapRelFwd = [] #overlap divided by src area
         overlapRelBck = [] #overlap divided by dist area
@@ -50,19 +58,26 @@ class ColocGraphs(ModuleBase):
 
             #calculate the distance matrix
             distMatrix = np.zeros((len(foci1),len(foci2)))
+            distMatrixCentroid = np.zeros((len(foci1),len(foci2)))
             for i in range(0,len(foci1)):
                 for j in range(0,len(foci2)):
                     distMatrix[i,j] = foci1[i].distance(foci2[j])
+                    distMatrixCentroid[i,j] = foci1[i].centroid.distance(foci2[j].centroid)
 
 
             #distMatrix will have F1 x F2 dimension
             #We need to find the smalles value in each row
             nearestNeighbourDistancesFwd = np.min(distMatrix, axis=1)
             nearestNeighbourDistancesBck = np.min(distMatrix, axis=0)
+            centroidNearestNeighbourDistancesFwd = np.min(distMatrixCentroid, axis=1)
+            centroidNearestNeighbourDistancesBck = np.min(distMatrixCentroid, axis=0)
 
             #Absolute distances in px or transformed by scale into nm/µm etc.
             distancesFwd += (nearestNeighbourDistancesFwd[nearestNeighbourDistancesFwd > 0] * scale).tolist()
             distancesBck += (nearestNeighbourDistancesBck[nearestNeighbourDistancesBck > 0] * scale).tolist()
+
+            centroidDistancesFwd += (centroidNearestNeighbourDistancesFwd * scale).tolist()
+            centroidDistancesBck += (centroidNearestNeighbourDistancesBck * scale).tolist()
 
             #Calculate overlaps
             for f1 in foci1:
@@ -74,7 +89,7 @@ class ColocGraphs(ModuleBase):
                         overlapRelBck += [ar / f2.area]
 
 
-        return distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck
+        return centroidDistancesFwd,centroidDistancesBck,distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck
 
 
     def run(self, action, params, inputkeys,outputkeys):
@@ -92,18 +107,20 @@ class ColocGraphs(ModuleBase):
             channel0 = foci[0]
             channel1 = foci[1]
 
+
             num0 = 0
             num1 = 0
             for c in channel0: num0 += len(c)
             for c in channel1: num1 += len(c)
 
-            distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck = self.__getDistToNearestNeighbor(channel0,channel1,scale)
+            centroidDistancesFwd,centroidDistancesBck, distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck = self.__getDistToNearestNeighbor(channel0,channel1,scale)
             #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
             #of the UI.
 
             #Generate an output that will go to javascript for displaying on the UI side
             json = {
                 'nn':{'fwd':distancesFwd,'bck':distancesBck},
+                'nncentroid':{'fwd':centroidDistancesFwd,'bck':centroidDistancesBck},
                 'overlap': {'abs':overlap,'fwd':overlapRelFwd,'bck':overlapRelBck},
                 'stats':{
                     'cells': len(channel0),
