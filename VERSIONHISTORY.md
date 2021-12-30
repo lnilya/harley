@@ -1,10 +1,19 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.2
+Major:
+- Added Pearson Correlation to Coloc Pipeline 
+
+Minor:
+- Improvements in Colocalization Pipeline UI
+
+
 ### Version: 1.1.1
 Minor:
 - Bugfix with BatchCreator fixed on Windows
 - Bugfix with restarting software on Windows
+
 ### Version: 1.1.0
 Major: 
 - Added Colocalization pipeline to Harley
