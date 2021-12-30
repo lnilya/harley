@@ -6,10 +6,11 @@ from numpy.core.records import ndarray
 from scipy.stats import pearsonr
 from shapely.geometry import Polygon
 
+from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells
 from src.py.modules.ColocCellsUtil.colocutil import identifyCellPartners, getColocImages
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.modules.ModuleBase import ModuleBase
-from src.sammie.py.util import imgutil
+from src.sammie.py.util import imgutil, shapeutil
 from src.sammie.py.util.imgutil import getPreviewImage
 import numpy as np
 
@@ -63,10 +64,33 @@ class ColocCells(ModuleBase):
             foci0 += [[Polygon(np.array([focus['x'],focus['y']]).T) for focus in self.cellFoci[0][i]]]
             foci1 += [[Polygon(np.array([focus['x'],focus['y']]).T) for focus in self.cellFoci[1][i]]]
 
+        data = CCCells(foci0,
+                foci1,
+                [img for i,img in enumerate(self.rawImages) if i in self.selectedCells],
+                [pcc for i,pcc in enumerate(self.pcc) if i in self.selectedCells],
+                [fpcc for i,fpcc in enumerate(self.fpcc) if i in self.selectedCells],
+                )
         """Add the selected cells' foci into the pipeline for coloc analysis"""
         self.onGeneratedData(self.keys.outIncludedCells,
-                             [ foci0, foci1 ]
+                             data
                              ,params)
+
+    def __getCorrelationInFoci(self,img1:np.ndarray,img2:np.ndarray,f1:List[Dict],f2:List[Dict]):
+
+        allFoci = f1 + f2
+        if len(allFoci) == 0: return None
+        corrCorrds0 = []
+        corrCorrds1 = []
+        for focus in allFoci:
+            mp, offx, offy = shapeutil.getPolygonMaskPatch(np.array(focus['x']), np.array(focus['y']), 0)
+            corrCorrds0 += img1[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
+            corrCorrds1 += img2[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
+
+        pcc = pearsonr(corrCorrds0, corrCorrds1)
+        if pcc[0] == pcc[0]:  # NaN check
+            return pcc
+
+        return None
 
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = ColocCellsKeys(inputkeys, outputkeys)
@@ -89,6 +113,7 @@ class ColocCells(ModuleBase):
             self.cellContours = []
             self.cellFoci = [[],[]]
             self.pcc = []
+            self.fpcc = []
             dsnum = 0
             for ds1,ds2 in self.alignedDataSets:
                 p = identifyCellPartners(ds1,ds2)
@@ -99,9 +124,14 @@ class ColocCells(ModuleBase):
                 dsnum += 1
                 self.cellImages += colocImgs[0]
                 self.rawImages += colocImgs[1]
-                self.cellFoci[0] += ds1.getFociContours(p1)
-                self.cellFoci[1] += ds2.getFociContours(p2)
+                fociContours1 = ds1.getFociContours(p1)
+                fociContours2 = ds2.getFociContours(p2)
+                self.cellFoci[0] += fociContours1
+                self.cellFoci[1] += fociContours2
                 self.pcc += colocImgs[2]
+                for i,ci in enumerate(colocImgs[1]):
+                    i1, i2, _ = ci
+                    self.fpcc += [self.__getCorrelationInFoci(i1,i2,fociContours1[i],fociContours2[i])]
             self.selectedCells = list(range(0,len(self.cellContours)))
             self.addGeneratedData(params)
 
@@ -109,6 +139,7 @@ class ColocCells(ModuleBase):
             return {'foci':self.cellFoci,
                     'imgs':self.cellImages,
                     'pccs':self.pcc,
+                    'fpccs':self.fpcc,
                     'cnts':self.cellContours,
                     'cellAreas':[Polygon(np.array([p['x'],p['y']]).T).area for p in self.cellContours],
                     'selected':self.selectedCells}

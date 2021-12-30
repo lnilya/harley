@@ -12,6 +12,7 @@ export type ColocCellsResult = {
     selected:number[],
     foci:[PipelinePolygons[],PipelinePolygons[]]
     pccs:[number,number][]
+    fpccs:[number,number][]
 }
 export async function runCellSelection(curParams:self.Parameters, curStep:self.Step, selectedCells:number[]):Promise<EelResponse<boolean>>{
     

@@ -1,7 +1,7 @@
 import React, {ReactNode, useState} from "react";
 import {ccl} from "../../../sammie/js/util";
 import './scss/FlexBinChart.scss'
-import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, XAxisProps, YAxis} from "recharts";
+import {Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, XAxisProps, YAxis} from "recharts";
 import {FormControl, NativeSelect, Slider} from "@mui/material";
 import {hist} from "../../util/math";
 import ParamHelpBtn from "../../../sammie/js/ui/elements/ParamHelpBtn";
@@ -20,6 +20,8 @@ interface IFlexBinChartProps {
     format?: Record<string, XAxisProps>
     
     titleImg?:any
+    
+    colFromEntry?: (x:number,y:number)=>string
 }
 
 /**
@@ -27,7 +29,7 @@ interface IFlexBinChartProps {
  * @author Ilya Shabanov
  */
 const cl = ccl('flex-bin-chart--')
-const FlexBinChart: React.FC<IFlexBinChartProps> = ({titleImg,format, data, title, explanation, className}) => {
+const FlexBinChart: React.FC<IFlexBinChartProps> = ({colFromEntry, titleImg,format, data, title, explanation, className}) => {
     
     const [dataKey, setDatakey] = useState<string>(Object.keys(data)[0]);
     const [numBins, setNumBins] = useState<number>(10);
@@ -63,7 +65,12 @@ const FlexBinChart: React.FC<IFlexBinChartProps> = ({titleImg,format, data, titl
                 <BarChart height={200} data={bins} margin={{left: -25}}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip content={CustomTooltip}/>
-                    <Bar dataKey="count" fill="#FF7F50"/>
+                    <Bar dataKey="count">
+                          {bins.map((entry, index) => {
+                              const col = colFromEntry ? colFromEntry(entry.xmean,entry.count) : '#FF7F50';
+                              return <Cell key={`cell-${index}`} fill={col}/>
+                          })}
+                    </Bar>
                     <XAxis {...{dataKey:'xmean',...curFormat}}/>
                     <YAxis dataKey='count'/>
                 </BarChart>
@@ -78,7 +85,7 @@ const CustomTooltip = (props:{ active?:any, payload?:any, label?:any }) => {
     const {xmean, xinterval,count} = props.payload[0].payload
     return (
       <div className="custom-tooltip">
-        <div>Foci in Bin: {count}</div>
+        <div>Elements in Bin: {count}</div>
         <div>Range: {xinterval}</div>
         {/*<div>{`Mean: ${printf('%.2f',mean)} `}</div>*/}
         {/*<div>{`Std: ${printf('%.2f',std)} `}</div>*/}

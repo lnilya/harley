@@ -7,6 +7,7 @@ import {SingleDataBatch} from "../../../sammie/js/state/algstate";
 
 export type ColocGraphsResult = {
     nn: {fwd:number[],bck:number[]},
+    pcc: {cell:[number,number][],foci:[number,number][],fwd:[number,number][],bck:[number,number][]},
     nncentroid: {fwd:number[],bck:number[]},
     overlap: {abs:number[], fwd:number[],bck:number[]}
     stats:{cells:number, num0:number, num1:number}

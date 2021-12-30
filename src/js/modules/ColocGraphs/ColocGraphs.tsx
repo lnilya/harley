@@ -17,6 +17,7 @@ import ColocOverview from "./ColocOverview";
 import CentroidTitleImage from '../../../assets/images/graph-centroid.svg'
 import OverlapTitleImage from '../../../assets/images/graph-overlap.svg'
 import ContourTitleImage from '../../../assets/images/graph-contour.svg'
+import PCCTitleImage from '../../../assets/images/graph-pcc.svg'
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<ColocGraphsResult, string>({key: 'coloc-graphs_result', default: null});
@@ -74,7 +75,7 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         
         var overlapData = {}
         var centroidData = {}
-        
+        var pccData = {}
         
         overlapData[`As % of ${n0} area`] = result.overlap.fwd
         format[`As % of ${n0} area`] = {type:'number', domain:[0,1]}
@@ -96,6 +97,12 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         var formatCentroid = {}
         formatCentroid[`From ${n0} to ${n1}`] = {format:'%d', dataKey:'xinterval'}
         formatCentroid[`From ${n1} to ${n0}`] = {format:'%d', dataKey:'xinterval'}
+        
+        pccData[`Whole Cell Area`] = result.pcc.cell.filter(c=>!!c).map((c)=>c[0])
+        pccData[`Foci Area`] = result.pcc.foci.filter(c=>!!c).map((c)=>c[0])
+        pccData[`${n0} Area`] = result.pcc.fwd.filter(c=>!!c).map((c)=>c[0])
+        pccData[`${n1} Area`] = result.pcc.bck.filter(c=>!!c).map((c)=>c[0])
+        
     }
     
     return (<div className={'coloc-graphs'}>
@@ -109,12 +116,19 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
                           explanation={'Area of overlap for Foci of the two types. Either as absolute area measurements (e.g. in nm²) or as a percentage of the size of the overlapping focus (0-1).'}/>
             <FlexBinChart  titleImg={CentroidTitleImage} format={formatCentroid} className={'pad-200-bottom'} data={centroidData} title={'Centroid Distance to Nearest Neighbour in ' + units}
                           explanation={'Histogram of distances centroid to centroid from one focus to its nearest neighbour (in the other channel). As opposed to contour distance, centroid to centroid distances are calculated for all foci, regardless of the overlap they have.'}/>
+            <FlexBinChart  titleImg={PCCTitleImage} format={{}} className={'pad-200-bottom'} data={pccData} title={'Pearson correlation'}
+                          explanation={'Pearson correlation between pixels in the separate channels. The pixels used are either for the full cells, only inside foci of one of the two channels or all foci. (P value is ignored).'}
+                          colFromEntry={colForPCC}/>
         </div>
         }
     </div>);
 }
 export default ColocGraphs
 
+function colForPCC(x:number,y:number):string{
+    if(x < 0) return '#FF7F5077'
+    return '#FF7F50ff'
+}
 function getDSName(curBatch:SingleDataBatch<ColocalizationBatchParameters>, allInputs:Record<PipelineDataKey,LocalFileWithPreview>, i:number){
     if(curBatch.batchParameters['name'+i])
         return curBatch.batchParameters['name'+i]

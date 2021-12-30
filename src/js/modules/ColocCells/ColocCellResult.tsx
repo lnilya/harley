@@ -23,6 +23,7 @@ interface IColocCellResultProps{
     foci0:PipelinePolygons
     foci1:PipelinePolygons,
     pcc:[number,number],
+    fpcc:[number,number],
     colorSet:string
 }
 
@@ -46,7 +47,7 @@ const ctop = {r:RedPolygon,g:GreenPolygon,b:BluePolygon}
  * ColocCellResult
  * @author Ilya Shabanov
  */
-const ColocCellResult:React.FC<IColocCellResultProps> = ({pcc,colorSet, foci0, foci1, onToggleCellInclusion, excluded, cnt,imgIdx, res,className}) => {
+const ColocCellResult:React.FC<IColocCellResultProps> = ({fpcc,pcc,colorSet, foci0, foci1, onToggleCellInclusion, excluded, cnt,imgIdx, res,className}) => {
  
  
 	return (
@@ -71,9 +72,23 @@ const ColocCellResult:React.FC<IColocCellResultProps> = ({pcc,colorSet, foci0, f
                 }
                 {excluded && <span>Excluded</span>}
                 {!excluded &&
-                    <Tooltip title={`Pearson correlation coefficient in this cell (p = ${pcc[1]})`} arrow>
-                        <span className={'text-tooltip'}> r = {printf('%.3f',pcc[0])}</span>
-                    </Tooltip>
+                    <>
+                        <div className="fl-grow"/>
+                        
+                        <Tooltip title={`Pearson correlation coefficient for pixels in cell bounds (p = ${pcc[1]})`} arrow>
+                            <span className={'text-tooltip'}> r<sub>cell</sub> = {printf('%.3f',pcc[0])}</span>
+                        </Tooltip>
+                        {fpcc &&
+                            <Tooltip title={`Pearson correlation coefficient for pixels in foci bounds (p = ${fpcc[1]})`} arrow>
+                                <span className={'text-tooltip'}> r<sub>foci</sub> = {printf('%.3f',fpcc[0])}</span>
+                            </Tooltip>
+                        }
+                        {!fpcc &&
+                            <Tooltip title={`Pearson correlation coefficient for pixels in foci bounds. Can't be determined, usually because one of the channels is constant inside the foci area. Reasons for this are either absence of signal or low variation in signal paired with the discrete 8bit nature of images, that yields constant values.`} arrow>
+                                <span className={'text-tooltip undef'}> r<sub>foci</sub> = ?</span>
+                            </Tooltip>
+                        }
+                    </>
                 }
                 {/*{!excluded && curSelection.length == 0 && <span className={'no-foci'}>No Foci</span>}*/}
                 {/*{!excluded && curSelection.length > 0 && <span>{curSelection.length} Foci</span>}*/}

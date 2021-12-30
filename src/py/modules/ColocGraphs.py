@@ -5,10 +5,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy._lib._ccallback_c import plus1_t
 from scipy.spatial import distance_matrix
+from scipy.stats import pearsonr
 from shapely.geometry import Polygon
 
+from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells
 from src.sammie.py.modules.ModuleBase import ModuleBase
-from src.sammie.py.util import imgutil
+from src.sammie.py.util import imgutil, shapeutil
 from src.sammie.py.util.shapeutil import contourLength
 
 
@@ -41,9 +43,47 @@ class ColocGraphs(ModuleBase):
 
 
 
-    def __getCellCorrelations(self, src:List[np.ndarray],dest:List[np.ndarray]):
+    def __getFociCorrelations(self, src:CCCells):
 
-        pass
+        fwd = []
+        bck = []
+        for i,it in enumerate(src.imgs):
+            img1, img2, _ = it
+
+            corrCorrds0 = []
+            corrCorrds1 = []
+
+            if len(src.foci1[i]) > 0:
+                #In area of Foci 1 only
+                for f1 in src.foci1[i]:
+                    x, y = f1.exterior.coords.xy
+                    mp, offx, offy = shapeutil.getPolygonMaskPatch(np.array(x), np.array(y), 0)
+                    corrCorrds0 += img1[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
+                    corrCorrds1 += img2[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
+
+                pcc = pearsonr(corrCorrds0,corrCorrds1)
+                if pcc[0] == pcc[0]: fwd += [pcc]
+                else: fwd += [None]
+            else:
+                fwd += [None]
+            #In area of Foci 2 only
+            corrCorrds0 = []
+            corrCorrds1 = []
+            if len(src.foci2[i]) > 0:
+                for f2 in src.foci2[i]:
+                    x, y = f2.exterior.coords.xy
+                    mp, offx, offy = shapeutil.getPolygonMaskPatch(np.array(x), np.array(y), 0)
+                    corrCorrds0 += img1[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
+                    corrCorrds1 += img2[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
+
+                pcc = pearsonr(corrCorrds0,corrCorrds1)
+                if pcc[0] == pcc[0]: bck += [pcc]
+                else: bck += [None]
+            else:
+                bck += [None]
+
+        return fwd,bck
+
     def __getDistToNearestNeighbor(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
         distancesFwd = [] #will contain nearest neighbour distances src->dist if foci are NOT overlapping
         distancesBck = [] #will contain nearest neighbout distances dist->src if not overlapping
@@ -99,13 +139,12 @@ class ColocGraphs(ModuleBase):
         if action == 'apply':
 
             #get the input that this step is working on
-            foci = self.session.getData(self.keys.inColocCells)
+            colocdata:CCCells = self.session.getData(self.keys.inColocCells)
 
             scale = params['scale']
-
             #Foci by cell for btoh channels
-            channel0 = foci[0]
-            channel1 = foci[1]
+            channel0 = colocdata.foci1
+            channel1 = colocdata.foci2
 
 
             num0 = 0
@@ -114,12 +153,19 @@ class ColocGraphs(ModuleBase):
             for c in channel1: num1 += len(c)
 
             centroidDistancesFwd,centroidDistancesBck, distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck = self.__getDistToNearestNeighbor(channel0,channel1,scale)
+
+            pccFwd, pccBck = self.__getFociCorrelations(colocdata)
             #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
             #of the UI.
 
             #Generate an output that will go to javascript for displaying on the UI side
             json = {
                 'nn':{'fwd':distancesFwd,'bck':distancesBck},
+                'pcc':{'cell':colocdata.pcc,
+                       'foci':colocdata.fpcc,
+                       'fwd':pccFwd,
+                       'bck':pccBck
+                       },
                 'nncentroid':{'fwd':centroidDistancesFwd,'bck':centroidDistancesBck},
                 'overlap': {'abs':overlap,'fwd':overlapRelFwd,'bck':overlapRelBck},
                 'stats':{

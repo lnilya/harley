@@ -47,6 +47,8 @@ const Box = (props: { name0: string,name1:string, result: ColocGraphsResult,i:nu
     const numInclusion = result.overlap[i == 0 ? 'fwd':'bck'].filter(o => o > 0.95).length / n
     const avgDist = mean(result.nn[i == 0 ? 'fwd':'bck'])
     
+    const avgPCC = mean(result.pcc[i == 0 ? 'fwd':'bck'].filter(c=>!!c).map(c=>c[0]))
+    
     var avgDistFormat:string = '%.2f'
     if(avgDist > 500) avgDistFormat = '%.0f'
     else if(avgDist > 50) avgDistFormat = '%.1f'
@@ -77,6 +79,12 @@ const Box = (props: { name0: string,name1:string, result: ColocGraphsResult,i:nu
                 <div className="box-row">
                     <span>Avg. distance to {name1}</span>
                     <span>{printf(avgDistFormat + ' %s', avgDist,units)}</span>
+                </div>
+            </Tooltip>
+            <Tooltip title={`Average Pearson Correlation of signal located inside ${name0} foci with signal of cell in ${name1} channel.`} placement={'bottom'}>
+                <div className="box-row">
+                    <span>Avg. Pearson Correlation</span>
+                    <span>{printf('%.2f', avgPCC)}</span>
                 </div>
             </Tooltip>
         </div>)

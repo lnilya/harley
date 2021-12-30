@@ -99,6 +99,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
                     return (
                         <ColocCellResult foci0={result.foci[0][i]}
                                          pcc={result?.pccs[i]}
+                                         fpcc={result?.fpccs[i]}
                                          colorSet={curParams.color}
                                          foci1={result.foci[1][i]}
                                          onToggleCellInclusion={() => onCellInclusionToggle(i)}
@@ -126,13 +127,19 @@ function getResultSorting(curParams: self.Parameters, result: ColocCellsResult):
     
     if (curParams.sorting == 'pcc')
         return sortOrder.sort((a, b) => result.pccs[a][0] > result.pccs[b][0] ? -1 : 1)
+    else if (curParams.sorting == 'fpcc')
+        return sortOrder.sort((a, b) => {
+            if(result.fpccs[a] === null) return 1
+            else if(result.fpccs[b] === null) return -1
+            return result.fpccs[a][0] > result.fpccs[b][0] ? -1 : 1
+        })
     else if (curParams.sorting == 'cellsize')
         return sortOrder.sort((a, b) => result.cellAreas[a] > result.cellAreas[b] ? -1 : 1)
     else if (curParams.sorting == 'nf')
         return sortOrder.sort((a, b) => {
             const nf1 = (result.foci[0][a].length + result.foci[1][a].length);
             const nf2 = (result.foci[0][b].length + result.foci[1][b].length);
-            return nf1 > nf2 ? 1 : -1;
+            return nf1 > nf2 ? -1 : 1;
         })
     else if (curParams.sorting == 'nf1')
         return sortOrder.sort((a, b) => result.foci[0][a].length > result.foci[0][b].length ? -1 : 1)
