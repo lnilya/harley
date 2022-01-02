@@ -39,26 +39,20 @@ class ColocCells(ModuleBase):
         self.log = 'ColocCells'
         self.trace('initialized')
 
+    def __letterToCol(self,col:str):
+        if   col == 'r': return (255, 0, 0)
+        elif col == 'g': return (0, 255, 0)
+        elif col == 'b': return (0, 0, 255)
+        elif col == 'y': return (255, 255, 0)
+        elif col == 'o': return (255, 169, 0)
+
     def unpackParams(self, color, shift,scale, **other):
         """unpack and possibly parse/cast all parameters coming from JS. The parameters from JS are defined in the params.tsx file of the respective step.
         The arrive as a dictionary on the py side and sometimes need some parsing. In any way this function provides a simple method to extract
         these parameters as named variables rather than using params['paramName1'] you can run it through this function."""
         #
         # respective
-
-        c = [None, None]
-        if color[0] == 'r':
-            c[0] = (255, 0, 0)
-        elif color[0] == 'g':
-            c[0] = (0, 255, 0)
-        elif color[0] == 'b':
-            c[0] = (0, 0, 255)
-        if color[1] == 'r':
-            c[1] = (255, 0, 0)
-        elif color[1] == 'g':
-            c[1] = (0, 255, 0)
-        elif color[1] == 'b':
-            c[1] = (0, 0, 255)
+        c = [self.__letterToCol(color[0]), self.__letterToCol(color[1])]
 
         s = [0, 0]
         if shift is not None and len(shift) > 0:

@@ -42,7 +42,17 @@ export const BluePolygon = styled.polygon({
     stroke:'#32a4cd',
     strokeWidth:1,
 })
-const ctop = {r:RedPolygon,g:GreenPolygon,b:BluePolygon}
+export const YellowPolygon = styled.polygon({
+    fill:'none',
+    stroke:'#fff200',
+    strokeWidth:1,
+})
+export const OrangePolygon = styled.polygon({
+    fill:'none',
+    stroke:'#ffa900',
+    strokeWidth:1,
+})
+const ctop = {r:RedPolygon,g:GreenPolygon,b:BluePolygon,y:YellowPolygon,o:OrangePolygon}
 /**
  * ColocCellResult
  * @author Ilya Shabanov
