@@ -20,6 +20,7 @@ import {changeCellSelection} from "../FociDetectionModel/server";
 import {SelectedPolygon, SplitablePolygon, SplitPolygon} from "../Labeling/_polygons";
 import _ from "lodash";
 import {ColocCellsResult} from "./server";
+import {ColocalizationBatchParameters} from "../../pipelines/ColocalizationPipeline";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<server.ColocCellsResult, string>({key: 'coloc-cells_result', default: null});
@@ -44,7 +45,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
     
     /**RUNNING ALGORITHM CALLBACK*/
     const runMainAlgorithm = async (params: self.Parameters, step: self.Step) => {
-        const res = await server.runColocCells(params, step);
+        const res = await server.runColocCells(params, step, curBatch.batchParameters["1px"]);
         setError(res.error ? res : null)
         setResult(!res.error ? res.data : null)
         setSelection(!res.error ? res.data.selected : null)
@@ -58,7 +59,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
         curParams,
         isRunning,
         curBatch
-    } = useStepHook<self.Inputs, self.Parameters, self.Step>(asLastRunSettings,
+    } = useStepHook<self.Inputs, self.Parameters, self.Step, ColocalizationBatchParameters>(asLastRunSettings,
         onInputChanged,
         runMainAlgorithm,
         {msg: 'Running ColocCells', display: "overlay"});

@@ -24,10 +24,10 @@ export async function runCellSelection(curParams:self.Parameters, curStep:self.S
     
     return res
 }
-export async function runColocCells(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<ColocCellsResult>>{
+export async function runColocCells(curParams:self.Parameters, curStep:self.Step, scale:number):Promise<EelResponse<ColocCellsResult>>{
     
     //Run the algorithm associated with this module in python
-    var res:EelResponse<ColocCellsResult> = await eel.runStep<ColocCellsResult>(self.moduleName,'apply',curParams,curStep)
+    var res:EelResponse<ColocCellsResult> = await eel.runStep<ColocCellsResult>(self.moduleName,'apply', {...curParams,scale:scale},curStep)
 
     //update pipeline, on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.colocCells);

@@ -1,6 +1,8 @@
 from typing import Tuple, List
 
 import numpy as np
+from matplotlib import pyplot as plt
+from scipy.interpolate import interpolate
 from scipy.stats import pearsonr
 
 from src.py.types.CellsDataset import CellsDataset
@@ -8,7 +10,14 @@ from src.sammie.py.util import shapeutil
 from src.sammie.py.util.imgutil import makeSemiTransparent, getPreviewImage, joinChannels, norm, addBorder
 
 
-def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]],key:str, color:List[Tuple[int,int,int]], border:int = 3):
+def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]],key:str, color:List[Tuple[int,int,int]], border:int = 3, shift:Tuple[float,float] = None):
+    d2img = d2.img
+    if shift is not None:
+        f = interpolate.interp2d(np.arange(0,d2.img.shape[0],1),
+                                 np.arange(0, d2.img.shape[1],1) , d2.img, kind='cubic')
+
+        d2img = f(np.arange(-shift[1], -shift[1] + d2.img.shape[0]), np.arange(-shift[0], -shift[0] + d2.img.shape[1]))
+
     """Preview Images are generated as the overlap area of the two cell images and exported as semi transparent masks"""
     allImgs = []
     allImgsNumpy = []
@@ -24,7 +33,7 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
 
         #Intensity images for each cell individually
         img1 = np.copy(d1.img[dy:h,dx:w])
-        img2 = np.copy(d2.img[dy:h,dx:w])
+        img2 = np.copy(d2img[dy:h,dx:w])
         allCorrelations += [pearsonr(img1[maskPatch1 == True].flat,img2[maskPatch2 == True].flat)]
         img1[maskPatch1 == False] = 0
         img2[maskPatch2 == False] = 0

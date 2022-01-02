@@ -34,7 +34,6 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
     /**CLEANUP CALLBACK WHEN INPUTS HAVE CHANGED*/
     const onInputChanged = () => {
         setResult(null)
-        console.log(`INPUT HAS CHANGED CLEANING STATE...`);
     };
     
     /**RUNNING ALGORITHM CALLBACK*/

@@ -75,10 +75,14 @@ class CellsDataset:
 
         return overlap / total
 
-    def getFociContours(self, cells: List[int], forJS:bool = True) -> List[Dict]:
+    def getFociContours(self, cells: List[int], forJS:bool = True, shift:Tuple[float,float] = None) -> List[Dict]:
+        if shift is None: shift = (0,0)
+
+        shift = np.array(shift)
         foci = []
         for i in cells:
             fc = self.fociContours[i]
+            fc = [f + shift for f in fc]
             if forJS:
                 fociJS = [{'x':list(f[:,1]),'y':list(f[:,0])} for f in fc]
                 foci += [fociJS]
