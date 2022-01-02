@@ -20,7 +20,7 @@ interface IFlexBinChartProps {
     format?: Record<string, XAxisProps>
     
     titleImg?:any
-    
+    xlabel?:string
     colFromEntry?: (x:number,y:number)=>string
 }
 
@@ -29,13 +29,14 @@ interface IFlexBinChartProps {
  * @author Ilya Shabanov
  */
 const cl = ccl('flex-bin-chart--')
-const FlexBinChart: React.FC<IFlexBinChartProps> = ({colFromEntry, titleImg,format, data, title, explanation, className}) => {
+const FlexBinChart: React.FC<IFlexBinChartProps> = ({xlabel,colFromEntry, titleImg,format, data, title, explanation, className}) => {
     
     const [dataKey, setDatakey] = useState<string>(Object.keys(data)[0]);
     const [numBins, setNumBins] = useState<number>(10);
     const curFormat = format ? (format[dataKey] || {}) : {}
     const bins = hist(data[dataKey], numBins, curFormat)
     const curEx = typeof explanation === 'string' ? explanation : explanation[dataKey];
+    
     return (
         
         <div className={`flex-bin-chart ${className || ''}`}>
@@ -71,10 +72,14 @@ const FlexBinChart: React.FC<IFlexBinChartProps> = ({colFromEntry, titleImg,form
                               return <Cell key={`cell-${index}`} fill={col}/>
                           })}
                     </Bar>
+                    {/* @ts-ignore */}
                     <XAxis {...{dataKey:'xmean',...curFormat}}/>
                     <YAxis dataKey='count'/>
                 </BarChart>
             </ResponsiveContainer>
+            {xlabel &&
+                <div className="xaxis-lbl">{xlabel}</div>
+            }
         </div>
     );
 }

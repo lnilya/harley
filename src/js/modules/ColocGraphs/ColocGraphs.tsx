@@ -110,12 +110,16 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         <div className={'site-block medium'}>
             <ColocOverview result={result} name0={n0} name1={n1} className={'pad-200-bottom'}/>
             <FlexBinChart titleImg={ContourTitleImage}  format={format} className={'pad-200-bottom'} data={nnData} title={'Contour Distance to non-overlapping Nearest Neighbour in ' + units}
+                          xlabel={'Distance in ' + units}
                           explanation={'Histogram of distances of one type of foci to the nearest neighbour of the other type. This gives a contour to contour distance, which means that it is only calculated for foci that are non overlapping. Overlapping foci end up in the overlap graph.'}/>
             <FlexBinChart titleImg={OverlapTitleImage}  format={format} className={'pad-200-bottom'} data={overlapData} title={'Overlap'}
+                          xlabel={'Overlap of focus'}
                           explanation={'Area of overlap for Foci of the two types. Either as absolute area measurements (e.g. in nm²) or as a percentage of the size of the overlapping focus (0-1).'}/>
             <FlexBinChart  titleImg={CentroidTitleImage} format={formatCentroid} className={'pad-200-bottom'} data={centroidData} title={'Centroid Distance to Nearest Neighbour in ' + units}
+                          xlabel={'Distance in ' + units}
                           explanation={'Histogram of distances centroid to centroid from one focus to its nearest neighbour (in the other channel). As opposed to contour distance, centroid to centroid distances are calculated for all foci, regardless of the overlap they have.'}/>
             <FlexBinChart  titleImg={PCCTitleImage} format={{}} className={'pad-200-bottom'} data={pccData} title={'Pearson correlation'}
+                          xlabel={'Pearson Correlation Coefficient'}
                           explanation={'Pearson correlation between pixels in the separate channels. The pixels used are either for the full cells, only inside foci of one of the two channels or all foci. (P value is ignored).'}
                           colFromEntry={colForPCC}/>
         </div>
