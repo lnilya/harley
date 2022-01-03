@@ -1,6 +1,11 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.3
+
+Minor:
+- Added XLSX Export of Colocalization Data 
+
 ### Version: 1.1.2
 Major:
 - Added Pearson Correlation to Coloc Pipeline 

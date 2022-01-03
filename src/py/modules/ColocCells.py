@@ -167,5 +167,3 @@ class ColocCells(ModuleBase):
         }
         with open(path, 'wb') as handle:
             pickle.dump(res, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        # Write a file with this data or postprocess it in some way
-        # ...

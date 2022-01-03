@@ -185,8 +185,9 @@ class ColocGraphs(ModuleBase):
         if args['format'] == 'xlsx':
             nn = self.distData.getNNDistCSV(args['name0'],args['name1'],units)
             centroid = self.distData.getCentroidDistCSV(args['name0'],args['name1'],units)
+            overlap = self.distData.getOverlapCSV(args['name0'],args['name1'],units)
             coloc = self.distData.getPCCCSV(args['name0'],args['name1'],colocdata.pcc,colocdata.fpcc)
-            writeXLSX([nn,centroid,coloc],['Nearest Neighbours','Centroids','Pearson Correlation'],path)
+            writeXLSX([nn,centroid,coloc, overlap],['Nearest Neighbours','Centroids','Pearson Correlation','Overlap'],path)
         elif args['format'] == 'json':
             fullJSON = colocdata.getExportJSON()
             fullJSON.update(self.distData.getExportJSON())

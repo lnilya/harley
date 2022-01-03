@@ -111,7 +111,7 @@ class NNData:
 
 
     def getOverlapCSV(self, name0:str, name1:str, units:str):
-        res = [['Cell','Abs Overlap (in %s^2)'%(units),'Overlap as % of %s area'%(name0),'Overlap as % of %s area'%(name1)]]
+        res = [['Cell','Abs Overlap (in %s^2)'%(units),'Overlap as %% of %s area'%(name0),'Overlap as %% of %s area'%(name1)]]
         for i,c in enumerate(self.overlapCellNum):
             res += [[c,self.overlapAbs[i],self.overlapRelFwd[i],self.overlapRelBck[i]]]
 
