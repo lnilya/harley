@@ -14,7 +14,7 @@ const asShowBorderCells = atomFamily<boolean,string>({key:'cd_show_border',defau
 const asDetected = atomFamily<PipelineBlobs,string>({key:'cd_detected',default:null});
 const asAccepted = atomFamily<number[],string>({key:'cd_accepted',default:null});
 const asBorder = atomFamily<number[],string>({key:'cd_border',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'cd_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'cd_initial',default:null});
 const CellDetection:React.FC<ICellDetectionProps> = () => {
     
     /**CLEANUP CALLBACK WHEN INPUTS HAVE CHANGED*/

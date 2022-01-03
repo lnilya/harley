@@ -44,7 +44,7 @@ export const RejPolygon = styled.polygon({
 const asCells = atomFamily<PipelinePolygons,string>({key:'mask-tightening_cells',default:null});
 const asCellsTight = atomFamily<PipelinePolygons,string>({key:'mask-tightening_cells-tight',default:null});
 const asAcceptedCells = atomFamily<number[],string>({key:'mask-tightening_accepted_cells',default:[]});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'mask-tightening_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'mask-tightening_initial',default:null});
 const asShowMask = atomFamily<boolean,string>({key:'mask-tightening_show_mask',default:true});
 
 

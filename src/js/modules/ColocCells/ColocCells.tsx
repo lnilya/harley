@@ -25,7 +25,7 @@ import {ColocalizationBatchParameters} from "../../pipelines/ColocalizationPipel
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<server.ColocCellsResult, string>({key: 'coloc-cells_result', default: null});
 const asSelectedCells = atomFamily<number[], string>({key: 'coloc-cells_selection', default: null});
-const asLastRunSettings = atomFamily<{ inputs: self.Inputs, params: self.Parameters }, string>({
+const asLastRunSettings = atomFamily<{ batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters }, string>({
     key: 'coloc-cells_initial',
     default: null
 });

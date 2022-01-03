@@ -16,7 +16,7 @@ const asMaskImg = atomFamily<PipelineImage,string>({key:'ts_mask_img',default:nu
 const asPrevMaskImg = atomFamily<PipelineImage,string>({key:'ts_prev_mask_img',default:null});
 const asShowOrig = atomFamily<boolean,string>({key:'ts_show_original',default:true});
 const asShowPrev = atomFamily<boolean,string>({key:'ts_show_ps',default:true});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'ts_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'ts_initial',default:null});
 
 interface IFileLoaderProps{}
 const Threshhold:React.FC<IFileLoaderProps> = () => {

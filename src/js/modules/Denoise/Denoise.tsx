@@ -13,7 +13,7 @@ import 'react-before-after-slider-component/dist/build.css';
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asDenoised = atomFamily<PipelineImage,string>({key:'denoise_result',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'denoise_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'denoise_initial',default:null});
 
 interface IDenoiseProps{}
 const Denoise:React.FC<IDenoiseProps> = () => {

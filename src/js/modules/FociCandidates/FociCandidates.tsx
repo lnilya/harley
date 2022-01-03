@@ -42,7 +42,7 @@ const asCellImages = atomFamily<PipelineImage[],string>({key:'foci-candidates-im
 const asCellContours = atomFamily<PipelinePolygons,string>({key:'foci-candidates-contours',default:null});
 const asSelectedResult = atomFamily<FociInCell,string>({key:'foci-in-cell',default:null});
 const asSelectedCell = atomFamily<number,string>({key:'foci-candidates-selcell',default:-1});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'foci-candidates_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'foci-candidates_initial',default:null});
 
 interface IFociCandidatesProps{}
 const FociCandidates:React.FC<IFociCandidatesProps> = () => {

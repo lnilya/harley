@@ -20,7 +20,7 @@ import {copyChange} from "../../../sammie/js/util";
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asDatasets = atomFamily<DatasetPreviewResult,string>({key:'dataset-alignment_preview',default:null});
 const asAlignment = atomFamily<number[],string>({key:'dataset-alignment_alignment',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'dataset-alignment_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'dataset-alignment_initial',default:null});
 
 interface IDatasetAlignmentProps{}
 const DatasetAlignment:React.FC<IDatasetAlignmentProps> = () => {

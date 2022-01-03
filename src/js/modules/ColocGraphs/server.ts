@@ -5,6 +5,22 @@ import {deletePipelineData, updatePipelineData} from "../../../sammie/js/state/s
 import {SingleDataBatch} from "../../../sammie/js/state/algstate";
 
 
+/**All data on a single Focus.*/
+export type FociScatter = {
+    
+    //basic continuous properties
+    size:number,
+    overlappedAreaPerc:number,
+    distanceToNN:number,
+    centroidDistanceToNN:number,
+    cellArea:number,
+    numOverlapPartners:number,
+    
+    //relational properties
+    nearestNeighbourIdx:number,
+    overlapPartnerIdx:number[],
+    
+}[];
 export type ColocGraphsResult = {
     nn: {fwd:number[],bck:number[]},
     pcc: {cell:[number,number][],foci:[number,number][],fwd:[number,number][],bck:[number,number][]},

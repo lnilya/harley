@@ -30,7 +30,7 @@ function getNextLabel(allImgs:PipelineImage[], results:LabelingResult[], random:
 const asLabelingResults = atomFamily<LabelingResult[],string>({key:'labeling_results',default:[]});
 const asCurCell = atomFamily<number,string>({key:'laveling_curCell',default:null});
 const asLabelingData = atomFamily<SingleCellLabelingData,string>({key:'labeling_dataset',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'labeling_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'labeling_initial',default:null});
 
 interface ILabelingProps{}
 const Labeling:React.FC<ILabelingProps> = () => {

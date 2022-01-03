@@ -19,7 +19,7 @@ const asShowSkel = atomFamily<boolean,string>({key:'cell-fitting-skel',default:f
 const asHeatmapAfterThreshhold = atomFamily<PipelineImage,string>({key:'cell-fitting_heatmap-at',default:null});
 const asPoints = atomFamily<{points:PipelinePolygons, accepted:Array<number>},string>({key:'cell-fitting_points',default:null});
 const asManualRejection = atomFamily<Array<number>,string>({key:'cell-fitting_mrej',default:[]});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'cell-fitting_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'cell-fitting_initial',default:null});
 
 
 export const AcceptedPolygon = styled.polygon({

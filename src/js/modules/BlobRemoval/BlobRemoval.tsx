@@ -15,7 +15,7 @@ interface IBlobRemovalProps {
 const asCleanedImage = atomFamily<PipelineImage,string>({key:'br_cleanedImage',default:null});
 const asShowOrig = atomFamily<boolean,string>({key:'br_show_original',default:true});
 const asShowRemoved = atomFamily<boolean,string>({key:'br_show_removed',default:true});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'br_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'br_initial',default:null});
 const BlobRemoval: React.FC<IBlobRemovalProps> = () => {
     
     /**CLEANUP CALLBACK WHEN INPUTS HAVE CHANGED*/

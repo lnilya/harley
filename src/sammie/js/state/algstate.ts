@@ -40,6 +40,10 @@ export type SingleDataBatch<BatchParamType = Record<ParameterKey, any>> = {
     
     /**Name of settings set in this batch*/
     settingsSetName:string
+    
+    /**Convenience variable, same as curLoadedBatchTimestamp, only loaded reliably when using the curLoadedBatch selector.
+     * If batch info is loaded differently do not rely on this value being valid or even present*/
+    timestamp?:number
 }
 /**Stores batches, i.e. array of inputs to be processed sequentially*/
 export const allPipelineBatches = connectedAtom<SingleDataBatch[]>({key:'all_pl_batches', default:[]});
@@ -48,12 +52,16 @@ export const allPipelineBatches = connectedAtom<SingleDataBatch[]>({key:'all_pl_
  *  this index needs to change as well to still point to the right batch.*/
 export const curLoadedBatchNumber = connectedAtom<number>({key:'cur_pl_batches', default:-1});
 
+/**When the batch was loaded, changing this timestamp will rerun all steps that worked with this batch.
+ * It is like a unique ID for a batch and its execution. Same batch, reloaded gets a different ts.*/
+export const curLoadedBatchTimestamp = connectedAtom<number>({key:'cur_pl_batche_ts', default:-1});
+
 /**Convenience selector for getting the SingleDataBatch object currently selected/processed*/
 export const curLoadedBatch = connectedSelector<SingleDataBatch>({key:'cur_pl_selected_batch',
     get:({get})=>{
         const apb = get(allPipelineBatches);
         const bn = get(curLoadedBatchNumber);
-        return !apb ? null : apb[bn]
+        return !apb ? null : {...apb[bn], timestamp:get(curLoadedBatchTimestamp)}
     }
 })
 

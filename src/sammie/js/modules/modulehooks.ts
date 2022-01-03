@@ -100,8 +100,7 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
                 }
             }
             
-            var needRun = changedParams || changedInputs;
-            
+            var needRun = curBatch.timestamp != lastRunSettings?.batchTimeStamp || changedParams || changedInputs;
             
             setLastRunSettings({inputs: curInputs, params: curParams})
             

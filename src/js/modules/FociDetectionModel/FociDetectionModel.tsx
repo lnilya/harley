@@ -15,7 +15,7 @@ const asResult = atomFamily<FociDetectionModelResult,string>({key:'foci-detectio
 const asIncludedCells = atomFamily<number[],string>({key:'foci-detection-model_included',default:null});
 const asSelectedFoci = atomFamily<number[][],string>({key:'foci-detection-model_foci',default:null});
 const asModelFoci = atomFamily<number[][],string>({key:'foci-detection-model_foci_model',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'foci-detection-model_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'foci-detection-model_initial',default:null});
 
 interface IFociDetectionModelProps{}
 const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {

@@ -12,7 +12,7 @@ import DisplayOptions, {DisplayOptionSetting} from "../../../sammie/js/ui/module
 const asHeatmap = atomFamily<PipelineImage,string>({key:'cell-fitting-heatmap_heatmap',default:null});
 const asSkel = atomFamily<PipelineImage,string>({key:'cell-fitting-heatmap_skel',default:null});
 const asShowMask = atomFamily<boolean,string>({key:'cell-fitting-heatmap_mask',default:true});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'cell-fitting-heatmap_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'cell-fitting-heatmap_initial',default:null});
 
 interface ICellFittingHeatmapProps{}
 const CellFittingHeatmap:React.FC<ICellFittingHeatmapProps> = () => {

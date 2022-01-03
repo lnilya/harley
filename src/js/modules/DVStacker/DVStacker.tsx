@@ -14,7 +14,7 @@ interface IDVStackerProps {
 }
 
 /**PERSISTENT UI STATE DEFINITIONS*/
-const asLastRunSettings = atomFamily<{ inputs: self.Inputs, params: self.Parameters }, string>({
+const asLastRunSettings = atomFamily<{ batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters }, string>({
     key: 'dv-stacker_initial',
     default: null
 });

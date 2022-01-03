@@ -88,6 +88,7 @@ export async function loadBatchAndStartPipeline(batchIndex: number, reloadParame
     
     //update index of batch
     updateConnectedValue(alg.curLoadedBatchNumber, batchIndex)
+    updateConnectedValue(alg.curLoadedBatchTimestamp, new Date().getTime())
     return true
 }
 

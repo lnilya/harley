@@ -15,7 +15,7 @@ import {useState} from "react";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asDemoUIState = atomFamily<PipelineImage,string>({key:'__NAME_LC___demo',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'__NAME_LC___initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs:self.Inputs, params:self.Parameters},string>({key:'__NAME_LC___initial',default:null});
 
 interface I__NAME__Props{}
 const __NAME__:React.FC<I__NAME__Props> = () => {

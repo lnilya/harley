@@ -13,7 +13,7 @@ import {Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} f
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asTrainingResult = atomFamily<TrainingResult, string>({key: 'training_result', default: null});
-const asLastRunSettings = atomFamily<{ inputs: self.Inputs, params: self.Parameters }, string>({
+const asLastRunSettings = atomFamily<{ batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters }, string>({
     key: 'training_initial',
     default: null
 });

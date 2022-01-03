@@ -14,7 +14,7 @@ const asShowClosedGaps = atomFamily<boolean,string>({key:'thinning_closed_gaps',
 const asShowOriginal = atomFamily<boolean,string>({key:'thinning_original',default:true});
 const asThinnedImage = atomFamily<PipelineImage,string>({key:'thinning_thinned',default:null});
 const asThinnedImageWithGaps = atomFamily<PipelineImage,string>({key:'thinning_thinned_with_gaps',default:null});
-const asLastRunSettings = atomFamily< {inputs:self.Inputs, params:self.Parameters},string>({key:'thinning_initial',default:null});
+const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'thinning_initial',default:null});
 const Thinning:React.FC<IThinningProps> = () => {
     
     /**CLEANUP CALLBACK WHEN INPUTS HAVE CHANGED*/
