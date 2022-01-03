@@ -8,7 +8,16 @@ from scipy.stats import pearsonr
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.util import shapeutil
 from src.sammie.py.util.imgutil import makeSemiTransparent, getPreviewImage, joinChannels, norm, addBorder
+import xlsxwriter as xls
 
+
+def writeXLSX(csvDataSheets:List[List],names:List[str],path:str):
+    wb = xls.Workbook(path)
+    for i,c in enumerate(csvDataSheets):
+        ws = wb.add_worksheet(names[i])
+        for j,r in enumerate(c):
+            ws.write_row(j,0,r)
+    wb.close()
 
 def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]],key:str, color:List[Tuple[int,int,int]], border:int = 3, shift:Tuple[float,float] = None):
     d2img = d2.img

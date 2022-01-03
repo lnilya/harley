@@ -95,8 +95,19 @@ function getPipeline(): Pipeline {
         outputs: [
             {
                 requiredInput: dataKeys.graphData,
+                title:'Excel Graph Data',
+                description:'Data used to generate the histograms. In Excel format, one sheet per graph',
+                exporterParams: {format:'xlsx'},
+                suggestDestinationOutput:{
+                    pipelineInputKey:inputKeys.dataset1,
+                    transform:suggestModifiedFilename(/(.*)\..*/g,'Graphs_$1.xlsx'),
+                },
+            },
+            {
+                requiredInput: dataKeys.graphData,
                 title:'JSON Graph Data',
                 description:'Data used to generate the histograms. In JSON format.',
+                exporterParams: {format:'json'},
                 suggestDestinationOutput:{
                     pipelineInputKey:inputKeys.dataset1,
                     transform:suggestModifiedFilename(/(.*)\..*/g,'Graphs_$1.json'),

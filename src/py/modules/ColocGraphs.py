@@ -8,7 +8,8 @@ from scipy.spatial import distance_matrix
 from scipy.stats import pearsonr
 from shapely.geometry import Polygon
 
-from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells
+from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells, NNData
+from src.py.modules.ColocCellsUtil.colocutil import writeXLSX
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util import imgutil, shapeutil
 from src.sammie.py.util.shapeutil import contourLength
@@ -23,9 +24,13 @@ class ColocGraphsKeys:
         self.inColocCells = inputs[0]
         self.outGraphData = outputs[0]
 
+
+
+
 class ColocGraphs(ModuleBase):
 
     keys: ColocGraphsKeys
+    distData: NNData
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -85,13 +90,8 @@ class ColocGraphs(ModuleBase):
         return fwd,bck
 
     def __getDistToNearestNeighbor(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
-        distancesFwd = [] #will contain nearest neighbour distances src->dist if foci are NOT overlapping
-        distancesBck = [] #will contain nearest neighbout distances dist->src if not overlapping
-        centroidDistancesFwd = [] #will contain nearest neighbour distances src->dist
-        centroidDistancesBck = [] #will contain nearest neighbout distances dist->src
-        overlap = [] #Overlapping area in px^2 * scale^2
-        overlapRelFwd = [] #overlap divided by src area
-        overlapRelBck = [] #overlap divided by dist area
+        res = NNData()
+
         for c,foci1 in enumerate(src):
             foci2 = dest[c]
             if len(foci1) <= 0 or len(foci2) <= 0: continue
@@ -113,23 +113,28 @@ class ColocGraphs(ModuleBase):
             centroidNearestNeighbourDistancesBck = np.min(distMatrixCentroid, axis=0)
 
             #Absolute distances in px or transformed by scale into nm/µm etc.
-            distancesFwd += (nearestNeighbourDistancesFwd[nearestNeighbourDistancesFwd > 0] * scale).tolist()
-            distancesBck += (nearestNeighbourDistancesBck[nearestNeighbourDistancesBck > 0] * scale).tolist()
+            res.nnDistFwd += (nearestNeighbourDistancesFwd[nearestNeighbourDistancesFwd > 0] * scale).tolist()
+            res.nnDistBack += (nearestNeighbourDistancesBck[nearestNeighbourDistancesBck > 0] * scale).tolist()
+            res.cellNumDistFwd += [c] * len(nearestNeighbourDistancesFwd[nearestNeighbourDistancesFwd > 0])
+            res.cellNumDistBack += [c] * len(nearestNeighbourDistancesBck[nearestNeighbourDistancesBck > 0])
 
-            centroidDistancesFwd += (centroidNearestNeighbourDistancesFwd * scale).tolist()
-            centroidDistancesBck += (centroidNearestNeighbourDistancesBck * scale).tolist()
+            res.centroidDistFwd += (centroidNearestNeighbourDistancesFwd * scale).tolist()
+            res.centroidDistBack += (centroidNearestNeighbourDistancesBck * scale).tolist()
+            res.cellNumCentroidDistFwd += [c] * len(centroidNearestNeighbourDistancesFwd)
+            res.cellNumCentroidDistBack += [c] * len(centroidNearestNeighbourDistancesBck)
 
             #Calculate overlaps
             for f1 in foci1:
                 for f2 in foci2:
                     if f1.distance(f2) == 0: #overlap
                         ar = f1.intersection(f2).area
-                        overlap += [ar * (scale**2)]
-                        overlapRelFwd += [ar / f1.area]
-                        overlapRelBck += [ar / f2.area]
+                        res.overlapAbs += [ar * (scale**2)]
+                        res.overlapRelFwd += [ar / f1.area]
+                        res.overlapRelBck += [ar / f2.area]
+                        res.overlapCellNum += [c]
 
 
-        return centroidDistancesFwd,centroidDistancesBck,distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck
+        return res
 
 
     def run(self, action, params, inputkeys,outputkeys):
@@ -146,50 +151,49 @@ class ColocGraphs(ModuleBase):
             channel0 = colocdata.foci1
             channel1 = colocdata.foci2
 
-
             num0 = 0
             num1 = 0
             for c in channel0: num0 += len(c)
             for c in channel1: num1 += len(c)
 
-            centroidDistancesFwd,centroidDistancesBck, distancesFwd,distancesBck,overlap,overlapRelFwd,overlapRelBck = self.__getDistToNearestNeighbor(channel0,channel1,scale)
+            self.distData = self.__getDistToNearestNeighbor(channel0,channel1,scale)
 
-            pccFwd, pccBck = self.__getFociCorrelations(colocdata)
+            self.distData.pccFwd, self.distData.pccBck = self.__getFociCorrelations(colocdata)
             #Required: Notify the pipeline that the processed data is now available, so that the user can step to the next step
             #of the UI.
 
             #Generate an output that will go to javascript for displaying on the UI side
-            json = {
-                'nn':{'fwd':distancesFwd,'bck':distancesBck},
-                'pcc':{'cell':colocdata.pcc,
-                       'foci':colocdata.fpcc,
-                       'fwd':pccFwd,
-                       'bck':pccBck
-                       },
-                'nncentroid':{'fwd':centroidDistancesFwd,'bck':centroidDistancesBck},
-                'overlap': {'abs':overlap,'fwd':overlapRelFwd,'bck':overlapRelBck},
-                'stats':{
-                    'cells': len(channel0),
-                    'num0': num0,
-                    'num1':num1
-                }
+            json = self.distData.getJSDict()
+            json['pcc']['cell'] = colocdata.pcc
+            json['pcc']['foci'] = colocdata.fpcc
+            json['stats'] = {
+                'cells': len(channel0),
+                'num0': num0,
+                'num1':num1
             }
             self.onGeneratedData(self.keys.outGraphData, json, params)
             return json
 
     def exportData(self, key: str, path: str, **args):
         #Get the data that needs to be exported
-        data = self.session.getData(key)
-        data['explanation'] = 'Data for nn (Nearest Neighbour) and overlap. Absolute values are either in px or nm^2 depending wether the scale has been provided initially.' \
-                              'fwd and bck are relative percentage value. nn-fwd means distance from channel0 to 1, nn-bck means distance from channel1 to 0. ' \
-                              'Overlap fwd means overlapArea / channel0 foci area, and bck overlapArea / channel1 foci area'
-        # Serializing json
-        json_object = json.dumps(data, indent=4)
 
-        # Writing to sample.json
-        with open(path, "w") as outfile:
-            outfile.write(json_object)
+        units = 'px'
+        if '1px' in args: units = 'nm'
 
-        #Write a file with this data or postprocess it in some way
-        #...
+        colocdata: CCCells = self.session.getData(self.keys.inColocCells)
 
+        if args['format'] == 'xlsx':
+            nn = self.distData.getNNDistCSV(args['name0'],args['name1'],units)
+            centroid = self.distData.getCentroidDistCSV(args['name0'],args['name1'],units)
+            coloc = self.distData.getPCCCSV(args['name0'],args['name1'],colocdata.pcc,colocdata.fpcc)
+            writeXLSX([nn,centroid,coloc],['Nearest Neighbours','Centroids','Pearson Correlation'],path)
+        elif args['format'] == 'json':
+            fullJSON = colocdata.getExportJSON()
+            fullJSON.update(self.distData.getExportJSON())
+
+            # Serializing json
+            json_object = json.dumps(fullJSON, indent=4)
+
+            # Writing to sample.json
+            with open(path, "w") as outfile:
+                outfile.write(json_object)
