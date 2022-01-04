@@ -4,4 +4,38 @@
 
 .scatter-chart{
 
+	.axis-input{
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-bottom: 10px;
+		> span{
+			font-weight: bold;
+			padding: 3px;
+			color: $colWhite;
+			background: $colBGMedium;
+			border-radius: 4px;
+			margin-right: 7px;
+		}
+		select{
+			font-size: 14px;
+			padding-left: 0;
+			display: inline !important;
+			padding-bottom: 2px;
+			padding-top: 2px;
+			margin-top: -2px;
+		}
+		.MuiInput-root{
+			margin-left: 5px;
+			margin-right: 5px;
+			background-color: transparent !important;
+			border-bottom: 1px solid $colMain;
+			border-radius: 0;
+		}
+		svg{
+			color: $colMain;
+		}
+	}
 }

@@ -34,6 +34,19 @@ class CCCells:
         return json
 
 @define
+class FociScatterData:
+    cellNum:int
+    area:float = field(default=0)
+
+    overlappedArea:float = field(default=0) #0-1, relative to area
+    contourDistToNN:float = field(default=-1) #-1 if focus has overlaps or there are no partners of other type, otherwise contour to contour distance
+    centroidDistToNN:float = field(default=-1) #distance to centroid of neighbour, if present will always be positive
+    numOverlapPartners:int = field(default=0) #length of self.overlapPartners, easier like this for JS
+
+    nearestNeighbour:int = field(default=-1)
+    overlapPartners:List[int] = field(default=Factory(list))
+
+@define
 class NNData:
 
     # Distance to Nearest Neighbour c0 -> c1
