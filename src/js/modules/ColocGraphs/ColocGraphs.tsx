@@ -110,7 +110,7 @@ const ColocGraphs: React.FC<IColocGraphsProps> = () => {
         {!error && result &&
         <div className={'site-block medium'}>
             <ColocOverview result={result} name0={n0} name1={n1} className={'pad-200-bottom'}/>
-            <FociScatterChart data={result.scatter} names={[n0,n1]} unit={curBatch.batchParameters["1px"] ? 'nm' : 'px'}/>
+            <FociScatterChart cellImageData={curInputs.colocResult} data={result.scatter} names={[n0,n1]} unit={curBatch.batchParameters["1px"] ? 'nm' : 'px'}/>
             <FlexBinChart titleImg={ContourTitleImage}  format={format} className={'pad-200-bottom'} data={nnData} title={'Contour Distance to non-overlapping Nearest Neighbour in ' + units}
                           xlabel={'Distance in ' + units}
                           explanation={'Histogram of distances of one type of foci to the nearest neighbour of the other type. This gives a contour to contour distance, which means that it is only calculated for foci that are non overlapping. Overlapping foci end up in the overlap graph.'}/>

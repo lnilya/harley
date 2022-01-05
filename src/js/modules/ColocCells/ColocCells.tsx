@@ -84,7 +84,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
             na = copyRemove(selected, idx);
         
         setSelection(na)
-        await server.runCellSelection(curParams, curStep, na)
+        await server.runCellSelection(curParams, curStep, na,result)
     };
     
     const sortingSeq = result?.imgs && getResultSorting(curParams, result)

@@ -58,14 +58,14 @@ function getPipeline(): Pipeline {
                 renderer: <ColocCells/>,
                 parameters: ColocCellsParams.parameters,
                 inputKeys: {alignedDatasets: dataKeys.matchedDatasets},
-                outputKeys: {colocCells: dataKeys.colocCells}
+                outputKeys: {colocResult: dataKeys.colocCells}
             } as ColocCellsParams.Step,
             {
                 title: 'Graphs',
                 moduleID: 'ColocGraphs',
                 renderer: <ColocGraphs/>,
                 parameters: ColocGraphsParams.parameters,
-                inputKeys: {colocCells: dataKeys.colocCells},
+                inputKeys: {colocResult: dataKeys.colocCells},
                 outputKeys: {graphdata: dataKeys.graphData}
             } as ColocGraphsParams.Step,
             //%NEWMODULE_STEP%

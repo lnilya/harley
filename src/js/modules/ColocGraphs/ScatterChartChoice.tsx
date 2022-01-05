@@ -144,13 +144,19 @@ const ScatterChartChoice:React.FC<IScatterChartChoiceProps> = ({onDataChanged, u
             x:transformByValue(xFociProp,fs.x),
             y:transformByValue(yFociProp,fs.y),
         }))
-        onDataChanged({
+        var gd = {
             points:graphData,
             xPropUnits:getUnitsLabel(xFociProp,unit),
             yPropUnits:getUnitsLabel(yFociProp,unit),
             xPropName:getAxisLabel(xFociProp,unit,names[xFociType],names[(xFociType+1)%2]),
-            yPropName:getAxisLabel(yFociProp,unit,names[(xFociType+1)%2],names[xFociType])
-        })
+            yPropName:''
+        }
+        
+        if(yFociType != 0) gd.yPropName = getAxisLabel(yFociProp,unit,names[(xFociType+1)%2],names[xFociType])
+        else gd.yPropName = getAxisLabel(yFociProp,unit,names[xFociType],names[(xFociType+1)%2])
+        
+        onDataChanged(gd)
+        
     },[xFociProp,xFociType,yFociProp,yFociType,yMultiHandling])
     
     const xChoices = {0:names[0],

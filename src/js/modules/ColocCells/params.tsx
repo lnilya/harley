@@ -8,6 +8,7 @@ import {
     getSliderParams,
     getTextfieldInputParams
 } from "../../../sammie/js/modules/paramutil";
+import {ColocCellsResult} from "./server";
 
 /**Name of the module*/
 export const moduleName = 'ColocCells'
@@ -39,7 +40,9 @@ export const parameters:Array<Parameter<any>> = [
 export type Inputs = {alignedDatasets:number[]}
 
 /**Typing for ColocCells Outputs - Define Output Types/Names of this Pipeline step here.*/
-export type Outputs = {colocCells:any}
+export type Outputs = {
+    colocResult:ColocCellsResult
+}
 
 /**Shorthand for the PipelineStep of ColocCells*/
 export type Step = PipelineStep<Inputs, Outputs>;

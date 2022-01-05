@@ -35,7 +35,8 @@ class CCCells:
 
 @define
 class FociScatterData:
-    cellNum:int
+    cellNum:int #Cell Number in original dataset
+    focusNum:int #Focus Number in original dataset
     area:float = field(default=0)
 
     overlappedArea:float = field(default=0) #0-1, relative to area

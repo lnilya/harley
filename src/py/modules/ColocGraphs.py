@@ -101,8 +101,8 @@ class ColocGraphs(ModuleBase):
             idxOffset2 = len(scatterData2)
 
             #create Foci Data Objects to hold results
-            scatter1 = [FociScatterData(cellNum, focus.area * scale**2) for focus in foci1]
-            scatter2 = [FociScatterData(cellNum, focus.area * scale**2) for focus in foci2]
+            scatter1 = [FociScatterData(cellNum,fn, focus.area * scale**2) for fn,focus in enumerate(foci1)]
+            scatter2 = [FociScatterData(cellNum,fn, focus.area * scale**2) for fn,focus in enumerate(foci2)]
 
             #no overlap, distances etc necessary if only one type of foci in cell
             if len(foci1) <= 0 or len(foci2) <= 0:

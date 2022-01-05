@@ -7,7 +7,10 @@ import {SingleDataBatch} from "../../../sammie/js/state/algstate";
 
 /**All data on a single Focus.*/
 export type FociScatter = {
-    
+    //Original cell number (in array of selected cells)
+    cellNum:number,
+    //original number of focus inside the cell
+    focusNum:number,
     //basic continuous properties
     area:number,
     overlappedArea:number,
