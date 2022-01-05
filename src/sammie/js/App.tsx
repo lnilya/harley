@@ -26,6 +26,9 @@ interface IApp{
     getPipelineDefinitions:()=>Pipeline[]
 }
 
+/**Debugging Recoil issue with retrieving pipeline names*/
+export var __debugAllPipelineNames:string[];
+
 const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
     const overlay = useRecoilValue(ui.overlay);
     const curStep = useRecoilValue(ui.curPipelineStep)
@@ -38,7 +41,9 @@ const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
     const inp = useRecoilValue(alg.allPipelineInputs);
     
     useEffect(() => {
-        initializePipelineStack(getPipelineDefinitions());
+        const pd = getPipelineDefinitions();
+        __debugAllPipelineNames = pd.map((pl)=>pl.name);
+        initializePipelineStack(pd);
         listenTo<ToastEventPayload>(EventTypes.ToastEvent, 'apptoast', (data) => {
             enqueueSnackbar(data.msg,{content:<Alert severity={data.severity}>{data.msg}</Alert>})
         })

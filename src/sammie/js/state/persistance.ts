@@ -1,8 +1,10 @@
 import {PipelineName} from "../types/datatypes";
 import {getConnectedValue} from "./ConnectedStore";
 import * as ui from './uistates'
+import * as events from './eventbus'
 import {selectedPipelineName} from './uistates'
 import {SettingDictionary} from "../modules/paramtypes";
+import {__debugAllPipelineNames} from "../App";
 
 enum keys{
     PIPELINE_PARAMS='pipelineparams',
@@ -45,7 +47,14 @@ export function loadGlobalData(key:string){
 
 /**Saves arbitrary data that is tied to the given pipeline*/
 export function saveDataForPipeline(data:any, key:string, pipeName:PipelineName){
-    localStorage.setItem(keys.PIPELINE_DATA+'_'+pipeName+'_'+key,JSON.stringify(data))
+    if(typeof pipeName !== 'string'){
+        alert(`Corruption in Recoil Pipeline Name. Provided getter/setter pair instead of name.`)
+    }else if(__debugAllPipelineNames.indexOf(pipeName) == -1){
+        alert(`Corruption in Recoil Pipeline Name. Could not store Pipeline Data: ${key}. Illegal PipeName: ${pipeName} `)
+        events.showToast(`Error saving ${key}.`)
+    }else{
+       localStorage.setItem(keys.PIPELINE_DATA+'_'+pipeName+'_'+key,JSON.stringify(data))
+    }
 }
 /**Loads arbitrary data that is tied to the given pipeline*/
 export function loadDataForPipeline(key:string, pipeName:PipelineName){
