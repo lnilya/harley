@@ -17,6 +17,7 @@ interface IColocCellResultProps{
 	className?:string
     res:ColocSingleCellImages,
     imgIdx:number,
+    cellNum:number
     cnt:PolygonData
     excluded:boolean
     onToggleCellInclusion:()=>any
@@ -57,7 +58,7 @@ const ctop = {r:RedPolygon,g:GreenPolygon,b:BluePolygon,y:YellowPolygon,o:Orange
  * ColocCellResult
  * @author Ilya Shabanov
  */
-const ColocCellResult:React.FC<IColocCellResultProps> = ({fpcc,pcc,colorSet, foci0, foci1, onToggleCellInclusion, excluded, cnt,imgIdx, res,className}) => {
+const ColocCellResult:React.FC<IColocCellResultProps> = ({cellNum, fpcc,pcc,colorSet, foci0, foci1, onToggleCellInclusion, excluded, cnt,imgIdx, res,className}) => {
  
  
 	return (
@@ -71,6 +72,7 @@ const ColocCellResult:React.FC<IColocCellResultProps> = ({fpcc,pcc,colorSet, foc
                 {foci1.length > 0 &&
                     <PolygonCloud className={'foci-1 stick-to-all'} polygons={foci1} canvasDim={res[1]} PolyComp={ctop[colorSet.charAt(1)]}/>
                 }
+                <div className="cell-num">#{cellNum}</div>
             </div>
             <div className="coloc-cell-result__footer">
                 {!excluded &&

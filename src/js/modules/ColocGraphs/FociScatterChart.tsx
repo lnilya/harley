@@ -128,6 +128,7 @@ const CustomTooltip = (props: { active?: any, payload?: any, label?: any, cellIm
                         <PolygonCloud className={'primary-cloud'} polygons={showFoci.sec} canvasDim={cellImg[3]} PolyComp={NeighbourPolygon}/>
                     }
                     <PolygonCloud polygons={[cellOutline]} canvasDim={cellImg[3]} PolyComp={OutlinePolygon}/>
+                    <div className="cell-num">#{cellIdx}</div>
                     {/*<PolygonCloud polygons={foci1} canvasDim={cellImg[3]}/>*/}
                 </div>
                 {/*<div>{`Mean: ${printf('%.2f',mean)} `}</div>*/}

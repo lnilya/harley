@@ -99,6 +99,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
                     const r = result.imgs[i]
                     return (
                         <ColocCellResult foci0={result.foci[0][i]}
+                                         cellNum={i}
                                          pcc={result?.pccs[i]}
                                          fpcc={result?.fpccs[i]}
                                          colorSet={curParams.color}
