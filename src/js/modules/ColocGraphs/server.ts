@@ -19,7 +19,7 @@ export type FociScatter = {
     nearestNeighbour:number,
     overlapPartners:number[],
     
-}[];
+};
 export type ColocGraphsResult = {
     nn: {fwd:number[],bck:number[]},
     pcc: {cell:[number,number][],foci:[number,number][],fwd:[number,number][],bck:[number,number][]},

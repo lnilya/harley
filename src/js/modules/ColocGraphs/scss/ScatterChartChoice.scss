@@ -1,41 +1,46 @@
-
 @import '../../../../sammie/scss/global/variables';
 @import '../../../../sammie/scss/global/mixins';
 
-.scatter-chart{
-
-	.axis-input{
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		align-items: center;
-		flex-wrap: wrap;
+.scatter-chart-choice {
+	.axis-input {
+		line-height: 2;
+		>*{
+			display: inline-block;
+		}
 		margin-bottom: 10px;
-		> span{
+		position: relative;
+		padding-left: 60px;
+		> span {
+			@include stick-to($fix-top-left);
 			font-weight: bold;
+			line-height: 1.3;
 			padding: 3px;
 			color: $colWhite;
 			background: $colBGMedium;
 			border-radius: 4px;
 			margin-right: 7px;
 		}
-		select{
+
+		select {
 			font-size: 14px;
 			padding-left: 0;
 			display: inline !important;
 			padding-bottom: 2px;
 			padding-top: 2px;
-			margin-top: -2px;
 		}
-		.MuiInput-root{
+
+		.MuiInput-root {
 			margin-left: 5px;
 			margin-right: 5px;
 			background-color: transparent !important;
 			border-bottom: 1px solid $colMain;
 			border-radius: 0;
 		}
-		svg{
+
+		svg {
 			color: $colMain;
 		}
+
+
 	}
 }

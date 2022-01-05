@@ -3,7 +3,7 @@ from typing import List, Dict, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.sammie.py.util import shapeutil
+from src.sammie.py.util import shapeutil, imgutil
 from src.sammie.py.util.imgutil import addBorder
 
 
@@ -103,6 +103,11 @@ class CellsDataset:
 
         return cnts
 
+    def show(self):
+        plt.imshow(self.img)
+        for dc in self.contours:
+            plt.plot(dc['x'], dc['y'], 'y:')
+        plt.show()
 
     def getSingleCellImagesAndContours(self, border: int = 3) -> Tuple[List[np.ndarray], List[Dict]]:
         """Retrieves a List of single cell images from the contours and adds a
@@ -110,10 +115,19 @@ class CellsDataset:
         cellImages = []
         cellContours = []
         for cnt in self.contours:
+            #For some reasone it is possible to achieve a non-valid contour - so we will just ignore it here.
+            # if len(cnt['x']) < 3 or len(cnt['y']) < 3:
+            #     continue
             maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
             img = self.img[dy:dy + maskPatch.shape[0], dx:dx + maskPatch.shape[1]]
-            minIntensity = img[maskPatch].min()
-            maxIntensity = img[maskPatch].max()
+            try:
+                minIntensity = img[maskPatch].min()
+                maxIntensity = img[maskPatch].max()
+            except:
+                minIntensity = 0
+                maxIntensity = 1
+                self.show()
+
             img = (img - minIntensity) / (maxIntensity - minIntensity)
             img[maskPatch == False] = 0
 
