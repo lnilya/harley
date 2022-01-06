@@ -62,10 +62,10 @@ function getPipeline(): Pipeline {
             {
                 requiredInput: dataKeys.foci,
                 title: 'Foci Table',
-                description: 'A CSV File with foci stats. Each Foci has a cell number associated with it. If your dataset file had a scale associated with it, the result here will be in µm otherwise just pixels.',
+                description: 'An excel file with foci stats. Cells that are excluded are not counted/mentioned in the file. All cell numbers relate to the set without excluded cells. All foci have a cell number associated with them. If your dataset file had a scale associated with it, the result here will be in µm otherwise just pixels.',
                 suggestDestinationOutput: {
                     pipelineInputKey: inputKeys.dataset,
-                    transform: suggestSuffixedFileName('_foci', 'csv')
+                    transform: suggestSuffixedFileName('_foci', 'xlsx')
                 },
                 exporterParams:{csv:true}
             },

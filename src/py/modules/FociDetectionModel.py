@@ -1,6 +1,7 @@
 import csv
 import pickle
 from typing import List, Set, Dict
+from itertools import chain
 
 import numpy as np
 import skimage.measure
@@ -17,6 +18,7 @@ from src.py.modules.TrainingUtil.SVMClassifier import SVMClassifier
 from src.sammie.py.util.imgutil import addBorder, getPreviewImage
 from src.py.util.modelutil import getCutoffLevel
 from src.sammie.py.util.shapeutil import getPolygonMaskPatch
+import xlsxwriter as xls
 
 
 class FociDetectionModelKeys:
@@ -155,7 +157,10 @@ class FociDetectionModel(ModuleBase):
 
                 allFoci += [fociInCell]
 
-            self.onGeneratedData(self.keys.outFoci, {'foci':adjustedChoices, 'selection':self.userSelectedFociPerCell}, params)
+            self.onGeneratedData(self.keys.outFoci, {
+                'foci':adjustedChoices,
+                'selection':self.userSelectedFociPerCell
+            }, params)
 
             return {'imgs': self.previews,
                     'foci':allFoci,
@@ -183,6 +188,105 @@ class FociDetectionModel(ModuleBase):
             adjustedChoices += [cc2]
 
         return adjustedChoices
+
+    def __exportXLSX(self, key:str, path:str,**args):
+
+        scale = args['1px'] if '1px' in args else 1
+
+        d = self.session.getData(self.keys.outFoci)
+        adjustedFociChoices = d['foci']
+        selectedChoices = d['selection']
+
+        wb = xls.Workbook(path)
+
+        #Will contain stats on the whole dataset
+        numCells = len(self.cellsInExport)
+        cellsWithFoci = 0
+        histData = []
+        for i, c in enumerate(list(self.cellsInExport)):
+            nf = len(selectedChoices[c])
+            histData += [nf]
+            if nf > 0: cellsWithFoci += 1
+
+        wss = wb.add_worksheet('Summary')
+        wsf = wb.add_worksheet('Foci Per Cell')
+
+        ws = wb.add_worksheet('Foci Details')
+        ws.set_column(2, 7, 15)
+        ws.write_row(0,0,['Cells that do not have foci, have no entries here.'])
+        if scale != 1:
+            ws.write_row(1,0,['Cell', 'Focus', 'x in nm', 'y in nm', 'Area in nm^2',
+                         'peakBrightness', 'meanBrightness', 'contourBrightness'])
+        else:
+            ws.write_row(1,0,['Cell', 'Focus', 'x in px', 'y in px', 'Area in px^2',
+                         'peakBrightness', 'meanBrightness', 'contourBrightness'])
+
+        r = 2
+        avgIntensityPerCell = []
+        avgAreaPerCell = []
+
+        for i, c in enumerate(list(self.cellsInExport)):
+            cc = adjustedFociChoices[c]
+            selFoci = selectedChoices[c]
+            nf = 0
+            avgIntensity = []
+            avgArea = []
+            for f, lvl in enumerate(cc):
+                if f not in selFoci: continue
+                binMaskOuter, offx, offy = getPolygonMaskPatch(self.trainingData.contours[c][f][lvl][:, 1],
+                                                               self.trainingData.contours[c][f][lvl][:, 0], 0)
+                region: RegionProperties = skimage.measure.regionprops(binMaskOuter.astype('int'),
+                                                                       self.trainingData.imgs[c][
+                                                                       offy:offy + binMaskOuter.shape[0],
+                                                                       offx:offx + binMaskOuter.shape[1]])[0]
+
+                area = Polygon(self.trainingData.contours[c][f][lvl]).area
+                center = self.trainingData.getFociCenters(c, [f])
+                avgArea += [area * (scale**2)]
+                avgIntensity += [region.mean_intensity]
+                ws.write_row(r,0,[i, nf,
+                             float('%.3f'%(center[0, 1] * scale)),
+                             float('%.3f'%(center[0, 0] * scale)),
+                             float('%.2f'%(area * (scale ** 2))),
+                             float('%.3f'%region.max_intensity),
+                             float('%.3f'%region.mean_intensity),
+                             float('%.3f'%self.trainingData.contourLevels[c][f][lvl])])
+                r += 1
+                nf += 1
+            avgIntensityPerCell += [avgIntensity]
+            avgAreaPerCell += [avgArea]
+
+
+        #Get Average Intensities/Areas of all Foci
+        avgIntensityTotal = np.mean(list(chain.from_iterable(avgIntensityPerCell)))
+        avgAreaTotal = np.mean(list(chain.from_iterable(avgAreaPerCell)))
+
+        wss.set_column(0, 0, 22)
+        wss.set_column(0, 1, 15)
+        wss.write_row(1, 0, ['Total Cells', numCells])
+        wss.write_row(2, 0, ['Cells with Foci', cellsWithFoci])
+        wss.write_row(3, 0, ['Cells without Foci', numCells - cellsWithFoci])
+        wss.write_row(4, 0, ['% of cells with foci', '%.2f%%' % (100 * cellsWithFoci / numCells)])
+        wss.write_row(5, 0, ['Avg Foci per Cell', np.mean(histData)])
+
+        unit = 'px'
+        if scale != -1: unit = 'nm'
+
+        wss.write_row(6, 0, ['Avg Foci area in %s²'%unit, float('%.3f'%(avgAreaTotal))])
+        wss.write_row(7, 0, ['Avg Foci Mean Brightness', float('%.3f'%avgIntensityTotal)])
+
+        wsf.set_column(0, 1, 12)
+        wsf.set_column(2, 3, 20)
+        wsf.write_row(1, 0, ['Cell Number', 'Foci in Cell','Avg Foci Mean Brightness','Avg Foci Area in %s²'%unit])
+        for cellnum, numFoci in enumerate(histData):
+            if numFoci > 0:
+                ic = float('%.3f'%np.mean(avgIntensityPerCell[cellnum]))
+                ac = float('%.3f'%(np.mean(avgAreaPerCell[cellnum])))
+                wsf.write_row(cellnum + 2, 0, [cellnum, numFoci,ic,ac])
+            else:
+                wsf.write_row(cellnum + 2, 0, [cellnum, numFoci])
+
+        wb.close()
 
     def __exportCSV(self, key:str, path:str,**args):
         scale = args['1px'] if '1px' in args else 1
@@ -253,7 +357,7 @@ class FociDetectionModel(ModuleBase):
 
     def exportData(self, key: str, path: str, csv:bool, **args):
         if csv:
-            self.__exportCSV(key,path,**args)
+            self.__exportXLSX(key,path,**args)
         else:
             self.__exportDataSetWithLabels(key,path,**args)
 

@@ -7,6 +7,7 @@ Major:
 - Added Scatterplots to Coocalization Pipeline 
 
 Minor:
+- Foci Detection changed CSV to XLSX and added more evaluations
 - Added XLSX Export of Colocalization Data
 - Bugfixes in pipelinehandling 
 
