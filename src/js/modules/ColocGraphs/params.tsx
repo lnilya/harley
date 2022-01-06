@@ -3,6 +3,7 @@ import {PipelineImage} from "../../../sammie/js/types/datatypes";
 import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
 import React from "react";
 import {getSliderParams} from "../../../sammie/js/modules/paramutil";
+import {ColocCellsResult} from "../ColocCells/server";
 
 /**Name of the module*/
 export const moduleName = 'ColocGraphs'
@@ -19,7 +20,7 @@ export const parameters:Array<Parameter<any>> = [
 ];
 
 /**Typing for ColocGraphs Inputs - Define Input Types/Names of this Pipeline step here.*/
-export type Inputs = {colocCells:any }
+export type Inputs = {colocResult:ColocCellsResult }
 
 /**Typing for ColocGraphs Outputs - Define Output Types/Names of this Pipeline step here.*/
 export type Outputs = {graphdata:any}

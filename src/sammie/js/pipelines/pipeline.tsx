@@ -181,12 +181,7 @@ export async function loadPipeline(pipe: Pipeline) {
         updateConnectedValue(allPipelineData, {})
         updateConnectedValue(allPipelineInputs, {})
         
-        //update UI back to input
-        updateConnectedValue(ui.appScreen, UIScreens.input);
-        updateConnectedValue(alg.curLoadedBatchNumber, -1);
-        
         //Reload previous input batches
-        
         updateConnectedValue(allPipelineBatches, [])
         //If we had previously stored any input batches use these
         var lastStoredBatches: SingleDataBatch[] = storage.loadDataForPipeline(alg.allPipelineBatches.key,pipe.name);
@@ -236,12 +231,14 @@ export async function loadPipeline(pipe: Pipeline) {
         //Wait for all load requests to finish.
         await Promise.allSettled(allFiles);
         
+        
         //Sort out those batches that do not have any data anymore.
         lastStoredBatches = arrAfterLoading?.filter((pinput) => {
             for (let pinputKey in pinput)
                 if (pinput[pinputKey] != null) return true;
             return false;
         })
+        
         
         //When no batches are present, auto create a new empty one, for easier user input
         if (lastStoredBatches.length == 0) {
@@ -253,10 +250,12 @@ export async function loadPipeline(pipe: Pipeline) {
             })
         }
         
-        // console.log(`LAST STORED BATCHES`, lastStoredBatches);
-        
         updateConnectedValue(allPipelineBatches, lastStoredBatches || [])
         updateConnectedValue(ui.overlay, null);
+        
+        //update UI back to input
+        updateConnectedValue(ui.appScreen, UIScreens.input);
+        updateConnectedValue(alg.curLoadedBatchNumber, -1);
     }
 }
 

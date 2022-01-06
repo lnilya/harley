@@ -1,0 +1,94 @@
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.scatter-chart {
+	h3 {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	.scatter-plot-container{
+		height: 500px !important;
+	}
+	.yaxis-lbl-container{
+		width: 20px;
+		padding-top: 30px;
+		font-weight:bold;
+		writing-mode: vertical-lr;
+		text-orientation: sideways;
+		text-align: center;
+		transform: rotate(-180deg);
+		transform-origin: center center;
+	}
+	.xaxis-lbl{
+		text-align: center;
+		font-weight:bold;
+	}
+	.custom-tooltip{
+		background-color: $colBGMedium;
+		color: $colWhite;
+		padding:15px;
+		border-radius: 4px;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: flex-start;
+		div.title{
+			color: rgba($colWhite,0.7);
+			margin-bottom: 5px;
+		}
+		.val-primary >.title:before{
+			content: '';
+			border-radius: 50%;
+			width: 10px;
+			display: inline-block;
+			height: 10px;
+			background: #b132cd;
+			margin-right: 5px;
+		}
+		.val-secondary >.title:before{
+			margin-right: 5px;
+			content: '';
+			border-radius: 50%;
+			width: 10px;
+			height: 10px;
+			display: inline-block;
+			background: #66cd32;
+		}
+		.data{
+			max-width: 200px;
+			>div{
+				margin-bottom: 20px;
+			}
+		}
+		.cell-preview{
+			.cell-num{
+				@include stick-to($fix-bottom-right, 5px);
+				line-height: 1;
+				opacity: .6;
+				color: white;
+				font-size: 10px;
+			}
+			line-height: 0;
+			display: inline-block;
+			img{
+				line-height: 0;
+				width: 250px;
+				border-radius: 4px;
+			}
+			.polygon-cloud{
+				@include stick-to($fix-all);
+				&.primary-cloud{
+					animation: blink .5s;
+					animation-direction: alternate;
+					animation-iteration-count: infinite;
+				}
+			}
+			@keyframes blink {
+				from{ opacity: 0.2; }
+				to{ opacity: 1; }
+			}
+		}
+	}
+}

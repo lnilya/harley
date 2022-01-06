@@ -7,26 +7,29 @@ import {SingleDataBatch} from "../../../sammie/js/state/algstate";
 
 /**All data on a single Focus.*/
 export type FociScatter = {
-    
+    //Original cell number (in array of selected cells)
+    cellNum:number,
+    //original number of focus inside the cell
+    focusNum:number,
     //basic continuous properties
-    size:number,
-    overlappedAreaPerc:number,
-    distanceToNN:number,
-    centroidDistanceToNN:number,
-    cellArea:number,
+    area:number,
+    overlappedArea:number,
+    contourDistToNN:number,
+    centroidDistToNN:number,
     numOverlapPartners:number,
     
     //relational properties
-    nearestNeighbourIdx:number,
-    overlapPartnerIdx:number[],
+    nearestNeighbour:number,
+    overlapPartners:number[],
     
-}[];
+};
 export type ColocGraphsResult = {
     nn: {fwd:number[],bck:number[]},
     pcc: {cell:[number,number][],foci:[number,number][],fwd:[number,number][],bck:[number,number][]},
     nncentroid: {fwd:number[],bck:number[]},
     overlap: {abs:number[], fwd:number[],bck:number[]}
-    stats:{cells:number, num0:number, num1:number}
+    stats:{cells:number, num0:number, num1:number},
+    scatter:{c0:FociScatter[],c1:FociScatter[]}
 }
 export async function runColocGraphs(curParams:self.Parameters, curStep:self.Step, scale:number):Promise<EelResponse<ColocGraphsResult>>{
     

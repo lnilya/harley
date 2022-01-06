@@ -3,8 +3,12 @@ Updates by version
 
 ### Version: 1.1.3
 
+Major:
+- Added Scatterplots to Coocalization Pipeline 
+
 Minor:
-- Added XLSX Export of Colocalization Data 
+- Added XLSX Export of Colocalization Data
+- Bugfixes in pipelinehandling 
 
 ### Version: 1.1.2
 Major:

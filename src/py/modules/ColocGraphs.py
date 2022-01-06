@@ -3,12 +3,13 @@ from typing import List, Dict
 
 import matplotlib.pyplot as plt
 import numpy as np
+from attr import asdict
 from scipy._lib._ccallback_c import plus1_t
 from scipy.spatial import distance_matrix
 from scipy.stats import pearsonr
 from shapely.geometry import Polygon
 
-from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells, NNData
+from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells, NNData, FociScatterData
 from src.py.modules.ColocCellsUtil.colocutil import writeXLSX
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util import imgutil, shapeutil
@@ -89,6 +90,72 @@ class ColocGraphs(ModuleBase):
 
         return fwd,bck
 
+    def __getFociScatterData(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
+        scatterData1:List[FociScatterData] = []
+        scatterData2:List[FociScatterData] = []
+
+        for cellNum,foci1 in enumerate(src):
+            foci2 = dest[cellNum]
+
+            idxOffset1 = len(scatterData1)
+            idxOffset2 = len(scatterData2)
+
+            #create Foci Data Objects to hold results
+            scatter1 = [FociScatterData(cellNum,fn, focus.area * scale**2) for fn,focus in enumerate(foci1)]
+            scatter2 = [FociScatterData(cellNum,fn, focus.area * scale**2) for fn,focus in enumerate(foci2)]
+
+            #no overlap, distances etc necessary if only one type of foci in cell
+            if len(foci1) <= 0 or len(foci2) <= 0:
+                continue
+
+            #calculate the distance matrix
+            distMatrix = np.zeros((len(foci1),len(foci2)))
+            distMatrixCentroid = np.zeros((len(foci1),len(foci2)))
+            for i in range(0,len(foci1)):
+                distMatrix[i,:] = [ foci1[i].distance(foci2[j]) for j in range(0,len(foci2))]
+                distMatrixCentroid[i,:] = [foci1[i].centroid.distance(foci2[j].centroid) for j in range(0,len(foci2))]
+
+            #Nearest Neighbour for focus 1 -> 2
+            nn = np.min(distMatrix, axis=1)
+            nnIdx = np.argmin(distMatrix, axis=1)
+            nncd = np.min(distMatrixCentroid, axis=1)
+            for i,s in enumerate(scatter1):
+                s.centroidDistToNN = nncd[i] * scale #always defined if there is another focus
+
+                if nn[i] > 0:   #only if this focus is not overlapping its nearest neighbour
+                    s.contourDistToNN = nn[i] * scale
+                    s.nearestNeighbour = int(nnIdx[i]) + idxOffset2
+
+                # find overlap partners 1 -> 2
+                for j,f2 in enumerate(foci2):
+                    if f2.distance(foci1[i]) == 0:
+                        s.overlapPartners += [j + idxOffset2]
+                        s.overlappedArea += f2.intersection(foci1[i]).area / foci1[i].area
+
+                s.numOverlapPartners = len(s.overlapPartners)
+
+            #Nearest Neighbour for focus 2 -> 1
+            nn = np.min(distMatrix, axis=0)
+            nnIdx = np.argmin(distMatrix, axis=0)
+            nncd = np.min(distMatrixCentroid, axis=0)
+            for i,s in enumerate(scatter2):
+                s.centroidDistToNN = nncd[i] * scale #always defined if there is another focus
+                if nn[i] > 0: #only if this focus is not overlapping its nearest neighbour
+                    s.contourDistToNN = nn[i] * scale
+                    s.nearestNeighbour = int(nnIdx[i]) + idxOffset1
+
+                #find overlap partners 2 -> 1
+                for j,f1 in enumerate(foci1):
+                    if f1.distance(foci2[i]) == 0:
+                        s.overlapPartners += [j + idxOffset1]
+                        s.overlappedArea += f1.intersection(foci2[i]).area / foci2[i].area
+
+                s.numOverlapPartners = len(s.overlapPartners)
+
+            scatterData1 += scatter1
+            scatterData2 += scatter2
+
+        return scatterData1,scatterData2
     def __getDistToNearestNeighbor(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
         res = NNData()
 
@@ -156,6 +223,7 @@ class ColocGraphs(ModuleBase):
             for c in channel0: num0 += len(c)
             for c in channel1: num1 += len(c)
 
+            self.scatterData = self.__getFociScatterData(channel0,channel1,scale)
             self.distData = self.__getDistToNearestNeighbor(channel0,channel1,scale)
 
             self.distData.pccFwd, self.distData.pccBck = self.__getFociCorrelations(colocdata)
@@ -166,6 +234,10 @@ class ColocGraphs(ModuleBase):
             json = self.distData.getJSDict()
             json['pcc']['cell'] = colocdata.pcc
             json['pcc']['foci'] = colocdata.fpcc
+            json['scatter'] = {
+                'c0':[asdict(sd) for sd in self.scatterData[0]],
+                'c1':[asdict(sd) for sd in self.scatterData[1]],
+            }
             json['stats'] = {
                 'cells': len(channel0),
                 'num0': num0,

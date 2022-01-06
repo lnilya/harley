@@ -3,17 +3,17 @@
  */
 import {PolygonData} from "./types/datatypes";
 
-export function cl(v:boolean, className:string){
-    if(v) return ` ${className} `;
+export function cl(v: boolean, className: string) {
+    if (v) return ` ${className} `;
     return '';
 }
 
-type clFun =  (v:boolean, className:string)=>string;
+type clFun = (v: boolean, className: string) => string;
 
 /**Curried version of cl function that allows to prepend for support of BEM style*/
-export function ccl(pre:string):clFun{
-    return (v, className)=>{
-        return cl(v,pre+className)
+export function ccl(pre: string): clFun {
+    return (v, className) => {
+        return cl(v, pre + className)
     }
 }
 
@@ -23,11 +23,11 @@ export function ccl(pre:string):clFun{
  * @param arr Array to remove element from
  * @param el element to remove
  */
-export function copyRemove(arr:any[],el:any ):any[]{
+export function copyRemove(arr: any[], el: any): any[] {
     const idx = arr.indexOf(el);
     const nv = [...arr]
-    if(idx == -1) return nv
-    nv.splice(idx,1)
+    if (idx == -1) return nv
+    nv.splice(idx, 1)
     return nv;
 }
 
@@ -37,7 +37,7 @@ export function copyRemove(arr:any[],el:any ):any[]{
  * @param idx index of element that will be replaced
  * @param replace the element it will be replaced with.
  */
-export function copyChange(arr:any[],idx:number, replace:any ):any[]{
+export function copyChange(arr: any[], idx: number, replace: any): any[] {
     const nv = [...arr]
     nv[idx] = replace
     return nv;
@@ -48,27 +48,27 @@ export function copyChange(arr:any[],idx:number, replace:any ):any[]{
  * @param path The path to a file
  * r
  */
-export function parseFilePath(path:string):{filename:string,folder:string , extension:string}{
+export function parseFilePath(path: string): { filename: string, folder: string, extension: string } {
     
     const splitChar = path.indexOf('/') == -1 ? '\\' : '/';
     
     //we assume that the path contains either / or \ but not a mixture
     var res = path.split(splitChar);
     
-    var fileName = res[res.length-1];
+    var fileName = res[res.length - 1];
     
     //split file name by extension '.'
     var fns = fileName.split('.');
-    var extension = fns[fns.length-1]
+    var extension = fns[fns.length - 1]
     
     
     res.pop();
     var folder = res.join(splitChar) + splitChar;
     
     return {
-        filename:fileName,
-        folder:folder,
-        extension:extension
+        filename: fileName,
+        folder: folder,
+        extension: extension
     }
     
 }
@@ -79,8 +79,8 @@ export function parseFilePath(path:string):{filename:string,folder:string , exte
  * await wait(100); //will wait 100ms
  * @param durationMS milliseconds to wait.
  */
-export async function wait(durationMS:number){
-    return new Promise((resolve)=>setTimeout(resolve,durationMS));
+export async function wait(durationMS: number) {
+    return new Promise((resolve) => setTimeout(resolve, durationMS));
 }
 
 
