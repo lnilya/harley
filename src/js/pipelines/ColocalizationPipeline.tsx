@@ -12,6 +12,7 @@ import ColocCells from "../modules/ColocCells/ColocCells";
 import {getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
 import * as ColocGraphsParams from '../modules/ColocGraphs/params'
 import ColocGraphs from "../modules/ColocGraphs/ColocGraphs";
+import thumb from "../../assets/images/coloc_thumb.jpg";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -136,8 +137,8 @@ function getPipeline(): Pipeline {
         //Info for user
         descriptions: {
             title: 'Colocalization',
-            description: 'After processing two datasets through the Foci Detection Pipeline you can load them here and perform differen colocalization measures.',
-            //thumb:<img src={thumb}/>, //an optional thumb image to appear in switch pipeline screen
+            description: 'After processing two datasets through the Foci Detection Pipeline you can load them here and perform different colocalization measures, as well as evaluate different properties of overlapping/neighbouring foci against one another.',
+            thumb:<img src={thumb}/>, //an optional thumb image to appear in switch pipeline screen
             helpscreen: helpScreen
         }
     }
