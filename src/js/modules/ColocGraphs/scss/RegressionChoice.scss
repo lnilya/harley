@@ -1,0 +1,32 @@
+
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.regression-choice{
+	min-width: 200px;
+	.row{
+		height: 30px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		&:not(:last-child){
+			margin-bottom: 5px;
+		}
+		em{
+			color: $colBlack;
+			opacity: .3;
+			font-weight: normal;
+		}
+	}
+	input{
+		width: 50px;
+	}
+	select,input{
+		font-size: 14px;
+		padding-top: 5px !important;
+		padding-left: 10px !important;
+		color: $colMain;
+	}
+
+}

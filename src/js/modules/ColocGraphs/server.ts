@@ -3,6 +3,8 @@ import * as eel from "../../../sammie/js/eel/eel";
 import * as self from "./params";
 import {deletePipelineData, updatePipelineData} from "../../../sammie/js/state/stateutil";
 import {SingleDataBatch} from "../../../sammie/js/state/algstate";
+import {GraphData} from "./FociScatterChart";
+import {RegressionResult} from "./RegressionChoice";
 
 
 /**All data on a single Focus.*/
@@ -42,4 +44,10 @@ export async function runColocGraphs(curParams:self.Parameters, curStep:self.Ste
     else updatePipelineData(curStep.outputKeys.graphdata,res.data);
 
     return res
+}
+export async function runExportScatter(curStep:self.Step, points:GraphData, regressionData:RegressionResult):Promise<EelResponse<string>>{
+    var res:EelResponse<string> = await eel.runStep(self.moduleName,'scatterexport',
+        {scatter:points,regression:regressionData},curStep);
+    
+    return res;
 }

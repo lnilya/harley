@@ -1,10 +1,17 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.4
+
+Minor:
+- Coloc: Added scatter plot regression
+- Coloc: Added scatter plot export
+- Coloc: Raw data export extended with foci details
+
 ### Version: 1.1.3
 
 Major:
-- Added Scatterplots to Coocalization Pipeline 
+- Added scatter plots to Coocalization Pipeline 
 
 Minor:
 - Foci Detection changed CSV to XLSX and added more evaluations

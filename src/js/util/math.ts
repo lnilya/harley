@@ -9,6 +9,12 @@ export function mean(data: number[]) {
     
     return k/data.length
 }
+/**Normalizes an array 0-1*/
+export function norm(data: number[]) {
+    const max = Math.max(...data)
+    const min = Math.min(...data)
+    return data.map((n)=>(n-min)/(max-min))
+}
 export function hist(data: number[], numOfBuckets: number, format?: XAxisProps) {
     var bins = [];
     var min = Number.MAX_VALUE;

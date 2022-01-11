@@ -7,6 +7,7 @@ import * as FociDetectionModelParams from '../modules/FociDetectionModel/params'
 import FociDetectionModel from "../modules/FociDetectionModel/FociDetectionModel";
 import ResponsiveEmbed from 'react-responsive-embed'
 import {getSliderParams, getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
+
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
@@ -82,7 +83,7 @@ function getPipeline(): Pipeline {
         ],
         descriptions: {
             title: 'Foci Detection',
-            description: 'This pipeline detects foci in a dataset using a trained model. You have the option to remove erroneous images as well. The result is a CSV file with information on each foci in each cell.',
+            description: 'This pipeline detects foci in a dataset using a trained model. You have the option to remove erroneous images as well. The result is a XLSX file with information on each foci in each cell.',
             thumb: <img src={thumb}/>,
             helpscreen: helpScreen
         },

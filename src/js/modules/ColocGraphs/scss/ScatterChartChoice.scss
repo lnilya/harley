@@ -4,12 +4,18 @@
 .scatter-chart-choice {
 	.axis-input {
 		line-height: 2;
-		>*{
+
+		> * {
 			display: inline-block;
 		}
-		margin-bottom: 10px;
+
+		&:not(:last-child) {
+			margin-bottom: 10px;
+		}
+
 		position: relative;
 		padding-left: 60px;
+
 		> span {
 			@include stick-to($fix-top-left);
 			font-weight: bold;

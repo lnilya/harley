@@ -15,6 +15,7 @@ def writeXLSX(csvDataSheets:List[List],names:List[str],path:str):
     wb = xls.Workbook(path)
     for i,c in enumerate(csvDataSheets):
         ws = wb.add_worksheet(names[i])
+        ws.set_column(0,len(c[0]),25)
         for j,r in enumerate(c):
             ws.write_row(j,0,r)
     wb.close()

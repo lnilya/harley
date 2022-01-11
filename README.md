@@ -9,8 +9,8 @@ DOI: https://doi.org/10.1101/2021.11.29.470484
 # Quick Start for Users
 
 
-1. Download the latest version for Windows or Mac OS and demo data: https://drive.google.com/drive/folders/1G9lOVfcQwahqiYS3pKJ0UdHJ7_YmvG0A?usp=sharing and launch the program.
-2. Using any browser navigate to http://localhost:1234 which is the local server started by the application.
+1. Download the latest version for Windows or Mac OS and demo data: https://drive.google.com/drive/folders/1G9lOVfcQwahqiYS3pKJ0UdHJ7_YmvG0A?usp=sharing and launch the program. You need to have Google Chrome installed for this software to work.
+2. Using any browser (not necessarily Chrome) navigate to http://localhost:1234 which is the local server started by the application.
 3. Use the demo data to explore software with different fluorescence datasets.
 
 Please watch the introductionary videos on how to use the software:

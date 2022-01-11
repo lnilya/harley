@@ -43,6 +43,11 @@ def getPreviewHeatMap(img: np.ndarray, key: str, force: bool = True, cmap: str =
     return getPreviewImage(colored_image, key, force)
 
 
+def getTmpFilePath(fileName:str):
+    relPath = os.path.join(settings.TMP_FOLDER, fileName)
+    return [eelutil.getFilePath(relPath),eelutil.getFileURL(relPath, True),]
+
+
 # Will retrieve the JS preview image url for a given array and key.
 # will not resave if force is set to false and the preview image is already available.
 def getPreviewImage(img: np.ndarray, key: str, force: bool = True, inColor:Tuple[int,int,int] = None, normalize:bool = False):

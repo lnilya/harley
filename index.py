@@ -14,6 +14,8 @@ if __name__ == '__main__':
             k = eel.start(port = settings.EEL_PORT,
                       host = settings.EEL_HOST)
     else:
+        print('Make sure you have Google Chrome installed on your machine, otherwise this window will close with an error after a few seconds.')
+        print('-')
         print('Visit http://%s:%d in your browser to use software' % (settings.EEL_HOST, settings.EEL_PORT))
         print('On first run it may take a while for the server to be receptive. So if you can\'t reach the site in your browser wait a little bit and reload.')
         print('Please report any bugs or suggestions to: http://github.com/lnilya/harley')

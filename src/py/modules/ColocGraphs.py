@@ -13,8 +13,9 @@ from src.py.modules.ColocCellsUtil.colocdatatypes import CCCells, NNData, FociSc
 from src.py.modules.ColocCellsUtil.colocutil import writeXLSX
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util import imgutil, shapeutil
+from src.sammie.py.util.imgutil import getTmpFilePath
 from src.sammie.py.util.shapeutil import contourLength
-
+import xlsxwriter as xls
 
 class ColocGraphsKeys:
     """Convenience class to access the keys as named entities rather than in an array"""
@@ -45,9 +46,6 @@ class ColocGraphs(ModuleBase):
         #
         #respective
         return paramName1[0],paramName2
-
-
-
 
     def __getFociCorrelations(self, src:CCCells):
 
@@ -91,8 +89,8 @@ class ColocGraphs(ModuleBase):
         return fwd,bck
 
     def __getFociScatterData(self, src:List[List[Polygon]], dest:List[List[Polygon]], scale:float = 1):
-        scatterData1:List[FociScatterData] = []
-        scatterData2:List[FociScatterData] = []
+        scatterData1:List[FociScatterData] = [] #Foci Properties in channel 0
+        scatterData2:List[FociScatterData] = [] #Foci Properties in channel 1
 
         for cellNum,foci1 in enumerate(src):
             foci2 = dest[cellNum]
@@ -208,7 +206,30 @@ class ColocGraphs(ModuleBase):
         self.keys = ColocGraphsKeys(inputkeys, outputkeys)
 
         #This is a stub and simply displays best practices on how to structure this function. Feel free to change it
-        if action == 'apply':
+        if action == 'scatterexport':
+            scatter = params['scatter']
+            regression = params['regression']
+
+            [path,url] = getTmpFilePath('scatter_export.xlsx')
+            wb = xls.Workbook(path)
+
+            ws = wb.add_worksheet('Scatter Plot')
+            ws.set_column(0,1,50)
+            ws.write_row(0,0,[scatter['xPropName'],scatter['yPropName']])
+            for i,s in enumerate(scatter['points']):
+                ws.write_row(i+1,0,[s['x'],s['y']])
+
+            if regression is not None and regression['r2'] is not None:
+                ws = wb.add_worksheet('Regression Curve')
+                ws.set_column(0,1,15)
+                ws.write_row(0,0,['Regression Equation: %s with R² = %f'%(regression['string'],regression['r2'])])
+                ws.write_row(1,0,['x','y'])
+                for i,s in enumerate(regression['curve']):
+                    ws.write_row(i+2,0,[s['x'],s['y']])
+
+            wb.close()
+            return url
+        elif action == 'apply':
 
             #get the input that this step is working on
             colocdata:CCCells = self.session.getData(self.keys.inColocCells)
@@ -259,10 +280,21 @@ class ColocGraphs(ModuleBase):
             centroid = self.distData.getCentroidDistCSV(args['name0'],args['name1'],units)
             overlap = self.distData.getOverlapCSV(args['name0'],args['name1'],units)
             coloc = self.distData.getPCCCSV(args['name0'],args['name1'],colocdata.pcc,colocdata.fpcc)
-            writeXLSX([nn,centroid,coloc, overlap],['Nearest Neighbours','Centroids','Pearson Correlation','Overlap'],path)
+
+            titles = [self.scatterData[0][0].getCSVRowTitles(units)]
+            c0 = titles + [i.getCSVRow(k,False) for k,i in enumerate(self.scatterData[0])]
+            c1 = titles + [i.getCSVRow(k,False) for k,i in enumerate(self.scatterData[1])]
+
+            writeXLSX([nn,centroid,coloc, overlap,c0,c1],
+                      ['Nearest Neighbours','Centroids','Pearson Correlation','Overlap','Foci Details Channel 0','Foci Details Channel 1'],path)
         elif args['format'] == 'json':
             fullJSON = colocdata.getExportJSON()
             fullJSON.update(self.distData.getExportJSON())
+            fullJSON['scatter'] = {'explanation':'Data used to generate the scatter plots. For each channel. Array indices are used as addresses to refer to nearest neighbours and overlap partners between channels. '
+                                                 'Columns field stores the meaning of each of the columns in c0, c1 fields',
+                                   'columns': self.scatterData[0][0].getCSVRowTitles(units),
+                                   'c0':[i.getCSVRow(k) for k,i in enumerate(self.scatterData[0])],
+                                   'c1':[i.getCSVRow(k) for k,i in enumerate(self.scatterData[1])]}
 
             # Serializing json
             json_object = json.dumps(fullJSON, indent=4)

@@ -47,6 +47,32 @@ class FociScatterData:
     nearestNeighbour:int = field(default=-1)
     overlapPartners:List[int] = field(default=Factory(list))
 
+    def getCSVRowTitles(self, unit:str):
+        return [
+            'Focus ID',
+            'Cell Num',
+            'Focus Num in Cell',
+            'Area in %s²'%unit,
+            'Overlapped Area in %',
+            'Contour dist to nearest Neighbour in %s'%unit,
+            'Centroid dist to nearest Neighbour in %s'%unit,
+            '# Overlap Partners',
+            'Nearest Neighbour Ids',
+            'Overlap Partner Ids'
+        ]
+    def getCSVRow(self, id:int, addressesAsArray:bool = True):
+        return [id,
+                self.cellNum,
+                self.focusNum,
+                self.area,
+                self.overlappedArea,
+                self.contourDistToNN,
+                self.centroidDistToNN,
+                self.numOverlapPartners,
+                self.nearestNeighbour,
+                self.overlapPartners if addressesAsArray else ', '.join(['%d'%i for i in self.overlapPartners])]
+
+
 @define
 class NNData:
 
@@ -121,8 +147,6 @@ class NNData:
             res += [[i] + pcc + fcc + pccfwd + pccbck ]
 
         return res
-
-
 
     def getOverlapCSV(self, name0:str, name1:str, units:str):
         res = [['Cell','Abs Overlap (in %s^2)'%(units),'Overlap as %% of %s area'%(name0),'Overlap as %% of %s area'%(name1)]]
