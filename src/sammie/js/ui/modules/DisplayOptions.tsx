@@ -9,6 +9,7 @@ interface IDisplayOptionsProps {
     settings?: Array<DisplayOptionSetting>,
     modKeys?: Array<DisplayOptionModKey>,
     activeModKeys?:string[]
+    children?:any,
 }
 
 export type DisplayOptionModKey = {
@@ -25,7 +26,7 @@ export type DisplayOptionSetting = {
  * DisplayOptions is a board of true/false switches to direct the display of images or anything else.
  * @author Ilya Shabanov
  */
-const DisplayOptions: React.FC<IDisplayOptionsProps> = ({activeModKeys, modKeys, className, settings}) => {
+const DisplayOptions: React.FC<IDisplayOptionsProps> = ({children,activeModKeys, modKeys, className, settings}) => {
     
     return (
         <div className={`display-options fl-row-start pad-25-left pad-50-ver ${className}`}>
@@ -43,6 +44,7 @@ const DisplayOptions: React.FC<IDisplayOptionsProps> = ({activeModKeys, modKeys,
                                   label={s.label}
                 />
             )}
+            {children}
             {modKeys &&
                 <>
                     <div className="fl-grow"/>

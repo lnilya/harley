@@ -16,6 +16,11 @@
 		color: white;
 
 	}
+	.contrast-slider{
+		.MuiSlider-root{
+			width: 200px;
+		}
+	}
 	&.hide-mask-all{
 		.polygon-cloud{
 			display: none;

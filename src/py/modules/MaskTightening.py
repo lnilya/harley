@@ -9,6 +9,8 @@ from src.py.modules.FociDetectionUtil.MaskShrink import MaskShrinkParams, MaskSh
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util import shapeutil
 import src.py.exporters as exporters
+from src.sammie.py.util.imgutil import getPreviewImage
+
 
 class MaskTighteningKeys:
     inMask: str
@@ -30,17 +32,27 @@ class MaskTightening(ModuleBase):
         self.log = 'MaskTightening'
         self.trace('initialized')
 
-    def unpackParams(self,border,intensityRange,alpha,beta,gamma,iterations, shrink):
-        return border[0],intensityRange,alpha[0]/100,beta[0]/100,gamma[0]/100,iterations[0],shrink
+    def unpackParams(self,border, intensityRange,intensityRangeMax, alpha,beta,gamma,iterations, shrink):
+        return border[0],intensityRange, intensityRangeMax,alpha[0]/100,beta[0]/100,gamma[0]/100,iterations[0],shrink
 
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = MaskTighteningKeys(inputkeys, outputkeys)
         if action == 'select':
             self.userAcceptedContours = params['accepted']
             return True
+        elif action == 'adjustContrast':
+
+            adjustment = params['contrastRange']
+            inputImg:np.array = self.session.getData(self.keys.inDenoisedImage)  # binaryMask
+            inputImg = inputImg.copy()
+            inputImg[inputImg >= adjustment[1]] = adjustment[1]
+            inputImg[inputImg <= adjustment[0]] = adjustment[0]
+
+            return getPreviewImage(inputImg,self.keys.inDenoisedImage+'_adjusted',normalize=True)
+
         elif action == 'apply':
 
-            border,intensityRange,a,b,g,iter,shrink = self.unpackParams(**params)
+            border,intensityRange,intensityRangeMax,a,b,g,iter,shrink = self.unpackParams(**params)
 
             
             mask = np.copy(self.session.getData(self.keys.inMask)) #binaryMask
@@ -54,12 +66,14 @@ class MaskTightening(ModuleBase):
             acceptedRegions = []
             for i, r in enumerate(regions):
                 accepted = True
-                meanIntensity = np.mean(inputImg[r.slice[0], r.slice[1]])
+                maxIntensity = np.max(inputImg[r.slice[0], r.slice[1]])
                 meanIntensity = np.mean(inputImg[r.slice[0], r.slice[1]])
                 if r.bbox[0] < border or r.bbox[2] > (mask.shape[0] - border) or r.bbox[1] < border or r.bbox[
                     3] > (mask.shape[1] - border):
                     accepted = False
                 elif meanIntensity < intensityRange[0] or meanIntensity > intensityRange[1]:
+                    accepted = False
+                elif maxIntensity < intensityRangeMax[0] or maxIntensity > intensityRangeMax[1]:
                     accepted = False
 
                 if accepted:

@@ -1,4 +1,4 @@
-import {PipelinePolygons} from "../../../sammie/js/types/datatypes";
+import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
 import * as eel from "../../../sammie/js/eel/eel";
 import {EelResponse} from "../../../sammie/js/eel/eel";
 import {updatePipelineData} from "../../../sammie/js/state/stateutil";
@@ -14,6 +14,10 @@ export async function runMaskTightening(curParams:self.Parameters, curStep:self.
     updatePipelineData(curStep.outputKeys.tightCells,res.error ? null : res.data.tight);
 
     return res
+}
+export async function adjustImageContrast(curStep:self.Step,range:[number,number]):Promise<EelResponse<PipelineImage>>{
+    return await eel.runStep<PipelineImage>(self.moduleName,'adjustContrast',{'contrastRange':range},curStep)
+    
 }
 export async function selectResults(curStep:self.Step,acceptedCells:number[]):Promise<EelResponse<boolean>>{
     return await eel.runStep<boolean>(self.moduleName,'selectEllipses',{'accepted':acceptedCells},curStep)

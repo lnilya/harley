@@ -9,8 +9,13 @@ export const moduleName = 'MaskTightening'
 
 const border = getSliderParams('border','Border','Every Cell closer than this value in pixels to the border will be automatically discarded.',
     0,50,1,10)
-const intensity = getSliderParams('intensityRange','Intensity Range','Dim cells suffer disproportionately from noise and make detection of foci for example imprecise. Very bright cells might be oversaturated and equally impair analysis. Those cells can be discarded by adjusting this intensity range. The measurement compared agains is the mean intensity within the cell boundary.',
+const intensity = getSliderParams('intensityRange','Intensity Range (Avg in Cell)','Dim cells suffer disproportionately from noise and make detection of foci imprecise/impossible. Very bright cells might be oversaturated and equally impair analysis. Those cells can be discarded by adjusting this intensity range. The measurement compared against is the mean intensity within the cell boundary.',
     0,1,0.01,[0,1])
+const intensityMax = getSliderParams('intensityRangeMax','Intensity Range (Max in Cell)','Dim cells suffer disproportionately from noise and make detection of foci imprecise/impossible. Very bright cells might be oversaturated and equally impair analysis. Those cells can be discarded by adjusting this intensity range. The measurement compared against is the max intensity within the cell boundary.',
+    0,1,0.01,[0,1])
+const contrast = getSliderParams('contrast','Contrast Adjustment','Temporary adjustment of contrast of the image allows to see more clearly whether a cell is dim, because of a lack of signal, death or other reasons. It makes sense to spend some time to select quality cells, so you do not have to sort those cells out at a later point. The setting has no influence on exported data and is temporary for this step.',
+    0,1,0.01,[0,1])
+
 const shrink = getCheckboxParams('shrink','Mask Tightening','Shrinking allows the mask to be tightened to the background of the fluorescence signal. This can be beneficial, if your cells clump together or if the boundary was not shrunk initially. In most cases you can forego this step.',
     'Enable Mask Tightening',false)
 
@@ -35,6 +40,7 @@ const iterations = getSliderParams(
 export const parameters:Array<Parameter<any>> = [
     border,
     intensity,
+    intensityMax,
     tit,
     shrink,
     alpha,
@@ -57,6 +63,7 @@ export type Step = PipelineStep<Inputs, Outputs>;
 export type Parameters = {
     border:[number],
     intensityRange:[number,number],
+    intensityRangeMax:[number,number],
     shrink:boolean,
     alpha:[number],
     beta:[number],

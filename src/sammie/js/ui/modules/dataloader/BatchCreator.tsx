@@ -108,11 +108,13 @@ const BatchCreator: React.FC<IBatchCreatorProps> = ({onDone, className}) => {
                     </p>
                     {pipe.inputs.length > 1 &&
                     <p>
-                        When batches need multiple files, these usually follow a pattern like "img_1.jpg" will go with
-                        "mask_1.png".<br/><br/>
+                        When batches need multiple files, these usually follow a pattern like "path/to/img_1.jpg" will go with
+                        "path/to/mask_1.png".<br/><br/>
                         Whatever the variable part is, is replaced with a <em>*</em>.<br/><br/>
-                        For Example: "<strong>img_<em>*</em>.jpg</strong>" and "<strong>mask_<em>*</em>.png</strong>"
-                        would be the input to achieve the above case.
+                        For Example: "<strong>path/to/img_<em>*</em>.jpg</strong>" and "<strong>path/to/mask_<em>*</em>.png</strong>"
+                        would be the input to achieve the above case. While in this case the img and mask files are located in the same folder,
+                        it does not need to be this way. Therefore you need to always add a full path and not just the filenames.
+                        
                     </p>
                     }
                 </div>
