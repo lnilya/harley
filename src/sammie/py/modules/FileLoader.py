@@ -24,9 +24,9 @@ class FileLoader(ModuleBase):
         p1Re = fromPattern.replace('**', '(---)') \
             .replace('*', '(---)'). \
             replace('**', '(---)') \
-            .replace('(---)', '(.*?)').replace(os.path.sep,'|')
+            .replace('(---)', '(.*?)').replace(os.path.sep,';;;')
 
-        return [[f] + list(re.search(p1Re, f.replace(os.path.sep,'|')).groups()) for f in files]
+        return [[f] + list(re.search(p1Re, f.replace(os.path.sep,';;;')).groups()) for f in files]
 
     def __findInFileList(self, fileList, patternList: List[str] = None):
         # fileList is the form [filename,wildcard1,wildcard2...] while patternList is [wildcard1,wildcard2...]
@@ -36,12 +36,13 @@ class FileLoader(ModuleBase):
         return None
 
     def getFileGlob(self, patterns: List[str], extenstions: List[List[str]]):
+        #Get a list of files that matches each given pattern in list
         allGlobs = []
         for p in patterns:
             allGlobs += [self.__getFiles(p)]
 
         result = []
-        if len(allGlobs) == 1:
+        if len(allGlobs) == 1: #if only one glob, no match is needed and we return whatever files match it
             result = [[f[0]] for f in allGlobs[0]]; # simply take the filename, we don't need any matching or wildcards
         else:
             # To find matches all wildcard characters have to match
