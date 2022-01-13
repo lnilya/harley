@@ -69,10 +69,10 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
         setSelectedFoci(nv)
         changeFociSelection(curParams,curStep,nv)
     }
-    const fcc = includedCells.map((cidx)=>result.selection[cidx]).map((fociInCell)=>fociInCell.length);
-    const numCells = includedCells.length;
-    const numCellsWithFoci = fcc.filter(f=>f>0).length
-    const meanFociPerCell = mean(fcc)
+    const fcc = result && includedCells?.map((cidx)=>result.selection[cidx]).map((fociInCell)=>fociInCell.length);
+    const numCells = includedCells?.length || 0;
+    const numCellsWithFoci = fcc?.filter(f=>f>0).length
+    const meanFociPerCell = fcc ? mean(fcc) : 0
 	return (<div className={'foci-detection-model margin-100-neg pad-100 ' + cl(modKeys['1'],'mod-1') + cl(modKeys['2'],'mod-2') + cl(curParams.showoutlines, 'show-outlines')}>
 	    {error && <ErrorHint error={error}/> }
         {!error && result &&
