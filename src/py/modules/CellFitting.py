@@ -3,7 +3,7 @@ from typing import List
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-
+import pickle
 import src.py.modules.CellFittingUtil as cf
 from src.sammie.py.eeljsinterface import eeljs_sendProgress
 from src.py.exporters.filexporters import exportBinaryImage
@@ -78,15 +78,28 @@ class CellFitting(ModuleBase):
 
 
 
-    def exportData(self, key: str, path: str, **args):
-        heatmap = self.session.getData(self.keys.inScoremap)
-        resImg = np.zeros_like(heatmap,dtype='uint8')
-        for ap in self.acceptedEllipses:
-            el = self.detectedPolygonOutlines[ap]
-            maskPatch,dx,dy = shapeutil.getPolygonMaskPatch(el['x'], el['y'], 1)
-            resImg = shapeutil.addPatchOntoImage(resImg, maskPatch.astype('uint8'), dy, dx)
+    def exportData(self, key: str, path: str, type:str, **args):
 
-        return exportBinaryImage(path, resImg.astype('bool'))
+        if type == 'png':
+            heatmap = self.session.getData(self.keys.inScoremap)
+            resImg = np.zeros_like(heatmap,dtype='uint8')
+            for ap in self.acceptedEllipses:
+                el = self.detectedPolygonOutlines[ap]
+                maskPatch,dx,dy = shapeutil.getPolygonMaskPatch(el['x'], el['y'], 1)
+                resImg = shapeutil.addPatchOntoImage(resImg, maskPatch.astype('uint8'), dy, dx)
+
+            return exportBinaryImage(path, resImg.astype('bool'))
+
+        elif type == 'mask':
+            raw_image = self.session.getData(self.keys.inSrcImg)
+            with open(path, 'wb') as handle:
+                pickle.dump({
+                    'ref': np.array(raw_image),
+                    'cells': [self.detectedPolygonOutlines[ap] for ap in self.acceptedEllipses]
+                },handle,protocol=pickle.HIGHEST_PROTOCOL)
+
+            return True
+
 
     def run(self, action, params, inputkeys, outputkeys):
 

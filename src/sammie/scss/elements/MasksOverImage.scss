@@ -1,4 +1,5 @@
 .masks-over-image{
+	overflow: hidden;
 	position: relative;
 	&.alg-running {
 		.mask-img{

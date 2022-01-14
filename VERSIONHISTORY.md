@@ -1,6 +1,17 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.5
+
+Major:
+- Cell Detection: Now possible to export mask files, with precise masks, instead of mask images. This give ~2px more precise outlines.
+- Pre Processing: Suggested to use new mask files now. Now possible to overlay reference images and fluorescence for better insight into data.
+
+Minor: 
+- Pre Processing: Added possibility to shift detected masks against fluorescence image.
+- Bugfix: crash due to bug in mask import.
+- Bugfix: Batch File Selection did not work properly for some patterns. 
+
 ### Version: 1.1.4
 
 Minor:
