@@ -18,6 +18,17 @@ class MaskFile:
     #Cell outlines as Dicts {x:List[float], y:List[float]}
     cells:List[Dict] = field(default=Factory(list))
 
+    def getShiftedCopy(self,shift:Tuple[int,int], ignoreIfNoShift:bool = True)->'MaskFile':
+        if shift[0] == 0 and shift[1] == 0 and ignoreIfNoShift: return self
+
+        copy = MaskFile(self.ref,[])
+        copy.cells = [{'x':c['x'].copy(),'y':c['y'].copy()} for c in self.cells]
+        for c in copy.cells:
+            c['x'] = [dc + shift[0] for dc in c['x']]
+            c['y'] = [dc + shift[1] for dc in c['y']]
+
+        return copy
+
     def getCellSelection(self,accepted:List[int])->List[Dict]:
         return [self.cells[i] for i in accepted]
 
@@ -26,6 +37,12 @@ class MaskFile:
         """Filters Regions by intensity and proximity to Border"""
         for i,c in enumerate(self.cells):
             patch,offx,offy = getPolygonMaskPatch(c['x'],c['y'],0)
+
+            #If the shape is out of bounds. This can happen if user sets the shift parameter such
+            #that cell outline start to shift outside of image.
+            if offx < 0 or offy < 0 or offx > inputImg.shape[1] or offy > inputImg.shape[0]:
+                continue
+
             bbox = [offy, offx, offy+patch.shape[0], offx + patch.shape[1]]
             imgPortion = inputImg[offy:offy+patch.shape[0], offx:offx+patch.shape[1]]
             maxIntensity = np.max(imgPortion)

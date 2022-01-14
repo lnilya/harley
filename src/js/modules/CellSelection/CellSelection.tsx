@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
-import './scss/MaskTightening.scss'
+import './scss/CellSelection.scss'
 import {useDisplaySettings, useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
 import {PipelineImage, PipelinePolygons} from "../../../sammie/js/types/datatypes";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
@@ -54,8 +54,8 @@ const asRefOpacityAdjustment = atomFamily<number,string>({key:'mask-tightening_r
 const asContrastAdjustedImage = atomFamily<PipelineImage,string>({key:'mask-tightening_contrast_adjusted_img',default:null});
 
 
-interface IMaskTighteningProps{}
-const MaskTightening:React.FC<IMaskTighteningProps> = () => {
+interface ICellSelectionProps{}
+const CellSelection:React.FC<ICellSelectionProps> = () => {
     
     /**CLEANUP CALLBACK WHEN INPUTS HAVE CHANGED*/
     const onInputChanged = ()=>{
@@ -75,6 +75,7 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
             setAllCells(res.data.original)
             setTightCells(res.data.tight)
             setAccepted(res.data.original.map((k,i)=>i))
+            setCurShift(curParams.shift) //set shift only after algorithm has run, to avoid shifting image and masks at different times.
         }
         return res.error ? {error:res.error} : true;
     };
@@ -86,6 +87,7 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
         {msg: 'Tightening...', display: "overlay"});
     
     /**UI SPECIFIC STATE*/
+    const [curShift,setCurShift] = useState(curParams.shift);
     const [allCells,setAllCells] = useRecoilState(asCells(curStep.moduleID))
     const [tightCells,setTightCells] = useRecoilState(asCellsTight(curStep.moduleID))
     const [accepted,setAccepted] = useRecoilState(asAcceptedCells(curStep.moduleID))
@@ -109,8 +111,9 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
     
     /**MASKS DISPLAY*/
     const [displayOptions] = useDisplaySettings(curStep,{})
+    
     const shownMasks:MaskOverImageMask[] = [
-        curInputs.srcImg && { url:curInputs.mask.url, col:'original', opacity:refOpacity },
+        curInputs.srcImg && { url:curInputs.mask.url, col:'original', opacity:refOpacity, shift: parseShift(curShift) },
     ];
     
     //Load the new contrast image after a short time
@@ -124,7 +127,7 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
     
     
     const numAccepted = acceptedPolygons?.filter(a=>!!a).length
-	return (<div className={'mask-tightening ' + cl(hideMask['1'] , 'hide-mask-orig') + cl(hideMask['2'] , 'hide-mask-all')}>
+	return (<div className={'cell-selection ' + cl(hideMask['1'] , 'hide-mask-orig') + cl(hideMask['2'] , 'hide-mask-all')}>
 	    {error && <ErrorHint error={error}/> }
         <DisplayOptions settings={displayOptions} activeModKeys={Object.keys(hideMask).filter(k=>hideMask[k])}  modKeys={[
             curParams.shrink ? {name:'1',desc:'Hold the "1" key to temporarily hide the original outlines and only display tightened mask.'} : null,
@@ -158,4 +161,10 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
         </div>
 	</div>);
 }
-export default MaskTightening
+export default CellSelection
+
+
+function parseShift(shift:string):number[]{
+    if(!shift || shift.length == 0) return [0,0];
+    return shift.split(';').map(s=>parseFloat(s))
+}

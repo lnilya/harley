@@ -13,7 +13,7 @@ from src.sammie.py.util.imgutil import getPreviewImage
 from src.sammie.py.util.shapeutil import getPolygonMaskPatch
 
 
-class MaskTighteningKeys:
+class CellSelectionKeys:
     inMask: str
     inDenoisedImage: str
     outTightenedCells: str
@@ -23,21 +23,27 @@ class MaskTighteningKeys:
         self.inDenoisedImage = inputs[1]
         self.outTightenedCells = outputs[0]
 
-class MaskTightening(ModuleBase):
+class CellSelection(ModuleBase):
 
-    keys: MaskTighteningKeys
+    keys: CellSelectionKeys
     userAcceptedContours: List[int]
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.log = 'MaskTightening'
+        self.log = 'CellSelection'
         self.trace('initialized')
 
-    def unpackParams(self,border, intensityRange,intensityRangeMax, alpha,beta,gamma,iterations, shrink):
-        return border[0],intensityRange, intensityRangeMax,alpha[0]/100,beta[0]/100,gamma[0]/100,iterations[0],shrink
+    def unpackParams(self,border, intensityRange,intensityRangeMax, alpha,beta,gamma,iterations, shrink,shift):
+        s = [0, 0]
+        if shift is not None and len(shift) > 0:
+            ranges = [float(r.strip()) for r in shift.split(';')]
+            if len(ranges) != 2: raise RuntimeError('Format of Shift Parameter needs to be <Number>;<Number>')
+            else: s = (ranges[0], ranges[1])
+
+        return border[0],intensityRange, intensityRangeMax,alpha[0]/100,beta[0]/100,gamma[0]/100,iterations[0],shrink,s
 
     def run(self, action, params, inputkeys,outputkeys):
-        self.keys = MaskTighteningKeys(inputkeys, outputkeys)
+        self.keys = CellSelectionKeys(inputkeys, outputkeys)
         if action == 'select':
             self.userAcceptedContours = params['accepted']
             return True
@@ -53,11 +59,10 @@ class MaskTightening(ModuleBase):
 
         elif action == 'apply':
 
-            border,intensityRange,intensityRangeMax,a,b,g,iter,shrink = self.unpackParams(**params)
+            border,intensityRange,intensityRangeMax,a,b,g,iter,shrink,shift = self.unpackParams(**params)
 
             maskFile = self.session.getData(self.keys.inMask)
-
-            mask = np.copy(maskFile.ref) #binaryMask
+            maskFile = maskFile.getShiftedCopy(shift)
             inputImg = self.session.getData(self.keys.inDenoisedImage) #binaryMask
 
             #filter out the unusable regions

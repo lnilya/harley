@@ -50,9 +50,9 @@ class HarleyModuleConnector(ModuleConnector):
         elif moduleName == 'Denoise':
             from src.py.modules.Denoise import Denoise
             return Denoise(moduleID, session)
-        elif moduleName == 'MaskTightening':
-            from src.py.modules.MaskTightening import MaskTightening
-            return MaskTightening(moduleID, session)
+        elif moduleName == 'CellSelection':
+            from src.py.modules.CellSelection import CellSelection
+            return CellSelection(moduleID, session)
         elif moduleName == 'FociCandidates':
             from src.py.modules.FociCandidates import FociCandidates
             return FociCandidates(moduleID, session)
