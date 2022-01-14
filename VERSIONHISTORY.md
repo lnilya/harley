@@ -4,14 +4,14 @@ Updates by version
 ### Version: 1.1.5
 
 Major:
-- Cell Detection: Now possible to export mask files, with precise masks, instead of mask images. This give ~2px more precise outlines.
+- Cell Detection: Now possible to export mask files, with precise masks, instead of mask images. This gives ~2px more precise outlines.
 - Pre Processing: Suggested to use new mask files now. Now possible to overlay reference images and fluorescence for better insight into data.
 
 Minor: 
-- Pre Processing: Cells file output not also contains ref image output, for further use. 
+- Pre Processing: Output cells file now also contains ref images, for further use in the future. 
 - Pre Processing: Added possibility to shift detected masks against fluorescence image.
 - Bugfix: crash due to bug in mask import.
-- Bugfix: Batch File Selection did not work properly for some patterns. 
+- Bugfix: Batch file selection did not work properly for some patterns. 
 
 ### Version: 1.1.4
 
