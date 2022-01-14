@@ -7,9 +7,10 @@ from skimage.measure._regionprops import RegionProperties
 
 from src.py.modules.FociDetectionUtil.MaskShrink import MaskShrinkParams, MaskShrink
 from src.sammie.py.modules.ModuleBase import ModuleBase
-from src.sammie.py.util import shapeutil
+from src.sammie.py.util import shapeutil, imgutil
 import src.py.exporters as exporters
 from src.sammie.py.util.imgutil import getPreviewImage
+from src.sammie.py.util.shapeutil import getPolygonMaskPatch
 
 
 class MaskTighteningKeys:
@@ -54,74 +55,52 @@ class MaskTightening(ModuleBase):
 
             border,intensityRange,intensityRangeMax,a,b,g,iter,shrink = self.unpackParams(**params)
 
-            
-            mask = np.copy(self.session.getData(self.keys.inMask)) #binaryMask
+            maskFile = self.session.getData(self.keys.inMask)
+
+            mask = np.copy(maskFile.ref) #binaryMask
             inputImg = self.session.getData(self.keys.inDenoisedImage) #binaryMask
 
-            #generate untightened polygons
-            labels = skimage.measure.label(mask)
-            regions = skimage.measure.regionprops(labels)
-            
             #filter out the unusable regions
-            acceptedRegions = []
-            for i, r in enumerate(regions):
-                accepted = True
-                maxIntensity = np.max(inputImg[r.slice[0], r.slice[1]])
-                meanIntensity = np.mean(inputImg[r.slice[0], r.slice[1]])
-                if r.bbox[0] < border or r.bbox[2] > (mask.shape[0] - border) or r.bbox[1] < border or r.bbox[
-                    3] > (mask.shape[1] - border):
-                    accepted = False
-                elif meanIntensity < intensityRange[0] or meanIntensity > intensityRange[1]:
-                    accepted = False
-                elif maxIntensity < intensityRangeMax[0] or maxIntensity > intensityRangeMax[1]:
-                    accepted = False
-
-                if accepted:
-                    acceptedRegions += [i]
+            acceptedRegions = maskFile.filterRegions(inputImg,intensityRange,intensityRangeMax,border)
 
             #generate tightened bounds
             msp = MaskShrinkParams(a,b,g,iter)
             ms = MaskShrink(msp)
 
-
-            origContours = []
+            origContours = maskFile.getCellSelection(acceptedRegions)
             tightContours = []
             tightContoursRaw = []
 
             if not shrink:
-                for r in acceptedRegions:
-                    reg = regions[r]
-                    contour = cv2.findContours(reg.filled_image.astype('uint8') * 255, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0][0]
-                    origContours += [self.__contourToList(contour[:, 0, :],reg)]
                 tightContours = origContours
                 tightContoursRaw = origContours
             else:
+                origContours = maskFile.getCellSelection(acceptedRegions)
                 for r in acceptedRegions:
-                    reg = regions[r]
+                    c = maskFile.cells[r]
+                    patch, offx, offy = getPolygonMaskPatch(c['x'], c['y'], 0)
+                    imgSlice = inputImg[offy:offy + patch.shape[0], offx:offx + patch.shape[1]]
                     #original Contours
-                    contour = cv2.findContours(reg.filled_image.astype('uint8') * 255, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0][0]
-                    origContours += [self.__contourToList(contour[:, 0, :],reg)]
+                    # contour = cv2.findContours(reg.filled_image.astype('uint8') * 255, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)[0][0]
+                    mask, cpxnew = ms.run(imgSlice, patch, False)
 
-                    imgSlice = np.copy(inputImg[reg.slice[0], reg.slice[1]])
-                    mask, cpxnew = ms.run(imgSlice, reg.filled_image, False)
-
-                    tightContoursRaw += [self.__contourToList(np.copy(cpxnew), reg,None)]
-                    tightContours += [self.__contourToList(cpxnew, reg)]
+                    tightContoursRaw += [self.__contourToList(np.copy(cpxnew), [offy,offx],None)]
+                    tightContours += [self.__contourToList(cpxnew, [offy,offx])]
 
             self.userAcceptedContours = list(range(0,len(tightContours)))
             self.onGeneratedData(self.keys.outTightenedCells, tightContoursRaw, params)
 
             return {'original':origContours,'tight':tightContours}
 
-    def __contourToList(self,cpx,reg:RegionProperties, subsample:Optional[int] = 30):
+    def __contourToList(self,cpx,bbox:List[float], subsample:Optional[int] = 30):
 
         if subsample is not None:
             subsample = int(len(cpx) / subsample)
             if subsample < 1: subsample = 1
             cpx = cpx[::subsample, :]
 
-        cpx[:, 1] += reg.bbox[0]
-        cpx[:, 0] += reg.bbox[1]
+        cpx[:, 1] += bbox[0]
+        cpx[:, 0] += bbox[1]
         cpx = cpx.astype('float')
         return {'x': list(cpx[:, 0]), 'y': list(cpx[:, 1])}
 

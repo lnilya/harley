@@ -81,12 +81,23 @@ function getPipeline():Pipeline{
         outputs:[
             {
                 requiredInput:dataKeys.cells,
+                exporterParams:{type:'png'},
                 suggestDestinationOutput:{
                     pipelineInputKey:dataKeys.img,
                     transform:suggestModifiedFilename(/(.*)\..*/g,'$1_masked.png'),
                 },
                 title: 'Binary Mask with non-intersecting cell boundaries',
-                description: "Will output a binary PNG image with cell outlines in white. This is the input for other algorithms, like the foci detection."
+                description: "Will output a binary PNG image with cell outlines in white. Since cells can overlap, there is a 1px border added and overlaps are substracted from the binary mask. Be aware that because of this the binary mask is not a 100% precise, which might be a problem for some organelles located on the very edge of the cell."
+            },
+            {
+                requiredInput:dataKeys.cells,
+                exporterParams:{type:'mask'},
+                suggestDestinationOutput:{
+                    pipelineInputKey:dataKeys.img,
+                    transform:suggestModifiedFilename(/(.*)\..*/g,'$1.mask'),
+                },
+                title: 'Cell Boundary File containing exact outlines ',
+                description: "Stores a file containing the exact outlines detected in this pipeline. Use this file as an input to the PreProcessing pipeline. (Note: in Harley versions before 1.1.5 the binary mask was used as input to preprocessing, which is discouraged due to not being very precise)"
             }
         ],
         steps: steps,

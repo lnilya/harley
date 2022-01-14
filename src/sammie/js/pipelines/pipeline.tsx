@@ -10,7 +10,7 @@ import {loadInputFile, onLoadNewPipeline} from "../eel/eel";
 import {GlobalPipelineSettings, Pipeline, PipelineInput} from "../types/pipelinetypes";
 import {updatePipelineInput} from "../state/stateutil";
 import {resetAutoExecution} from "./pipelineexec";
-import {EventTypes, fireEvent, ToastEventPayload} from "../state/eventbus";
+import {EventTypes, fireEvent, showToast, ToastEventPayload} from "../state/eventbus";
 import {LocalFile} from "../types/datatypes";
 import {SettingDictionary} from "../modules/paramtypes";
 import * as events from '../state/eventbus'
@@ -202,7 +202,17 @@ export async function loadPipeline(pipe: Pipeline) {
                     totalLoads++;
                     continue; //hasnt been loaded yet.
                 }
-                const loader = getLoaderFromFileName(pinput.inputs[pinputKey].file.name, pipe.inputs.find(k => k.key == pinputKey));
+                const plinput:PipelineInput = pipe.inputs.find(k => k.key == pinputKey);
+                if(!plinput){
+                    //No pipeline input for this file from lastStored batch. This can happen when running a newer version
+                    // of harley where the inputs were changed and this is just old data. Or due to some bug.
+                    //In any case we can't read the stored data and wll simply discard it.
+                    
+                    showToast(`Could not load previously referenced file: ${pinput.inputs[pinputKey].file.name} in batch #${i}.`,'error')
+                    totalLoads++;
+                    continue; //hasnt been loaded yet.
+                }
+                const loader = getLoaderFromFileName(pinput.inputs[pinputKey].file.name, plinput );
                 const ld = loadInputFile(pinputKey, pinput.inputs[pinputKey].file.path, loader, k)
                 allFiles.push(ld);
                 ld.then((res) => {

@@ -50,6 +50,7 @@ const asAcceptedCells = atomFamily<number[],string>({key:'mask-tightening_accept
 const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'mask-tightening_initial',default:null});
 const asShowMask = atomFamily<boolean,string>({key:'mask-tightening_show_mask',default:true});
 const asContrastAdjustment = atomFamily<[number,number],string>({key:'mask-tightening_contrast_asjust',default:[0,1]});
+const asRefOpacityAdjustment = atomFamily<number,string>({key:'mask-tightening_ref_opacity',default:.3});
 const asContrastAdjustedImage = atomFamily<PipelineImage,string>({key:'mask-tightening_contrast_adjusted_img',default:null});
 
 
@@ -89,6 +90,7 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
     const [tightCells,setTightCells] = useRecoilState(asCellsTight(curStep.moduleID))
     const [accepted,setAccepted] = useRecoilState(asAcceptedCells(curStep.moduleID))
     const [contrast,setContrast] = useRecoilState(asContrastAdjustment(curStep.moduleID))
+    const [refOpacity,setRefOpacity] = useRecoilState(asRefOpacityAdjustment(curStep.moduleID))
     const [contrastImg,setContrastImg] = useRecoilState(asContrastAdjustedImage(curStep.moduleID))
     const [error,setError] = useState<EelResponse<any>>(null)
     
@@ -98,7 +100,7 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
     const acceptedPolygons = allCells?.map((p,i)=>accepted?.indexOf(i) == -1 ? null : p)
     const onAcceptRejected = (pid)=>setAccepted([...accepted,pid]);
     const onRejectAccepted = (pid)=>setAccepted(copyRemove(accepted,pid));
-    const hideMask = useToggleKeys(['1','2','3'])
+    const hideMask = useToggleKeys(curParams.shrink ? ['1','2','3'] : ['2','3'])
     
     //give note to server that results have been selected
     useEffect(()=>{
@@ -106,9 +108,9 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
     },[accepted])
     
     /**MASKS DISPLAY*/
-    const [displayOptions,showMask,setShowMask] = useDisplaySettings(curStep,{'Show Original Outlines':asShowMask})
+    const [displayOptions] = useDisplaySettings(curStep,{})
     const shownMasks:MaskOverImageMask[] = [
-        curInputs.srcImg && showMask && { url:curInputs.mask.url, col:'blue' },
+        curInputs.srcImg && { url:curInputs.mask.url, col:'original', opacity:refOpacity },
     ];
     
     //Load the new contrast image after a short time
@@ -124,17 +126,19 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
     const numAccepted = acceptedPolygons?.filter(a=>!!a).length
 	return (<div className={'mask-tightening ' + cl(hideMask['1'] , 'hide-mask-orig') + cl(hideMask['2'] , 'hide-mask-all')}>
 	    {error && <ErrorHint error={error}/> }
-        <DisplayOptions settings={displayOptions} activeModKeys={Object.keys(hideMask).filter(k=>hideMask[k])}  modKeys={[{name:'1',desc:'Hold the "1" key to temporarily hide the cell filling.'},
-        {name:'2',desc:'Hold the "2" key to temporarily hide all cells.'},
-        {name:'3',desc:'Hold the "3" key to see the original image (instead of contrast adjusted one).'}]}>
+        <DisplayOptions settings={displayOptions} activeModKeys={Object.keys(hideMask).filter(k=>hideMask[k])}  modKeys={[
+            curParams.shrink ? {name:'1',desc:'Hold the "1" key to temporarily hide the original outlines and only display tightened mask.'} : null,
+            {name:'2',desc:'Hold the "2" key to temporarily hide all outlines.'},
+            {name:'3',desc:'Hold the "3" key to see the original image (instead of contrast adjusted one).'}]}>
+            <div className="contrast-slider fl-row-start fl-align-center">
+                <span className={'pad-100-right'}>Ref Opacity:</span>
+                <Slider valueLabelDisplay={'auto'} size={'small'} value={refOpacity} min={0} max={1} step={0.01} onChange={(e, v) =>  setRefOpacity(v as number)}/>
+                <ParamHelpBtn className={'margin-50-left'} toolTipPlacement={'bottom'} content={'Opacity of the reference image displayed on top of the fluorescence image.'}/>
+            </div>
             <div className="fl-grow"/>
             <div className="contrast-slider fl-row-start fl-align-center">
                 <span className={'pad-100-right'}>Contrast:</span>
-                <Slider valueLabelDisplay={'auto'} size={'small'} value={contrast} min={0} max={1} step={0.01}
-                            onChange={(e, v) => {
-                                // @ts-ignore
-                                setContrast(v);
-                            }}/>
+                <Slider valueLabelDisplay={'auto'} size={'small'} value={contrast} min={0} max={1} step={0.01} onChange={(e, v) =>  setContrast(v as [number,number])}/>
                 <ParamHelpBtn className={'margin-50-left'} toolTipPlacement={'bottom'} content={'Temporary contrast adjustment that might help to distinguish between cells with low signal, no signal and/or dead cells. It is advised to use some time here to pick quality cells, that do not need to be sorted out at a later point.'}/>
             </div>
         </DisplayOptions>
@@ -145,7 +149,9 @@ const MaskTightening:React.FC<IMaskTighteningProps> = () => {
             <ImageBorder hideAfter={2000} img={curInputs.srcImg} border={curParams.border[0]}/>
             <MasksOverImage originalURL={(contrastImg && !(hideMask['3'])) ? contrastImg.url : curInputs.srcImg.url} showOriginal={true} masks={shownMasks}/>
             
-            <PolygonCloud PolyComp={TightPolygon} polygons={tightCells} canvasDim={curInputs.srcImg}/>
+            {curParams.shrink &&
+                <PolygonCloud PolyComp={TightPolygon} polygons={tightCells} canvasDim={curInputs.srcImg}/>
+            }
             
             <PolygonCloud className={'orig'} onClick={onAcceptRejected} PolyComp={RejPolygon} polygons={rejectedPolygons} canvasDim={curInputs.srcImg}/>
             <PolygonCloud className={'orig'} onClick={onRejectAccepted} PolyComp={AccPolygon} polygons={acceptedPolygons} canvasDim={curInputs.srcImg}/>

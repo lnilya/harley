@@ -50,10 +50,13 @@ const DisplayOptions: React.FC<IDisplayOptionsProps> = ({children,activeModKeys,
                     <div className="fl-grow"/>
                     <div className={'display-options__mods'}>
                         <strong>Mod keys:</strong>
-                        {modKeys?.map((mc)=>
-                            <Tooltip title={mc.desc} placement={'bottom'} key={mc.name} arrow>
-                                <div className={`btnicon ${activeModKeys.indexOf(mc.name) != -1 ? 'active' : ''}`}>{mc.name}</div>
-                            </Tooltip>
+                        {modKeys?.map((mc)=> {
+                            if(!mc) return null;
+                                return (<Tooltip title={mc.desc} placement={'bottom'} key={mc.name} arrow>
+                                    <div
+                                        className={`btnicon ${activeModKeys.indexOf(mc.name) != -1 ? 'active' : ''}`}>{mc.name}</div>
+                                </Tooltip>)
+                            }
                         )}
                     </div>
                 </>

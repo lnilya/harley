@@ -5,7 +5,8 @@ import * as ui from "../../state/uistates";
 
 export type MaskOverImageMask = {
     url:string,
-    col:'black'|'blue'|'red'|'white',
+    col:'black'|'blue'|'red'|'white'|'original',
+    opacity?:number,
     className?:string
 }
 interface IMasksOverImageProps{
@@ -31,7 +32,8 @@ const MasksOverImage:React.FC<IMasksOverImageProps> = ({ className,originalURL,s
             {masks.map((m,i)=>{
                 if(m === null || m === false) return;
                 return <img key={i} src={m.url} alt={'Mask Image'}
-                         className={`mask-img ${m.col} ${m.className}`}/>
+                         className={`mask-img ${m.col} ${m.className}`}
+                            style={m.opacity !== undefined ? {opacity:m.opacity} : {}}/>
             }
             )}
         </div>

@@ -8,7 +8,7 @@ export type MaskTighteningResult = { original:PipelinePolygons, tight:PipelinePo
 export async function runMaskTightening(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<MaskTighteningResult>>{
     
     //Run algorithm - this demo is for a simple image in and image out.
-    var res:EelResponse<MaskTighteningResult> = await eel.runStepAsync<MaskTighteningResult>(self.moduleName,'apply',curParams,curStep)
+    var res:EelResponse<MaskTighteningResult> = await eel.runStep<MaskTighteningResult>(self.moduleName,'apply',curParams,curStep)
 
     //Update Pipeline and downstream stuff
     updatePipelineData(curStep.outputKeys.tightCells,res.error ? null : res.data.tight);
