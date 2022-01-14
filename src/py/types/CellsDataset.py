@@ -10,19 +10,27 @@ from src.sammie.py.util.imgutil import addBorder
 class CellsDataset:
     """Dataset storing the cells inside a single image and possibly foci in each of the cells."""
 
+    ref: np.ndarray  # Reference Brightfield Image
+    refShift: Tuple[int,int]  #Shift of contours in relation to brightfield image (can be set in PreProcessing Pipeline Step)
     img: np.ndarray  # Source Image for cell Images
     contours: List[Dict]  # List of Contours in the form {'x':List[float], 'y':List[float]}
     fociContours: List[
         List[np.ndarray]]  # For each cell a list of P x 2 numpy arrays, outlining the contour of the foci
     scale: float  # The dimensions of 1px in nm or None if no scale is provided
 
-    def __init__(self, img, contours, scale, fociContours=None):
+    def __init__(self, img:np.ndarray, contours:List[Dict], scale:float, refImg:np.ndarray, refShift:str, fociContours=None):
         self.img = img
+        self.ref = refImg
         self.contours = contours
         self.scale = scale
         self.fociContours = fociContours
         if (self.fociContours is None):
             self.fociContours = [None] * len(self.contours)
+
+        self.refShift = (0, 0)
+        if refShift is not None and len(refShift) > 0:
+            ranges = [float(r.strip()) for r in refShift.split(';')]
+            self.refShift = (ranges[0], ranges[1])
 
     def getNumLabeledCells(self):
         """All cells that have a foci labeling array """

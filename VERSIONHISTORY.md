@@ -8,6 +8,7 @@ Major:
 - Pre Processing: Suggested to use new mask files now. Now possible to overlay reference images and fluorescence for better insight into data.
 
 Minor: 
+- Pre Processing: Cells file output not also contains ref image output, for further use. 
 - Pre Processing: Added possibility to shift detected masks against fluorescence image.
 - Bugfix: crash due to bug in mask import.
 - Bugfix: Batch File Selection did not work properly for some patterns. 

@@ -3,9 +3,11 @@ import pickle
 import time
 from typing import Dict, List
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from src.py.types.CellsDataset import CellsDataset
+from src.py.types.MaskFile import MaskFile
 from src.sammie.py.ModuleConnector import AggregatorFileInfo, AggregatorReturn
 from src.sammie.py.SessionData import SessionData
 from src.sammie.py.modules.ModuleBase import ModuleBase
@@ -14,6 +16,7 @@ from src.sammie.py.util import shapeutil
 
 def __getBaseAggregateFile():
     return {'data':{},'created':time.time()}
+
 
 def __getDataSetInfoObject(curData) -> AggregatorFileInfo:
     if len(curData['data']) == 0:
@@ -24,13 +27,15 @@ def __getDataSetInfoObject(curData) -> AggregatorFileInfo:
 def __getBatchData(session:SessionData, modulesById:Dict[str, ModuleBase],scalePxToNm:float = None):
     denoised = "Denoised Image"
     tightCells = "Tight Cells"
+    refImage = "Cell Outlines"
 
     denoisedImage = session.getData(denoised)  #the cells
     tightContourList = session.getData(tightCells)  #the cells as outlines
-
+    imgShift = session.getParams(tightCells)['shift']  #the parameters
+    maskFile:MaskFile = session.getData(refImage)
     cellImages = []
 
-    acceptedContourList = [tightContourList[i] for i in modulesById['MaskTightening'].userAcceptedContours]
+    acceptedContourList = [tightContourList[i] for i in modulesById['CellSelection'].userAcceptedContours]
 
     # for i in modulesById['MaskTightening'].userAcceptedContours:
     #     cnt = tightContourList[i]
@@ -44,7 +49,7 @@ def __getBatchData(session:SessionData, modulesById:Dict[str, ModuleBase],scaleP
     #     cellImages += [img]
 
     # We store the source image and the contours the user accepted in this dataset.
-    return CellsDataset(denoisedImage,acceptedContourList,scalePxToNm)
+    return CellsDataset(denoisedImage,acceptedContourList,scalePxToNm, maskFile.ref,imgShift)
 
 def appendToCellSet_Info(destinationPath:str) -> AggregatorFileInfo:
     filename = os.path.basename(destinationPath)
