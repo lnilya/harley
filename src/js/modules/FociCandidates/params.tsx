@@ -18,7 +18,7 @@ It governs how close the shortest and longest contours will be to the desired ci
 Consider lowering this parameter if your dataset is very large and contour detection takes a long time, identify the best parameters and before exporting set it back to a higher value.`;
 /**Parameter UI Definition the user can set in FociCandidates*/
 export const parameters:Array<Parameter<any>> = [
-    getSliderParams('fociSize','Foci Circumference in px',sizeDesc,5,100,1,[10,40]),
+    getSliderParams('fociSize','Foci Circumference in px',sizeDesc,5,150,1,[10,40]),
     getSliderParams('granularity','Granularity',granDesc,20,200,1,150),
 ]
 

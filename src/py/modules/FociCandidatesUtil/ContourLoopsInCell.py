@@ -96,6 +96,6 @@ class ContourLoopsInCell:
         if self.levels is None or len(self.levels) == 0:
             return
         l = np.array(self.levels)
-        validIDs = np.nonzero(l[:,0] > 0)[0]
+        validIDs = np.nonzero(l[:,0] >= 0)[0]
         self.levels = l[validIDs]
         self.contours = [self.contours[i] for i in list(validIDs)]
