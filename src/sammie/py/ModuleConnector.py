@@ -51,7 +51,7 @@ class ModuleConnector(metaclass=abc.ABCMeta):
     created for a specific algorithm by the developer"""
 
     @abc.abstractmethod
-    def runLoader(self, loaderName: str, asPreview:bool, key:str, filePath:str) -> LoaderResult:
+    def runLoader(self, loaderName: str, asPreview:bool, key:str, filePath:str, loaderArgs:Dict) -> LoaderResult:
         """
         Loads a file and returns data and previews. Should throw an error if anything goes wrong.
         Args:
@@ -60,6 +60,7 @@ class ModuleConnector(metaclass=abc.ABCMeta):
             The size of preview images needs not to be larger than 300x300px.
             key (str): The Key for this datafile. This is a unique key that should be used for generating filenames for preview images. Will depend on pipeline step, batchnumber and such.
             filePath (str): The path to load the data from.
+            loaderArgs (Dict): List of arguments the caller wishes to pass to the loader function.
 
         Returns:
             A LoaderResult containing metadata,previewURL and data for session

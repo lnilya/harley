@@ -11,7 +11,7 @@ import {ReactNode} from "react";
 import {ModuleID} from "./uitypes";
 import {Parameter, ParameterKey} from "../modules/paramtypes";
 
-
+/**A loader can either be just the ID or a tuple of ID and parameters dictionary to pass to loader funciton in python*/
 export type PipelineDataLoader = PipelineDataLoaderID|[PipelineDataLoaderID,Record<string, any>]
 
 /**Describes an Input into the pipeline*/

@@ -102,13 +102,13 @@ class FileLoader(ModuleBase):
 
     #Load as Preview, these files do not need to be processed or anything, and is simply for the user as a feedback
     def loadFilePreview(self,pipelinekey:str,batchID:int,path:str,loaderName:str,loaderArgs:Dict):
-        res: LoaderResult = self.moduleConnector.runLoader(loaderName,True,pipelinekey + '_preview_' + str(batchID),path)
+        res: LoaderResult = self.moduleConnector.runLoader(loaderName,True,pipelinekey + '_preview_' + str(batchID),path,loaderArgs)
         # return preview
         return {'previewURL': res.previewURL, 'meta': res.metaData}
 
     def loadFile(self,pipelinekey,path:str,loaderName:str,loaderArgs:Dict):
 
-        res: LoaderResult = self.moduleConnector.runLoader(loaderName,False,pipelinekey,path)
+        res: LoaderResult = self.moduleConnector.runLoader(loaderName,False,pipelinekey,path,loaderArgs)
         # push data into the pipeline, for loaders the parameters is simply a dump for any metadata
         self.session.onDataAdded(pipelinekey,self,res.data, {'path':path, 'meta':res.metaData})
 
