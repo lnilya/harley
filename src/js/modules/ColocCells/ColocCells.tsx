@@ -111,13 +111,20 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
                 })
                 }
             </div>
-            <Alert severity="info" className={'margin-100-top'}>
-                Be aware that cells that have close to no signal will appear in full brightness for that channel, since
-                all cells are normalized in intensity.
-                This will make it look like colocalization appears but is in actuality nothing.
-                The final colocalization detection however is not based on pixels but on the detected foci and the
-                overlap of their outlines. This problem will therefore not occur.
-            </Alert>
+            {curParams.norm &&
+                <Alert key={'notnn'} severity="info" className={'margin-100-top'}>
+                    Be aware that cells that have close to no signal will appear in full brightness for that channel, since
+                    all cells are normalized in intensity. This does not effect pearson correlation, but might be visually suprising.
+                    Uncheck the normalization checkbox on the left hand side, to disable normalization and look at images as they are.
+                </Alert>
+            }
+            
+            {!curParams.norm &&
+                <Alert key={'nn'} severity="info" className={'margin-100-top'}>
+                    Some cells might appear very dim, to the point, where you cannot discern foci. While the signal is dim it is still there.
+                    Check the normalization checkbox on the left hand side, to enable brightness normalization and see the foci more clearly.
+                </Alert>
+            }
         </>
         }
     </div>);

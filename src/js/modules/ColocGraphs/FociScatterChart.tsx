@@ -1,22 +1,22 @@
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import {ccl} from "../../../sammie/js/util";
 import './scss/FociScatterChart.scss'
+import * as server from "./server";
 import {FociScatter} from "./server";
 import ScatterChartChoice, {ScatterPlotPoint} from "./ScatterChartChoice";
 import titleImg from '../../../assets/images/graph-scatter.svg'
-import {CartesianGrid, Line, ScatterChart, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Scatter} from "recharts";
+import {CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis} from "recharts";
 import {printf} from "fast-printf";
 import {ColocCellsResult} from "../ColocCells/server";
 import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
 import {OutlinePolygon} from "../FociCandidates/FociCandidates";
 import styled from "@emotion/styled";
-import * as server from './server'
-
-
-import {norm} from "../../util/math";
+import * as ui from '../../../sammie/js/state/uistates'
+import {UIScreens} from '../../../sammie/js/state/uistates'
 import RegressionChoice, {RegressionResult} from "./RegressionChoice";
 import {Button, Dialog} from "@mui/material";
 import {Step} from "./params";
+import {useRecoilState} from "recoil";
 
 interface IFociScatterChartProps {
     
@@ -51,6 +51,7 @@ const FociScatterChart: React.FC<IFociScatterChartProps> = ({curStep,cellImageDa
     const [graphData, setGraphData] = useState<GraphData>(null);
     const [regResult, setRegresult] = useState<RegressionResult>(null);
     const [exportDownloadLink, setExportDownloadLink] = useState<string>(null);
+    const [screen,setScreen] = useRecoilState(ui.appScreen)
     
     const runExport = async () => {
         const res = await server.runExportScatter(curStep,graphData,regResult);
@@ -63,8 +64,16 @@ const FociScatterChart: React.FC<IFociScatterChartProps> = ({curStep,cellImageDa
         <div className={`scatter-chart ${className || ''} pad-200-bottom`}>
             <Dialog open={!!exportDownloadLink} onClose={(e)=>setExportDownloadLink(null)}>
                 <div className="pad-200 fl-col text-center">
-                    XLSX File is ready. It will contain exactly what you currently see on the screen. In order
-                    to get the raw data this plot is generated from, use the export function of this pipeline (Excel or JSON).
+                    <strong>
+                        XLSX File is ready and will only contain scatter plot data that you currently see on the screen.
+                    </strong>
+                    <br/>
+                    <div className={'scatter-chart__dialog-help'}>
+                        If you need the raw data that was used to generate this plot, go to the <span className="scatter-chart__dialog-link" onClick={e=>setScreen(UIScreens.output)}>output screen of this pipeline </span> and
+                        export the graph data as either XLSX or JSON. Specifically the JSON file contains some explanation
+                        about the structure and meaning of the data, that you can use for your post-processing.
+                    </div>
+                    <br/>
                     <a href={exportDownloadLink} target={'_blank'} rel="noreferrer" className={'margin-100-top no-underline'}>
                         <Button variant={'contained'}>Download Current Data</Button>
                     </a>

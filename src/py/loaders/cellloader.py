@@ -34,7 +34,7 @@ def __generateDataSetPreview(allImages, previewGridSize):
 
     return p
 
-def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[int,int] = (3,3))->Optional[LoaderResult]:
+def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[int,int] = (3,3),normalize:bool = True)->Optional[LoaderResult]:
     print('[loadCells]: %s from %s'%(pipekey,filePath))
 
     with open(filePath, 'rb') as handle:

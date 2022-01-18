@@ -8,9 +8,9 @@ from src.sammie.py.modules.ModuleBase import ModuleBase
 
 
 class HarleyModuleConnector(ModuleConnector):
-    def runLoader(self, loaderName: str, asPreview: bool, key: str, filePath: str) -> LoaderResult:
+    def runLoader(self, loaderName: str, asPreview: bool, key: str, filePath: str, loaderArgs:Dict) -> LoaderResult:
         loaderFun = getattr(loaders, loaderName)  # will throw an error if doesnt exist
-        return loaderFun(asPreview, key, filePath)
+        return loaderFun(asPreview, key, filePath,**loaderArgs)
 
     def resetAggregatorFile(self, aggregatorID: str, destinationPath: str) -> bool:
         aggregatorFun = getattr(aggregators, aggregatorID + '_Reset')

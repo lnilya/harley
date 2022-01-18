@@ -81,14 +81,14 @@ function getPipeline(): Pipeline {
             {
                 key: inputKeys.dataset1,
                 title: 'Labeled Dataset 1', description: datasetDesc,
-                loaders: {'cells': 'loadCells'}, //this loader does not exist and is just for Demo purposes
+                loaders: {'cells': ['loadCells',{normalize:false}]}, //this loader does not exist and is just for Demo purposes
                 postProcessForJS: util.postProcessForImage, //postprocessing
                 modifyBatchParameters:util.mergeMetaInformationWithBatchSettings
             },
             {
                 key: inputKeys.dataset2,
                 title: 'Labeled Dataset 2', description: datasetDesc,
-                loaders: {'cells': 'loadCells'}, //this loader does not exist and is just for Demo purposes
+                loaders: {'cells': ['loadCells',{normalize:false}]}, //this loader does not exist and is just for Demo purposes
                 postProcessForJS: util.postProcessForImage //postprocessing
             }
         ],

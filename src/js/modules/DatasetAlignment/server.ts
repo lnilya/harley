@@ -15,7 +15,7 @@ export type DatasetAlignmentResult = {
     demoResult:string
 }
 export async function setAlignment(curParams:self.Parameters, curStep:self.Step, alignment:number[]):Promise<EelResponse<boolean>>{
-    var res:EelResponse<boolean> = await eel.runStepAsync<boolean>(self.moduleName,'align', {...curParams, alignment:alignment},curStep)
+    var res:EelResponse<boolean> = await eel.runStep<boolean>(self.moduleName,'align', {...curParams, alignment:alignment},curStep)
     
     //update pipeline, on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.alignedDatasets);
@@ -26,7 +26,7 @@ export async function setAlignment(curParams:self.Parameters, curStep:self.Step,
 export async function preloadDataset(curParams:self.Parameters, curStep:self.Step):Promise<EelResponse<DatasetPreviewResult>>{
     
     //Run the algorithm associated with this module in python
-    var res:EelResponse<DatasetPreviewResult> = await eel.runStepAsync<DatasetPreviewResult>(self.moduleName,'preload',curParams,curStep)
+    var res:EelResponse<DatasetPreviewResult> = await eel.runStep<DatasetPreviewResult>(self.moduleName,'preload',curParams,curStep)
     //update pipeline, on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.alignedDatasets);
     else updatePipelineData(curStep.outputKeys.alignedDatasets, res.data.suggestedAlignment);

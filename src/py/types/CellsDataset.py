@@ -117,7 +117,7 @@ class CellsDataset:
             plt.plot(dc['x'], dc['y'], 'y:')
         plt.show()
 
-    def getSingleCellImagesAndContours(self, border: int = 3) -> Tuple[List[np.ndarray], List[Dict]]:
+    def getSingleCellImagesAndContours(self, border: int = 3, normalize:bool = True) -> Tuple[List[np.ndarray], List[Dict]]:
         """Retrieves a List of single cell images from the contours and adds a
         black border if desired."""
         cellImages = []
@@ -128,6 +128,7 @@ class CellsDataset:
             #     continue
             maskPatch, dx, dy = shapeutil.getPolygonMaskPatch(cnt['x'], cnt['y'], 0)
             img = self.img[dy:dy + maskPatch.shape[0], dx:dx + maskPatch.shape[1]]
+
             try:
                 minIntensity = img[maskPatch].min()
                 maxIntensity = img[maskPatch].max()
@@ -136,7 +137,9 @@ class CellsDataset:
                 maxIntensity = 1
                 self.show()
 
-            img = (img - minIntensity) / (maxIntensity - minIntensity)
+            if normalize:
+                img = (img - minIntensity) / (maxIntensity - minIntensity)
+
             img[maskPatch == False] = 0
 
             cellContour = {'x': (np.array(cnt['x']) + border - dx).tolist(),

@@ -47,10 +47,10 @@ const AlignmentPair: React.FC<IAlignmentPairProps> = ({ onChangeAlignment,
     return (
         <div className="margin-100-bottom rel">
             {dataRight && match < 0.9 &&
-                <ToolTipIconButton className={'alignment-pair__check warning'} Icon={Warning} color={'white'} tooltipText={`The alignment between the two images is low (${printf('%.1f%%',100*match)}). Alignment however only measures the overlap between the cell (outlines) in one image with the other. So if one image simply has cells filtered out, the alignment will be low, but the colocalization is still possible. Double check that the two images indeed have the same origin.`} />
+                <ToolTipIconButton className={'alignment-pair__check warning'} Icon={Warning} color={'white'} tooltipText={`The alignment between the two images is low (${printf('%.1f%%',100*match)}). Alignment however only measures the overlap between the cell (outlines) in one image with the other. So if one image simply has cells filtered out, the alignment will be low but colocalization is still possible for cells shared in both images. Double check that the two images indeed have the same origin.`} />
             }
             {dataRight && match >= 0.9 &&
-                <ToolTipIconButton className={'alignment-pair__check success'} Icon={CheckCircle} color={'white'} tooltipText={'The overlap of cells in the images seem to be quite well. If this is not a coincidence because of high cell density, colocalization will work.'} />
+                <ToolTipIconButton className={'alignment-pair__check success'} Icon={CheckCircle} color={'white'} tooltipText={`The overlap of cells in this pair of images is good (${printf('~%.1f%%',100*match)}). If this is not a coincidence because of high cell density, these two images likely depict the same cells.`} />
             }
             
             <div className={`alignment-pair ${className || ''} grid cols-2 no-gap `}>

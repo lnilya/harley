@@ -2,7 +2,7 @@ import random
 from typing import List
 
 import numpy as np
-
+import matplotlib.pyplot as plt
 from src.py.types.CellsDataset import CellsDataset
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.sammie.py.util.imgutil import getPreviewImage

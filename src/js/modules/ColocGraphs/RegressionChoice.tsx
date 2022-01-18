@@ -38,8 +38,6 @@ const RegressionChoice:React.FC<IRegressionChoiceProps> = ({graphData,onSetRegre
         const regPoints = graphData.points.map((pnt)=>[pnt.x,pnt.y])
         //do Regression
         var options = {precision:5};
-        if(funType == 'polynomial') options['order'] = polyOrder;
-        const regResult:RegressionResult = regression[funType](regPoints,options);
         
         //create an x,y array for plotting via recharts
         const minX = Math.min(...graphData.points.map((e)=>e.x));
@@ -48,6 +46,15 @@ const RegressionChoice:React.FC<IRegressionChoiceProps> = ({graphData,onSetRegre
         const maxY = Math.max(...graphData.points.map((e)=>e.y));
         const rng = maxX - minX;
         const rngY = maxY - minY;
+        
+        //We do not need to try regression, if the data beocmes 1 dimensional
+        if(rng <= 0){
+            onSetRegression(null)
+            return
+        }
+        
+        if(funType == 'polynomial') options['order'] = polyOrder;
+        const regResult:RegressionResult = regression[funType](regPoints,options);
         
         regResult.curve = []
         for (let i = (minX - (rng*.1)); i <= (maxX + (rng*.1)) ; i += (maxX - minX)/30) {

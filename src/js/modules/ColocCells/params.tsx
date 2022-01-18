@@ -22,6 +22,13 @@ const shiftDesc = <>
     Units are either nanometers or pixels, depending on whether the scale was provided in Data Input step to convert pixels to nanometers.
     Positive numbers shift to bottom and right.
     </>
+
+const normDesc = <>
+    Signal strength varies by cell. While some cells might have the full spectrum of a signal from 0 to 1, others might only be 0 - 0.1. Normalizing will artificially normalize the signal to unit range: 0-1. This makes all foci clearly visible regardless of signal strength. However cells with no signal/no foci will appear full bright after normalization, as if the signal strength is close to 1 over the whole cell.
+    <br/><br/>
+    The pearson correlation is invariant to normalization. Thus this setting is a purely visual setting, to more clearly see shapes/locations of foci.
+</>
+
 /**Parameter UI Definition the user can set in ColocCells*/
 export const parameters:Array<Parameter<any>> = [
      getDropdownParams('color','Color Combination','Colors to use to visualize the channels.','rg',
@@ -34,6 +41,8 @@ export const parameters:Array<Parameter<any>> = [
      getSliderParams('cellsperrow','Cells per Row','Number of cells displayed in a row. The less dispalyed, the bigger the magnification.',3,8,1,4,false,null,true),
      getDropdownParams('sorting','Cell Sorting','Order of sorting in the UI','pcc',{none:'No Particular Sorting', pcc:'Pearson Correlation (cell)',fpcc:'Pearson Correlation (foci)',nf:'Total Number of Foci', nf1:'Number of Foci Channel 1', nf2:'Number of Foci Channel 2', cellsize:'Cell Area'},null,true),
      getTextfieldInputParams('shift','Channel Shift',shiftDesc,'X;Y shift...','',null,false),
+    getCheckboxParams('norm','Normalize Brightness',normDesc,
+        'Enabled',true)
 ];
 
 /**Typing for ColocCells Inputs - Define Input Types/Names of this Pipeline step here.*/
@@ -52,6 +61,7 @@ export type Parameters = {
     color:string,
     cellsperrow:[number],
     shift:string,
+    norm:boolean,
     sorting:'none'|'pcc'|'fpcc'|'nf'|'nf1'|'nf2'|'cellsize',
     //A few example data types:
     /*

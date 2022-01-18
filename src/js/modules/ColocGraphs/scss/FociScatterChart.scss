@@ -11,6 +11,15 @@
 	.scatter-plot-container{
 		height: 500px !important;
 	}
+	&__dialog-link{
+		cursor: pointer;
+		text-decoration: underline;
+		font-weight: bold;
+	}
+	&__dialog-help{
+		font-style: italic;
+		opacity: .6;
+	}
 	.yaxis-lbl-container{
 		width: 20px;
 		padding-top: 30px;

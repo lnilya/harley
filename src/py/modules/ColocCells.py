@@ -46,7 +46,7 @@ class ColocCells(ModuleBase):
         elif col == 'y': return (255, 255, 0)
         elif col == 'o': return (255, 169, 0)
 
-    def unpackParams(self, color, shift,scale, **other):
+    def unpackParams(self, color, shift,scale, norm, **other):
         """unpack and possibly parse/cast all parameters coming from JS. The parameters from JS are defined in the params.tsx file of the respective step.
         The arrive as a dictionary on the py side and sometimes need some parsing. In any way this function provides a simple method to extract
         these parameters as named variables rather than using params['paramName1'] you can run it through this function."""
@@ -64,7 +64,7 @@ class ColocCells(ModuleBase):
                 if scale:
                     s = (s[0]/scale,s[1]/scale)
 
-        return c, s
+        return c, s, norm
 
     def addGeneratedData(self, params):
 
@@ -113,7 +113,7 @@ class ColocCells(ModuleBase):
             return True
         elif action == 'apply':
 
-            col,shift = self.unpackParams(**params)
+            col,shift,norm = self.unpackParams(**params)
 
             # get the input that this step is working on
             self.alignedDataSets = self.session.getData(self.keys.inAlignedDatasets)
@@ -133,7 +133,7 @@ class ColocCells(ModuleBase):
                 p1 = [i for i, j in p]  # cellnumbers in ds1
                 p2 = [j for i, j in p]  # cellnumbers in ds2
                 self.cellContours += ds1.getSingleCellContours(p1,border)
-                colocImgs = getColocImages(ds1, ds2, p, '%s_%d' % (self.keys.outIncludedCells, dsnum), col,border,shift)
+                colocImgs = getColocImages(ds1, ds2, p, '%s_%d' % (self.keys.outIncludedCells, dsnum), col,border,shift,norm)
                 dsnum += 1
                 self.cellImages += colocImgs[0]
                 self.rawImages += colocImgs[1]

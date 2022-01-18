@@ -20,7 +20,7 @@ def writeXLSX(csvDataSheets:List[List],names:List[str],path:str):
             ws.write_row(j,0,r)
     wb.close()
 
-def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]],key:str, color:List[Tuple[int,int,int]], border:int = 3, shift:Tuple[float,float] = None):
+def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]],key:str, color:List[Tuple[int,int,int]], border:int = 3, shift:Tuple[float,float] = None, normalize:bool = True):
     d2img = d2.img
     if shift is not None:
         f = interpolate.interp2d(np.arange(0,d2.img.shape[0],1),
@@ -52,13 +52,17 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
             img2 = addBorder(img2,border)
 
         mixColor = tuple(map(sum, zip(color[0], color[1])))
-        imgMix = norm(img1) * norm(img2)
+        if normalize:
+            imgMix = norm(img1) * norm(img2)
+        else:
+            imgMix = img1 * img2
+
         mix = getPreviewImage(imgMix,'%s_m_%d'%(key,p1),True,mixColor,False)
 
-        allImgs += [(getPreviewImage(img1,'%s_0_%d'%(key,p1),True,color[0],True), # CHANNEL 1
-                     getPreviewImage(img2,'%s_1_%d'%(key,p1),True,color[1],True), #CHANNEL 2
+        allImgs += [(getPreviewImage(img1,'%s_0_%d'%(key,p1),True,color[0],normalize), # CHANNEL 1
+                     getPreviewImage(img2,'%s_1_%d'%(key,p1),True,color[1],normalize), #CHANNEL 2
                      mix, #COLOC ONLY IMAGE
-                     joinChannels('%s_j_%d' % (key, p1), img1, color[0], img2, color[1], True) #MIXED IMAGE
+                     joinChannels('%s_j_%d' % (key, p1), img1, color[0], img2, color[1], normalize) #MIXED IMAGE
                      )]
         allImgsNumpy += [[img1,img2,imgMix]]
 
