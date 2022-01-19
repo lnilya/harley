@@ -8,11 +8,14 @@ Major:
 
 Minor:
 - Batch indicator on top left, now displays currently loaded file(s)
-- Foci Detection: Brightness values exported are not normalized.
+- Foci Detection: Brightness values exported are now not normalized.
+- Foci Detection: Added Sorting to cells and touched up UI.
 - Colocalization: Added parameter to toggle normalizaton of images 
 - Colocalization: Fixed crash in scatter plot 
 - Colocalization: Various changes in wording/explanations 
-- Colocalization: Added info panel to Cells overview with average PCC and other counts. 
+- Colocalization: Added info panel to Cells overview with average PCC and other counts.
+- Bugfix, normalization failure under certain conditions
+- Bugfix, cell images appeared chopped off 
 
 ### Version: 1.1.5
 

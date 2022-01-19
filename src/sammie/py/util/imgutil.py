@@ -27,7 +27,12 @@ def meshgridForImage(img: ndarray, spacing=1):
 # matplotlib colormaps for cmap parameter values
 
 def norm(img: np.ndarray, range: Tuple = (0, 1), newtype=None):
-    img = (img - img.min()) / (img.max() - img.min())
+    min = img.min()
+    max = img.max()
+    if min == max: #cannot normalize
+        return img
+
+    img = (img - min) / (max-min)
     img = (img + range[0]) * (range[1] - range[0])
     if newtype is not None:
         img = img.astype(newtype)
