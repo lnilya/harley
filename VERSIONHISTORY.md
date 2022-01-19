@@ -3,11 +3,16 @@ Updates by version
 
 ### Version: 1.1.6
 
+Major:
+- Foci Detection: Fixed bug where detected foci would not be merged correctly and made improvements to merging when adjusting size of foci. 
+
 Minor:
+- Batch indicator on top left, now displays currently loaded file(s)
 - Foci Detection: Brightness values exported are not normalized.
 - Colocalization: Added parameter to toggle normalizaton of images 
 - Colocalization: Fixed crash in scatter plot 
 - Colocalization: Various changes in wording/explanations 
+- Colocalization: Added info panel to Cells overview with average PCC and other counts. 
 
 ### Version: 1.1.5
 

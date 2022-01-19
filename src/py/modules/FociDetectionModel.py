@@ -3,6 +3,7 @@ import pickle
 from typing import List, Set, Dict, Tuple
 from itertools import chain
 
+import matplotlib.pyplot as plt
 import numpy as np
 import skimage.measure
 from shapely.geometry import Polygon
@@ -129,7 +130,7 @@ class FociDetectionModel(ModuleBase):
                     if self.abortSignal():
                         raise RuntimeError('Aborted execution.')
 
-                #Predict the foci using the model
+                #Predict the foci using the model, but don't merge contours before adjusting size
                 eeljs_sendProgress(-1,'Classifying Foci')
                 self.result = self.classifier.predict(self.trainingData)
 
@@ -138,7 +139,7 @@ class FociDetectionModel(ModuleBase):
                 for c in self.cellInidices:
                     self.userSelectedFociPerCell += [[i for i, cc in enumerate(self.result.contourChoices[c]) if cc != -1]]
 
-                self.modelSelectedFociPerCell = self.userSelectedFociPerCell.copy()
+                self.modelSelectedFociPerCell = [k.copy() for k in self.userSelectedFociPerCell]
 
                 # generate preview Images for all cells
                 self.previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i) for i, img in enumerate(allCellImages)]
@@ -149,6 +150,16 @@ class FociDetectionModel(ModuleBase):
             #Adjust sizes for ALL choices
             adjustedChoices = self.getFociWithSizeAdjustment(sizeAdjustment)
 
+            merges = {}
+            #after size adjustment some foci might have merged, we want to unselect those.
+            #They won't get selected again if user increases the size though
+            for i,c in enumerate(self.cellInidices):
+                choices = adjustedChoices[c]
+                for k, c in enumerate(choices):
+                    if c == -1 and k in self.userSelectedFociPerCell[i]:
+                        self.userSelectedFociPerCell[i].remove(k)
+                        if not c in merges: merges[c] = 0
+                        merges[c] += 1
 
             #get the polygon data for all possible foci
             allFoci = []
@@ -170,6 +181,7 @@ class FociDetectionModel(ModuleBase):
 
             return {'imgs': self.previews,
                     'foci':allFoci,
+                    'merges': merges,
                     'cellsInExport':list(self.cellsInExport),
                     'contours': self.cellContours,
                     'modelSelection':self.modelSelectedFociPerCell,
@@ -191,7 +203,8 @@ class FociDetectionModel(ModuleBase):
                 desiredArea = areas[lvl] * adjFactor
                 cc2[f] = np.argmin(np.abs(areas - desiredArea))
 
-            adjustedChoices += [cc2]
+            # adjustedChoices += [cc2]
+            adjustedChoices += [self.trainingData.mergeContours(c,cc2)]
 
         return adjustedChoices
 
@@ -370,9 +383,9 @@ class FociDetectionModel(ModuleBase):
         with open(path, 'wb') as handle:
             pickle.dump(rawPickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    def exportData(self, key: str, path: str, csv:bool, **args):
-        if csv:
+    def exportData(self, key: str, path: str, type:str, **args):
+        if type == 'xlsx':
             self.__exportXLSX(key,path,**args)
-        else:
+        elif type == 'cells':
             self.__exportDataSetWithLabels(key,path,**args)
 

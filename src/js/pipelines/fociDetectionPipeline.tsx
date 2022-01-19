@@ -1,6 +1,6 @@
 import React from "react";
 import * as util from '../../sammie/js/pipelines/pipelineutil'
-import {suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
+import {suggestModifiedFilename, suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
 import {Pipeline} from "../../sammie/js/types/pipelinetypes";
 import thumb from '../../assets/images/fd_thumb.jpg'
 import * as FociDetectionModelParams from '../modules/FociDetectionModel/params'
@@ -42,17 +42,17 @@ function getPipeline(): Pipeline {
         name: 'Foci Detection',
         inputs: [
             {
-                key: inputKeys.model,
-                title: 'Model File', description: modelDesc,
-                loaders: {'model': 'loadModel'},
-                postProcessForJS: util.postProcessForImage
-            },
-            {
                 key: inputKeys.dataset,
                 title: 'Dataset file', description: datasetDesc,
                 loaders: {'cells': ['loadCells',{normalize:false}]},
                 postProcessForJS: util.postProcessForImage,
                 modifyBatchParameters: util.mergeMetaInformationWithBatchSettings
+            },
+            {
+                key: inputKeys.model,
+                title: 'Model File', description: modelDesc,
+                loaders: {'model': 'loadModel'},
+                postProcessForJS: util.postProcessForImage
             }
         ],
         inputParameters: [
@@ -68,7 +68,7 @@ function getPipeline(): Pipeline {
                     pipelineInputKey: inputKeys.dataset,
                     transform: suggestSuffixedFileName('_foci', 'xlsx')
                 },
-                exporterParams:{csv:true}
+                exporterParams:{type:'xlsx'}
             },
             {
                 requiredInput: dataKeys.foci,
@@ -78,7 +78,7 @@ function getPipeline(): Pipeline {
                     pipelineInputKey: inputKeys.dataset,
                     transform: suggestSuffixedFileName('', 'cells')
                 },
-                exporterParams:{csv:false}
+                exporterParams:{type:'cells'}
             }
         ],
         descriptions: {

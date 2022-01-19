@@ -33,7 +33,7 @@ class SVMClassifier:
         #Normalize data
         self.features = self.params.normalizer.reset(np.array(self.features))
 
-    def predict(self, data:TrainingData)->LabelingResult:
+    def predict(self, data:TrainingData, mergeContours:bool = True)->LabelingResult:
         """Predicts the whole dataset and returns res as QuantificationResult for comparisons"""
 
         util.tic()
@@ -52,6 +52,11 @@ class SVMClassifier:
                 if not pred: cutoffs += [-1]
                 else:
                     cutoffs += [getCutoffLevel(data.contourLevels[cell][i], data.contours[cell][i])[1]]
+
+            #Check if any of the predicted contours include another one and elimenate the smaller of the two.
+            #i.e. merge smaller into bigger.
+            if mergeContours:
+                cutoffs = data.mergeContours(cell,cutoffs)
 
             contourChoices += [cutoffs]
             cnt += fpc

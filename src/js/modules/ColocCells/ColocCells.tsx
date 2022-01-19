@@ -14,13 +14,15 @@ import {useState} from "react";
 import ColocCellResult from "./ColocCellResult";
 import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 import DisplayOptions, {DisplayOptionModKey} from "../../../sammie/js/ui/modules/DisplayOptions";
-import {Alert} from "@mui/material";
+import {Alert, Tooltip} from "@mui/material";
 import {cl, copyRemove, doesPolygonContain} from "../../../sammie/js/util";
 import {changeCellSelection} from "../FociDetectionModel/server";
 import {SelectedPolygon, SplitablePolygon, SplitPolygon} from "../Labeling/_polygons";
 import _ from "lodash";
 import {ColocCellsResult} from "./server";
 import {ColocalizationBatchParameters} from "../../pipelines/ColocalizationPipeline";
+import {printf} from "fast-printf";
+import {mean} from "../../util/math";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<server.ColocCellsResult, string>({key: 'coloc-cells_result', default: null});
@@ -89,10 +91,40 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
     
     const sortingSeq = result?.imgs && getResultSorting(curParams, result)
     
+    const pccs = getPCCs(selected,result);
+    const fociStats = getFociStats(selected,result);
+    
     return (<div className={`coloc-cells ${cl(cellBorders, 'show-borders')} ${cl(grayscale, 'use-grayscale')}`}>
         {error && <ErrorHint error={error}/>}
         {!error && result &&
         <>
+            <div className="coloc-cells__box pad-100-excepttop pad-50-top margin-100-bottom">
+                    <Tooltip title={`Total number of included cells`} placement={'bottom'}>
+                        <div className="box-row">
+                                <span>Number of Cells:</span>
+                            <span>{selected.length}</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip title={`Number of included cells that have foci in both channels absolute and in %`} placement={'bottom'}>
+                        <div className="box-row">
+                            <span>Cells with foci in both channels:</span>
+                            <span>{fociStats.both} ({printf('%.2f %%',100*fociStats.both/selected.length)})</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip title={`Number of included cells that have no foci at all absolute and in %`} placement={'bottom'}>
+                        <div className="box-row">
+                            <span>Cells without foci:</span>
+                            <span>{fociStats.noFoci} ({printf('%.2f %%',100*fociStats.noFoci/selected.length)})</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip title={`Average pearson correlation across all selected cells calculated over pixels in entire cell area or just foci area.`} placement={'bottom'}>
+                        <div className="box-row">
+                            <span>Average Pearson Correlation (Cells/Foci):</span>
+                            <span>{printf('%.4f / %.4f',pccs[0],pccs[1])}</span>
+                        </div>
+                    </Tooltip>
+            </div>
+            
             <DisplayOptions settings={displayOptions} modKeys={modKeysDesc} activeModKeys={['' + (selMod + 1)]}/>
             <div className={`grid quarter-gap cols-${curParams.cellsperrow[0]}`}>
                 {sortingSeq.map((i) => {
@@ -130,6 +162,27 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
     </div>);
 }
 export default ColocCells
+
+function getFociStats(selected:number[], result: ColocCellsResult): {both:number, noFoci:number,c0:number, c1:number} {
+    var ret = {both:0, noFoci:0, c0:0, c1:0 };
+    if(!selected || !result) return ret;
+    
+    selected.forEach((s)=>{
+        if(result.foci[0][s].length > 0 && result.foci[1][s].length > 0) ret.both++;
+        else if(result.foci[0][s].length == 0 && result.foci[1][s].length == 0) ret.noFoci++;
+        else if(result.foci[0][s].length > 0) ret.c0++;
+        else if(result.foci[1][s].length > 0) ret.c1++;
+    })
+    
+    return ret;
+}
+function getPCCs(selected:number[], result: ColocCellsResult): [number,number] {
+    if(!selected || !result) return [0,0];
+    return [
+        mean(selected.map((idx)=>result.pccs[idx][0])),
+        mean(selected.map((idx)=>(result.fpccs[idx] ? result.fpccs[idx][0] : NaN)).filter(s=>!isNaN(s))),
+    ]
+}
 
 function getResultSorting(curParams: self.Parameters, result: ColocCellsResult): number[] {
     var sortOrder: number[] = _.range(0, result?.imgs.length);

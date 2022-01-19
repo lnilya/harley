@@ -31,6 +31,36 @@ class TrainingData:
         self.contours = []
         self.contourLevels = []
 
+    def mergeContours(self,cellNum:int, levelIDs:List[int])->List[int]:
+        """For a given cell and a set of chosen contours at level given by levelIDs will look if
+        any of the contours can be merged. i.e. if there is a smaller (or equal) contour contained in another contour
+        Returns the new levelIDs array, with -1 placed where a contour has been merge"""
+
+        #No overlap if only one focus
+        if len(levelIDs) <= 1: return levelIDs
+
+        #Extract the contours in question
+        cnts = [self.contours[cellNum][fociNum][fociLevel] for fociNum,fociLevel in enumerate(levelIDs) if fociLevel != -1]
+        #Transform to shapely polygons
+        poly:List[Polygon] = [Polygon(focus) for focus in cnts]
+
+        newLevelIDs = levelIDs.copy();
+        #Check for overlaps in these contours
+        for i,p1 in enumerate(poly):
+            for j,p2 in enumerate(poly):
+
+                if j <= i: continue
+                if newLevelIDs[i] == -1 or newLevelIDs[j] == -1: continue #one partner already elimenated
+
+                #intersection is enough, since for closed contour loops it implies bigger contains smaller
+                if p1.intersection(p2).area > 0:
+                    if p1.area >= p2.area: #elimate p2
+                        newLevelIDs[j] = -1
+                    else: #elimate p1
+                        newLevelIDs[i] = -1
+
+        return newLevelIDs
+
     def getFociCenters(self,cellNum:int,fociNum:List[int]):
         contours = self.contours[cellNum]
         pos = np.zeros((len(fociNum),2))

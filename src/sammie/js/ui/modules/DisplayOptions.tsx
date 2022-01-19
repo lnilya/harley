@@ -6,7 +6,7 @@ interface IDisplayOptionsProps {
     
     /**Additional classnames for this component*/
     className?: string
-    settings?: Array<DisplayOptionSetting>,
+    settings?: Array<DisplayOptionSetting<any>>,
     modKeys?: Array<DisplayOptionModKey>,
     activeModKeys?:string[]
     children?:any,
@@ -16,11 +16,12 @@ export type DisplayOptionModKey = {
     name: string
     desc: ReactNode,
 }
-export type DisplayOptionSetting = {
+export type DisplayOptionSetting<T> = {
+    type:'binary'|'dropdown'|'slider',
     color?: 'primary' | 'secondary' | 'default',
     label: string,
-    setter?: (val: boolean) => void,
-    checked: boolean
+    setter?: (val: T) => void,
+    value: T
 }
 /**
  * DisplayOptions is a board of true/false switches to direct the display of images or anything else.
@@ -34,7 +35,7 @@ const DisplayOptions: React.FC<IDisplayOptionsProps> = ({children,activeModKeys,
                 <FormControlLabel key={i}
                                   control={
                                       <Switch
-                                          checked={s.checked}
+                                          checked={s.value}
                                           onChange={(e) => s.setter(e.target.checked)}
                                           name={'s' + i}
                                           size={'small'}

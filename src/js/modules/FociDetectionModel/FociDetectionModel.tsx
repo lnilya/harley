@@ -12,6 +12,7 @@ import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
 import {printf} from "fast-printf";
 import {mean} from "../../util/math";
 import {Tooltip} from "@mui/material";
+import {showToast} from "../../../sammie/js/state/eventbus";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<FociDetectionModelResult,string>({key:'foci-detection-model_result',default:null});
@@ -36,7 +37,11 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
         setSelectedFoci(!res.error ? res.data.selection: null)
         setModelFoci(!res.error ? res.data.modelSelection: null)
         setResult(!res.error ? res.data : null)
-        
+        if(!res.error && Object.keys(res.data.merges).length > 0){
+            var totalMerges = 0;
+            Object.keys(res.data.merges).forEach((fk)=>totalMerges += res.data.merges[fk])
+            showToast(`Due to the current foci adjustment size (${printf('%.1f',curParams.sizeadjustment)}) ${totalMerges} foci have been merged in ${Object.keys(res.data.merges).length} cells.`,'warning')
+        }
         return res.error ? {error:res.error} : true;
     };
     
@@ -106,6 +111,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
                 <div className={`grid cols-${curParams.fociperrow} half-gap`}>
                     {result.imgs.map((img,i)=>{
                         return <CellResult key={i} img={img} foci={result.foci[i]}
+                                           idx={i}
                                            cellOutline={result.contours[i]}
                                            modelSelection={modelFoci[i]}
                                            onChangeSelection={(v)=>onFociToggle(i,v)}

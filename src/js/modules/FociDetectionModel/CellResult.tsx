@@ -11,7 +11,7 @@ import {OutlinePolygonLabeling} from "../Labeling/_polygons";
 import {OutlinePolygon} from "../FociCandidates/FociCandidates";
 
 interface ICellResultProps{
-	
+	idx:number,
 	/**Additional classnames for this component*/
 	className?:string,
     img:PipelineImage,
@@ -44,7 +44,7 @@ const AvailablePolygon = styled.polygon({
         opacity:1,
     }
 })
-const CellResult:React.FC<ICellResultProps> = ({cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className}) => {
+const CellResult:React.FC<ICellResultProps> = ({idx, cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className}) => {
 	const selFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? null : pd)
 	const avFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? pd : null)
     const onToggleFoci = (f:number)=>{
@@ -60,6 +60,7 @@ const CellResult:React.FC<ICellResultProps> = ({cellOutline, modelSelection, onC
     
 	return (
 		<div className={`cell-result ${className || ''} ` + cl(excluded,'is-excluded')}>
+            <div className="cell-result__idx">#{idx}</div>
 			<div className="rel lh-0">
                 <img src={img.url} />
                 <PolygonCloud className={'outline'} polygons={[cellOutline]} canvasDim={img} PolyComp={OutlinePolygon}/>
