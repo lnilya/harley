@@ -1,6 +1,13 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.6
+
+Minor:
+- Colocalization: Added parameter to toggle normalizaton of images 
+- Colocalization: Fixed crash in scatter plot 
+- Colocalization: Various changes in wording/explanations 
+
 ### Version: 1.1.5
 
 Major:
