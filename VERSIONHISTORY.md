@@ -15,7 +15,8 @@ Minor:
 - Colocalization: Various changes in wording/explanations 
 - Colocalization: Added info panel to Cells overview with average PCC and other counts.
 - Bugfix, normalization failure under certain conditions
-- Bugfix, cell images appeared chopped off 
+- Bugfix, cell images appeared chopped off
+- File Picker will display folder that are not permitted and should not crash on permission errors 
 
 ### Version: 1.1.5
 

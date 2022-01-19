@@ -12,7 +12,9 @@ export type LocalFileWithPreview = {
 export type LocalFilePath = string
 export type LocalFolder = {
     name:string,
-    path:LocalFilePath
+    path:LocalFilePath,
+    /*Read and Write access*/
+    access:[boolean,boolean]
 }
 export type LocalFile = {
     /**FileName with extension*/
