@@ -41,9 +41,9 @@ const BlobRemoval: React.FC<IBlobRemovalProps> = () => {
     const [showRemoved, setShowRemoved] = useRecoilState(asShowRemoved(curStep.moduleID));
     const [showOriginal, setShowOriginal] = useRecoilState(asShowOrig(curStep.moduleID));
     
-    const displayOptions: DisplayOptionSetting[] = [
-        {checked: showRemoved, label: 'Show Removed (blue)', setter: setShowRemoved},
-        {checked: showOriginal, label: 'Show Image', setter: setShowOriginal},
+    const displayOptions: DisplayOptionSetting<boolean>[] = [
+        {type:'binary', value: showRemoved, label: 'Show Removed (blue)', setter: setShowRemoved},
+        {type:'binary', value: showOriginal, label: 'Show Image', setter: setShowOriginal},
     ]
     
     const shownMasks:Array<MaskOverImageMask> = [

@@ -43,9 +43,9 @@ const Thinning:React.FC<IThinningProps> = () => {
     const [thinnedImage,setThinnedImage] = useRecoilState(asThinnedImage(curStep.moduleID));
     const [thinnedImageWithGaps,setThinnedWithGapsImage] = useRecoilState(asThinnedImageWithGaps(curStep.moduleID));
     
-    const displayOptions: DisplayOptionSetting[] = [
-        {checked: showClosedGaps, label: 'Show Closed Gaps (blue)', setter: setShowClosedGaps},
-        {checked: showOriginal, label: 'Show Image', setter: setShowOriginal},
+    const displayOptions: DisplayOptionSetting<boolean>[] = [
+        {type:'binary', value: showClosedGaps, label: 'Show Closed Gaps (blue)', setter: setShowClosedGaps},
+        {type:'binary', value: showOriginal, label: 'Show Image', setter: setShowOriginal},
     ]
     
     const shownMasks:Array<MaskOverImageMask> = [

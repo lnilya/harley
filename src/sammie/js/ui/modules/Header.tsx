@@ -24,7 +24,7 @@ const Header:React.FC<IStepChoiceProps> = ({className}) => {
     
     var inputName = '';
     var tooltip = null;
-    if(curLoadedBatch?.inputs) {
+    if(curLoadedBatch?.inputs && uiStep == UIScreens.pipeline) {
         inputName = curLoadedBatch?.inputs[pipe.inputs[0].key]?.file?.name
         tooltip = <div>
             {pipe.inputs.map((pi)=>

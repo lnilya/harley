@@ -42,9 +42,9 @@ const CellDetection:React.FC<ICellDetectionProps> = () => {
     const [acceptedCells,setAcceptedCells] = useRecoilState(asAccepted(curStep.moduleID));
     const [borderCells,setBorderCells] = useRecoilState(asBorder(curStep.moduleID));
     
-    const displayOptions:DisplayOptionSetting[] = [
-        {checked:showRejected,label:'Show Rejected Cells',setter:setShowRejected},
-        {checked:showBorderCells,label:'Show Border Cells',setter:setShowBorderCells},
+    const displayOptions:DisplayOptionSetting<boolean>[] = [
+        {type:'binary', value:showRejected,label:'Show Rejected Cells',setter:setShowRejected},
+        {type:'binary', value:showBorderCells,label:'Show Border Cells',setter:setShowBorderCells},
     ]
     
     const onClickCell = (cellNum)=>{
