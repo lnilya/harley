@@ -1,6 +1,6 @@
 import csv
 import pickle
-from typing import List, Set, Dict
+from typing import List, Set, Dict, Tuple
 from itertools import chain
 
 import numpy as np
@@ -15,7 +15,7 @@ from src.py.modules.LabelingUtil import LabelingResult
 from src.py.modules.LabelingUtil.TrainingData import TrainingData
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.py.modules.TrainingUtil.SVMClassifier import SVMClassifier
-from src.sammie.py.util.imgutil import addBorder, getPreviewImage
+from src.sammie.py.util.imgutil import addBorder, getPreviewImage, norm
 from src.py.util.modelutil import getCutoffLevel
 from src.sammie.py.util.shapeutil import getPolygonMaskPatch
 import xlsxwriter as xls
@@ -42,6 +42,7 @@ class FociDetectionModel(ModuleBase):
     cellInidices: Set
     loadedPortion:float
     cellsInExport: Set
+    normalizationFactors: List[Tuple[float,float]] #min and max values of original image, before normalization
     result: LabelingResult
     allPossibleContourSelections: List[List[int]] #Cell x Foci => selected contour level
     dataLoaded:bool
@@ -84,6 +85,11 @@ class FociDetectionModel(ModuleBase):
 
                 #get all images
                 allCellImages: List[np.ndarray] = self.session.getData(self.keys.inDataset)['imgs']  # List of images with cells
+
+                #normalize images and store the normalization factors
+                self.normalizationFactors = [(cimg.min(),cimg.max()) for cimg in allCellImages]
+                allCellImages = [norm(cimg) for cimg in allCellImages]
+
                 self.cellContours = self.session.getData(self.keys.inDataset)['contours']  # List of images with cells
 
                 #pick a portion of dataset
@@ -240,17 +246,26 @@ class FociDetectionModel(ModuleBase):
                                                                        offy:offy + binMaskOuter.shape[0],
                                                                        offx:offx + binMaskOuter.shape[1]])[0]
 
+                maxIntensity = region.max_intensity
+                meanIntensity = region.mean_intensity
+                contourIntensity = self.trainingData.contourLevels[c][f][lvl]
+                nmin,nmax = self.normalizationFactors[c]
+
+                maxIntensity = (maxIntensity*(nmax - nmin)) + nmin
+                meanIntensity = (meanIntensity*(nmax - nmin)) + nmin
+                contourIntensity = (contourIntensity*(nmax - nmin)) + nmin
+
                 area = Polygon(self.trainingData.contours[c][f][lvl]).area
                 center = self.trainingData.getFociCenters(c, [f])
                 avgArea += [area * (scale**2)]
-                avgIntensity += [region.mean_intensity]
+                avgIntensity += [meanIntensity]
                 ws.write_row(r,0,[i, nf,
                              float('%.3f'%(center[0, 1] * scale)),
                              float('%.3f'%(center[0, 0] * scale)),
                              float('%.2f'%(area * (scale ** 2))),
-                             float('%.3f'%region.max_intensity),
-                             float('%.3f'%region.mean_intensity),
-                             float('%.3f'%self.trainingData.contourLevels[c][f][lvl])])
+                             float('%.3f'%maxIntensity),
+                             float('%.3f'%meanIntensity),
+                             float('%.3f'%contourIntensity)])
                 r += 1
                 nf += 1
             avgIntensityPerCell += [avgIntensity]

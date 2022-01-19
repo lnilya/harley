@@ -50,7 +50,7 @@ function getPipeline(): Pipeline {
             {
                 key: inputKeys.dataset,
                 title: 'Dataset file', description: datasetDesc,
-                loaders: {'cells': 'loadCells'},
+                loaders: {'cells': ['loadCells',{normalize:false}]},
                 postProcessForJS: util.postProcessForImage,
                 modifyBatchParameters: util.mergeMetaInformationWithBatchSettings
             }

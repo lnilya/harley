@@ -4,6 +4,7 @@ Updates by version
 ### Version: 1.1.6
 
 Minor:
+- Foci Detection: Brightness values exported are not normalized.
 - Colocalization: Added parameter to toggle normalizaton of images 
 - Colocalization: Fixed crash in scatter plot 
 - Colocalization: Various changes in wording/explanations 

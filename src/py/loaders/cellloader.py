@@ -35,7 +35,7 @@ def __generateDataSetPreview(allImages, previewGridSize):
     return p
 
 def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[int,int] = (3,3),normalize:bool = True)->Optional[LoaderResult]:
-    print('[loadCells]: %s from %s'%(pipekey,filePath))
+    print('[loadCells]: %s from %s norm:%r'%(pipekey,filePath,normalize))
 
     with open(filePath, 'rb') as handle:
         curData = pickle.load(handle)
@@ -51,7 +51,7 @@ def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[in
     for i in curData['data']:
         cdi:CellsDataset = curData['data'][i]
         labeledCells += cdi.getNumLabeledCells()
-        imgs,cnts = cdi.getSingleCellImagesAndContours(3)
+        imgs,cnts = cdi.getSingleCellImagesAndContours(3,normalize)
         allImages += imgs
         allContours += cnts
         cellToBatch += [i] * len(imgs) #conversion to retrieve batch number from cell number
