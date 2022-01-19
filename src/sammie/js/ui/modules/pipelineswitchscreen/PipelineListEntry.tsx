@@ -11,6 +11,13 @@ const PipelineListEntry:React.FC<IPipelineListEntryProps> = ({pl, onChoose}) => 
     const [showingHelp,setShowingHelp] = useState(false);
     
 	return (<div className={'pipeline-list-entry margin-200-bottom full-w'}>
+        <div className="fl-row-start bg-bgdark col-white pad-50">
+            <span style={{opacity:0.3}}>VARIANTS</span>
+            <div className="fl-grow"/>
+            <span style={{opacity:0.5}}>With Model</span>
+            <span className={'margin-50-hor'}>|</span>
+            <span className={'col-main font-bold'}>Without Model</span>
+        </div>
         <div className="fl-row bg-bglight">
             {pl.descriptions?.thumb &&
                 <div className="pipeline-list-entry__thumb">

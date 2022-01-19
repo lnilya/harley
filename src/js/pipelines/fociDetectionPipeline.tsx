@@ -82,7 +82,7 @@ function getPipeline(): Pipeline {
             }
         ],
         descriptions: {
-            title: 'Foci Detection',
+            title: 'Foci Detection (using model)',
             description: 'This pipeline detects foci in a dataset using a trained model. You have the option to remove erroneous images as well. The result is a XLSX file with information on each foci in each cell.',
             thumb: <img src={thumb}/>,
             helpscreen: helpScreen
