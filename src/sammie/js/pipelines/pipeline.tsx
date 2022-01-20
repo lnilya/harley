@@ -58,11 +58,15 @@ export async function unloadPipeline() {
  * @param reloadParameters If true, the parameters associated with this batch will also be loaded into pipeline.
  */
 export async function loadBatchAndStartPipeline(batchIndex: number, reloadParameters: boolean = true) {
-    
     const allPipes = getConnectedValue(ui.allPipelines);
     const selPipeName = getConnectedValue(ui.selectedPipelineName);
     if (!allPipes[selPipeName]) return false;
+    
     const pipeline = allPipes[selPipeName];
+    //Reset the pipeline, will delete any stored/cached data
+    const d = await onLoadNewPipeline(pipeline);
+    if(!d.data) return false;
+    
     const batch: SingleDataBatch = getConnectedValue(alg.allPipelineBatches)[batchIndex];
     const allInputs = []
     for (let i = 0; i < pipeline.inputs.length; i++) {

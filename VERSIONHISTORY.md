@@ -1,6 +1,28 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.7
+
+Minor:
+- Bugfix: Data was not always reloaded when starting a new batch. 
+
+### Version: 1.1.6
+
+Major:
+- Foci Detection: Fixed bug where detected foci would not be merged correctly and made improvements to merging when adjusting size of foci. 
+
+Minor:
+- Batch indicator on top left, now displays currently loaded file(s)
+- Foci Detection: Brightness values exported are now not normalized.
+- Foci Detection: Added Sorting to cells and touched up UI.
+- Colocalization: Added parameter to toggle normalizaton of images 
+- Colocalization: Fixed crash in scatter plot 
+- Colocalization: Various changes in wording/explanations 
+- Colocalization: Added info panel to Cells overview with average PCC and other counts.
+- Bugfix, normalization failure under certain conditions
+- Bugfix, cell images appeared chopped off
+- File Picker will display folder that are not permitted and should not crash on permission errors 
+
 ### Version: 1.1.5
 
 Major:

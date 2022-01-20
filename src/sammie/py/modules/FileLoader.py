@@ -86,16 +86,25 @@ class FileLoader(ModuleBase):
         return parsed
 
     def getFolderContents(self, folder: str, extenstions: List[str]):
+        if folder is None or len(folder) == 0:
+            return {'files':[],'folders':[]}
+
         if folder[-1] != os.path.sep:
             folder += os.path.sep
         allFiles = []
         allFolders = []
-        for x in os.listdir(folder):
+
+        dirlist = os.listdir(folder)
+
+        for x in dirlist:
             if os.path.isdir(folder + x):
-                allFolders += [{'name': x, 'path': folder + x}]
+                accessR = os.access(folder+x, os.R_OK)
+                accessW = os.access(folder+x, os.W_OK)
+                allFolders += [{'name': x, 'path': folder + x, 'access':[accessR,accessW]}]
                 continue  # is a folder
 
             s = x.split('.')
+            if len(s) != 2: continue
             if s[1] not in extenstions: continue  # is not a file this pipeline can load
             allFiles += [{'name': x, 'folder': folder, 'path': folder + x}]
         return {'files': allFiles, 'folders': allFolders}

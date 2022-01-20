@@ -46,8 +46,8 @@ const CellFittingHeatmap:React.FC<ICellFittingHeatmapProps> = () => {
     const [skel,setSkel] = useRecoilState(asSkel(curStep.moduleID))
     const [showMask,setShowMask] = useRecoilState(asShowMask(curStep.moduleID))
     
-    const displayOptions:DisplayOptionSetting[] = [
-        {checked:showMask,label:'Show Skeleton',setter:setShowMask},
+    const displayOptions:DisplayOptionSetting<boolean>[] = [
+        {type:'binary',value:showMask,label:'Show Skeleton',setter:setShowMask},
     ]
     
     const shownMasks:Array<MaskOverImageMask> = [

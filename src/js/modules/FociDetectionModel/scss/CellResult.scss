@@ -1,6 +1,13 @@
 @import '../../../../sammie/scss/global/variables';
 @import '../../../../sammie/scss/global/mixins';
 .cell-result{
+	position: relative;
+	&__idx{
+		@include stick-to($fix-top-right,4px);
+		font-size: 12px;
+		color:rgba(white,.5);
+		z-index: 1;
+	}
 	width: 100%;
 	background-color: black;
 	display: flex;
@@ -23,6 +30,9 @@
 		}
 	}
 	.polygon-cloud{
+		&.selected-foci{
+			z-index: 2;
+		}
 		@include stick-to($fix-all);
 		svg{
 			polygon{

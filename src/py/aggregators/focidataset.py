@@ -122,7 +122,7 @@ def resetFociInCellSet(curData):
 def addFocusToCellSet(curData, batchNum:int, cellNum:int, fociList:List[np.ndarray]):
     """Adds foci to a data batch. curData has the same structures as exporte dby this aggregator"""
     if batchNum not in curData['data']:
-        raise RuntimeError('Invaldi batchnum (%d) provided for export fo cell (%d)'%(batchNum,cellNum))
+        raise RuntimeError('Invalid batchnum (%d) provided for export fo cell (%d)'%(batchNum,cellNum))
 
     ds:CellsDataset = curData['data'][batchNum]
     ds.addFociContourForCell(cellNum,fociList)

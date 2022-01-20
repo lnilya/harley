@@ -1,8 +1,9 @@
 import csv
 import pickle
-from typing import List, Set, Dict
+from typing import List, Set, Dict, Tuple
 from itertools import chain
 
+import matplotlib.pyplot as plt
 import numpy as np
 import skimage.measure
 from shapely.geometry import Polygon
@@ -15,7 +16,7 @@ from src.py.modules.LabelingUtil import LabelingResult
 from src.py.modules.LabelingUtil.TrainingData import TrainingData
 from src.sammie.py.modules.ModuleBase import ModuleBase
 from src.py.modules.TrainingUtil.SVMClassifier import SVMClassifier
-from src.sammie.py.util.imgutil import addBorder, getPreviewImage
+from src.sammie.py.util.imgutil import addBorder, getPreviewImage, norm
 from src.py.util.modelutil import getCutoffLevel
 from src.sammie.py.util.shapeutil import getPolygonMaskPatch
 import xlsxwriter as xls
@@ -42,6 +43,7 @@ class FociDetectionModel(ModuleBase):
     cellInidices: Set
     loadedPortion:float
     cellsInExport: Set
+    normalizationFactors: List[Tuple[float,float]] #min and max values of original image, before normalization
     result: LabelingResult
     allPossibleContourSelections: List[List[int]] #Cell x Foci => selected contour level
     dataLoaded:bool
@@ -84,6 +86,11 @@ class FociDetectionModel(ModuleBase):
 
                 #get all images
                 allCellImages: List[np.ndarray] = self.session.getData(self.keys.inDataset)['imgs']  # List of images with cells
+
+                #normalize images and store the normalization factors
+                self.normalizationFactors = [(cimg.min(),cimg.max()) for cimg in allCellImages]
+                allCellImages = [norm(cimg) for cimg in allCellImages]
+
                 self.cellContours = self.session.getData(self.keys.inDataset)['contours']  # List of images with cells
 
                 #pick a portion of dataset
@@ -123,7 +130,7 @@ class FociDetectionModel(ModuleBase):
                     if self.abortSignal():
                         raise RuntimeError('Aborted execution.')
 
-                #Predict the foci using the model
+                #Predict the foci using the model, but don't merge contours before adjusting size
                 eeljs_sendProgress(-1,'Classifying Foci')
                 self.result = self.classifier.predict(self.trainingData)
 
@@ -132,7 +139,7 @@ class FociDetectionModel(ModuleBase):
                 for c in self.cellInidices:
                     self.userSelectedFociPerCell += [[i for i, cc in enumerate(self.result.contourChoices[c]) if cc != -1]]
 
-                self.modelSelectedFociPerCell = self.userSelectedFociPerCell.copy()
+                self.modelSelectedFociPerCell = [k.copy() for k in self.userSelectedFociPerCell]
 
                 # generate preview Images for all cells
                 self.previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i) for i, img in enumerate(allCellImages)]
@@ -143,6 +150,16 @@ class FociDetectionModel(ModuleBase):
             #Adjust sizes for ALL choices
             adjustedChoices = self.getFociWithSizeAdjustment(sizeAdjustment)
 
+            merges = {}
+            #after size adjustment some foci might have merged, we want to unselect those.
+            #They won't get selected again if user increases the size though
+            for i,c in enumerate(self.cellInidices):
+                choices = adjustedChoices[c]
+                for k, c in enumerate(choices):
+                    if c == -1 and k in self.userSelectedFociPerCell[i]:
+                        self.userSelectedFociPerCell[i].remove(k)
+                        if not c in merges: merges[c] = 0
+                        merges[c] += 1
 
             #get the polygon data for all possible foci
             allFoci = []
@@ -164,6 +181,7 @@ class FociDetectionModel(ModuleBase):
 
             return {'imgs': self.previews,
                     'foci':allFoci,
+                    'merges': merges,
                     'cellsInExport':list(self.cellsInExport),
                     'contours': self.cellContours,
                     'modelSelection':self.modelSelectedFociPerCell,
@@ -185,7 +203,8 @@ class FociDetectionModel(ModuleBase):
                 desiredArea = areas[lvl] * adjFactor
                 cc2[f] = np.argmin(np.abs(areas - desiredArea))
 
-            adjustedChoices += [cc2]
+            # adjustedChoices += [cc2]
+            adjustedChoices += [self.trainingData.mergeContours(c,cc2)]
 
         return adjustedChoices
 
@@ -240,17 +259,26 @@ class FociDetectionModel(ModuleBase):
                                                                        offy:offy + binMaskOuter.shape[0],
                                                                        offx:offx + binMaskOuter.shape[1]])[0]
 
+                maxIntensity = region.max_intensity
+                meanIntensity = region.mean_intensity
+                contourIntensity = self.trainingData.contourLevels[c][f][lvl]
+                nmin,nmax = self.normalizationFactors[c]
+
+                maxIntensity = (maxIntensity*(nmax - nmin)) + nmin
+                meanIntensity = (meanIntensity*(nmax - nmin)) + nmin
+                contourIntensity = (contourIntensity*(nmax - nmin)) + nmin
+
                 area = Polygon(self.trainingData.contours[c][f][lvl]).area
                 center = self.trainingData.getFociCenters(c, [f])
                 avgArea += [area * (scale**2)]
-                avgIntensity += [region.mean_intensity]
+                avgIntensity += [meanIntensity]
                 ws.write_row(r,0,[i, nf,
                              float('%.3f'%(center[0, 1] * scale)),
                              float('%.3f'%(center[0, 0] * scale)),
                              float('%.2f'%(area * (scale ** 2))),
-                             float('%.3f'%region.max_intensity),
-                             float('%.3f'%region.mean_intensity),
-                             float('%.3f'%self.trainingData.contourLevels[c][f][lvl])])
+                             float('%.3f'%maxIntensity),
+                             float('%.3f'%meanIntensity),
+                             float('%.3f'%contourIntensity)])
                 r += 1
                 nf += 1
             avgIntensityPerCell += [avgIntensity]
@@ -355,9 +383,9 @@ class FociDetectionModel(ModuleBase):
         with open(path, 'wb') as handle:
             pickle.dump(rawPickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    def exportData(self, key: str, path: str, csv:bool, **args):
-        if csv:
+    def exportData(self, key: str, path: str, type:str, **args):
+        if type == 'xlsx':
             self.__exportXLSX(key,path,**args)
-        else:
+        elif type == 'cells':
             self.__exportDataSetWithLabels(key,path,**args)
 

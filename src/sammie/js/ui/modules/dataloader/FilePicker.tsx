@@ -58,7 +58,7 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
             setSelFile(null)
             return;
         }
-        console.log(`[FilePicker]: Fetching: ${folder}`);
+        // console.log(`[FilePicker]: Fetching: ${folder}`);
         setLoading(true)
         const res = await server.getFolderContents(folder, getAvailableExtensions(input))
         
@@ -74,11 +74,11 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
             if (liof == -1) liof = folder.lastIndexOf('\\')
             
             if (liof == -1) setUpFolder(null)
-            else setUpFolder({path: folder.substr(0, liof), name: '..'});
+            else setUpFolder({path: folder.substr(0, liof), name: '..', access:[true,true]});
             
         }
         
-        console.log(`[FilePicker]: Fetched and selFile:`, selectFile);
+        // console.log(`[FilePicker]: Fetched and selFile:`, selectFile);
         if (selectFile) {
             //check if file is still in folder
             const foundFile = res?.data?.files?.find((flfp) => flfp.path == selectFile.path)

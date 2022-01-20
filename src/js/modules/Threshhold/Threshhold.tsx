@@ -47,9 +47,9 @@ const Threshhold:React.FC<IFileLoaderProps> = () => {
     const [showPrevStep,setShowPrevStep] = useRecoilState(asShowPrev(curStep.moduleID))
     const [showOriginal,setShowOriginal] = useRecoilState(asShowOrig(curStep.moduleID));
     
-    const displayOptions:DisplayOptionSetting[] = [
-        {checked:showPrevStep,label:'Show Previous Step (blue)',setter:setShowPrevStep},
-        {checked:showOriginal,label:'Show Image',setter:setShowOriginal},
+    const displayOptions:DisplayOptionSetting<boolean>[] = [
+        {type:'binary', value:showPrevStep,label:'Show Previous Step (blue)',setter:setShowPrevStep},
+        {type:'binary', value:showOriginal,label:'Show Image',setter:setShowOriginal},
     ]
     
     const shownMasks:Array<MaskOverImageMask> = [

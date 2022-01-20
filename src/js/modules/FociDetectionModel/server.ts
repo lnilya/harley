@@ -12,6 +12,9 @@ export type FociDetectionModelResult = {
     /**Foci in each cell at optimal outline*/
     foci:PipelinePolygons[]
     
+    /**When merges occur due to changes in size, this can be displayed to user*/
+    merges:Record<number, number>
+    
     /**Cells included in export*/
     cellsInExport:number[],
     /**Foci Indices selected by user in each cell at optimal outline*/
@@ -23,7 +26,7 @@ export async function runFociDetectionModel(curParams:self.Parameters, curStep:s
     
     //Run algorithm - this demo is for a simple image in and image out.
     var res:EelResponse<FociDetectionModelResult> =
-        await eel.runStepAsync<FociDetectionModelResult>(self.moduleName,'apply', {...curParams, portion:portion},curStep)
+        await eel.runStep<FociDetectionModelResult>(self.moduleName,'apply', {...curParams, portion:portion},curStep)
 
     //update pipeline, on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.foci);

@@ -17,7 +17,7 @@ function changeHTML(v) {
 function changePackage(v) {
     var data = fs.readFileSync(pacakgeJSON, 'utf8')
     data = data.replace(/("version":\s)"(.*?)"/ig, `$1"${v}"`);
-    v = v.replace('.','-')
+    v = v.replace('.','-').replace('.','-')
     data = data.replace(/harley-(.*?)\s/ig, `harley-${v} `);
     fs.writeFileSync(pacakgeJSON, data);
     console.log(`Replaced Package.json`);

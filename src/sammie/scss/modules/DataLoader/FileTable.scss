@@ -18,6 +18,14 @@
 		}
 	}
 	.folder{
+		&.no-access{
+			cursor: not-allowed !important;
+			opacity: .6 !important;
+			&:hover{
+				color:$colWhite;
+				background-color: $colBGMedium;
+			}
+		}
 	}
 	.file{
 		span{

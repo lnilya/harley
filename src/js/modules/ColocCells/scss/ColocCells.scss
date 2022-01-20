@@ -12,4 +12,29 @@
 			filter: grayscale(100%) !important;
 		}
 	}
+	&__box{
+		flex-grow: 1;
+		h3{
+			margin: 0;
+			padding-bottom: 10px;
+		}
+		background-color: $colBGLight;
+		.box-row{
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 10px;
+			span:first-child{
+				text-decoration: underline dotted;
+				cursor: help;
+			}
+			span:last-child{
+				font-weight: bold;
+			}
+			&:hover{
+				color: $colMain;
+			}
+		}
+	}
 }

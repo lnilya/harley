@@ -78,9 +78,9 @@ const CellFitting:React.FC<ICellFittingProps> = () => {
     const [showOrig,setShowOrig] = useRecoilState(asShowOrig(curStep.moduleID))
     const [showSkel,setShowSkel] = useRecoilState(asShowSkel(curStep.moduleID))
 
-    const displayOptions:DisplayOptionSetting[] = [
-        {checked:showOrig,label:'Show Src Image',setter:setShowOrig},
-        {checked:showSkel,label:'Show Skeleton',setter:setShowSkel},
+    const displayOptions:DisplayOptionSetting<boolean>[] = [
+        {type:'binary', value:showOrig,label:'Show Src Image',setter:setShowOrig},
+        {type:'binary', value:showSkel,label:'Show Skeleton',setter:setShowSkel},
     ]
     
     var accEllipses = points?.points?.map((p,i)=>(points.accepted.indexOf(i) != -1 && manRej.indexOf(i) == -1) ? p : null)
