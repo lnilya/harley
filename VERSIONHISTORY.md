@@ -1,6 +1,11 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.1.7
+
+Minor:
+- Bugfix: Data was not always reloaded when starting a new batch. 
+
 ### Version: 1.1.6
 
 Major:

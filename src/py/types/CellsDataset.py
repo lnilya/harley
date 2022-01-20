@@ -122,7 +122,7 @@ class CellsDataset:
         black border if desired."""
         cellImages = []
         cellContours = []
-        for cnt in self.contours:
+        for i,cnt in enumerate(self.contours):
             #For some reasone it is possible to achieve a non-valid contour - so we will just ignore it here.
             # if len(cnt['x']) < 3 or len(cnt['y']) < 3:
             #     continue
@@ -135,7 +135,8 @@ class CellsDataset:
             except:
                 minIntensity = 0
                 maxIntensity = 1
-                self.show()
+                print('Error loading cell image %d'%i)
+                # self.show()
 
             if normalize:
                 img = (img - minIntensity) / (maxIntensity - minIntensity)
