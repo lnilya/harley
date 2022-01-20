@@ -4,7 +4,6 @@ import * as ui from './uistates'
 import * as events from './eventbus'
 import {selectedPipelineName} from './uistates'
 import {SettingDictionary} from "../modules/paramtypes";
-import {__debugAllPipelineNames} from "../App";
 
 enum keys{
     PIPELINE_PARAMS='pipelineparams',
@@ -49,9 +48,6 @@ export function loadGlobalData(key:string){
 export function saveDataForPipeline(data:any, key:string, pipeName:PipelineName){
     if(typeof pipeName !== 'string'){
         alert(`Corruption in Recoil Pipeline Name. Provided getter/setter pair instead of name.`)
-    }else if(__debugAllPipelineNames.indexOf(pipeName) == -1){
-        alert(`Corruption in Recoil Pipeline Name. Could not store Pipeline Data: ${key}. Illegal PipeName: ${pipeName} `)
-        events.showToast(`Error saving ${key}.`)
     }else{
        localStorage.setItem(keys.PIPELINE_DATA+'_'+pipeName+'_'+key,JSON.stringify(data))
     }

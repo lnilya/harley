@@ -4,24 +4,35 @@ import {suggestSuffixedFileName} from '../../sammie/js/pipelines/pipelineutil'
 import {Pipeline} from "../../sammie/js/types/pipelinetypes";
 import ResponsiveEmbed from 'react-responsive-embed'
 import thumb from "../../assets/images/fd_thumb.jpg";
+import {getSliderParams, getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
+import * as FociDetectionParamsParams from '../modules/FociDetectionParams/params'
+import FociDetectionParams from "../modules/FociDetectionParams/FociDetectionParams";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
-    img1: 'Input File 1',
-    img2: 'Input File 2',//these are example inputs
+    dataset: 'Dataset'
 }
 const dataKeys = {
-    step1: 'Added Images', //example, some step for example adds these two images into one.
+    foci: 'Foci',
 }
 
 const helpScreen = <div>
-    Here is the main Help Component for this Pipeline. You can even add a Video like so:
-    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen />
+    This pipeline is used to detect foci, without using a trained model. Which is useful in a few instances.
+    First of all if your data contains a very simple dataset, e.g. a single bright focus per cell, as is often the case
+    with spindle pole bodies for example. In such cases there are few "wrong" foci which the model requres to learn.
+    Using the parameter approach in this case is faster and more convenient than training a model.
+    Video on Foci Detection using model (exports and general flow is same):
+    <div className="pad-50-ver">
+        <ResponsiveEmbed src='https://www.youtube.com/embed/KRvW-F2ED6g' allowFullScreen/>
+    </div>
+    Video on Foci Detection via paramters:
+    TODO
 </div>
 
-/**Optional Typing for the */
+/**Optional Typing for the Batch parameters*/
 export type ParametrizedFociDetectionBatchParameters = {
-
+    '1px': number
+    cellstoprocess:number
 }
 
 function getPipeline(): Pipeline {
@@ -32,45 +43,57 @@ function getPipeline(): Pipeline {
         steps: [
             //No Steps defined yet. Use the main create Script to add Steps automatically.
             //This will work, as long as you keep the comment below.
-            //%NEWMODULE_STEP%
+            { 
+            title:'FociDetectionParams',
+            moduleID:'FociDetectionParams',
+            renderer: <FociDetectionParams/>,
+            parameters:FociDetectionParamsParams.parameters,
+            inputKeys:{dataset:inputKeys.dataset},
+            outputKeys:{foci:dataKeys.foci}
+        } as FociDetectionParamsParams.Step,
+        //%NEWMODULE_STEP%
         ],
         
         disableBatchMode:true, //wether or not batch mode is allowed.
         
-        name: 'ParametrizedFociDetection', //name of your pipeline
+        name: 'Parametrized Foci Detection', //name of your pipeline
         
         //Define what data needs to be provided in DataInput screen to start the pipeline
         inputs: [
             {
-                key: inputKeys.img1,
-                title: 'First Image', description: datasetDesc,
-                loaders: {'jpg,png,tif': 'loadImage'}, //this loader does not exist and is just for Demo purposes
-                postProcessForJS: util.postProcessForImage //postprocessing
+                key: inputKeys.dataset,
+                title: 'Dataset file', description: datasetDesc,
+                loaders: {'cells': ['loadCells',{normalize:false}]},
+                postProcessForJS: util.postProcessForImage,
+                modifyBatchParameters: util.mergeMetaInformationWithBatchSettings
             },
-            {
-                key: inputKeys.img2,
-                title: 'Second Image', description: datasetDesc,
-                loaders: {'jpg,png,tif': 'loadImage'}, //this loader does not exist and is just for Demo purposes
-                postProcessForJS: util.postProcessForImage //postprocessing
-            }
         ],
         //Define what the outputs of this Pipeline are
         outputs: [
             {
-                requiredInput: dataKeys.step1,
-                title:'Sum of Two images',
-                description:'This is the description that appears in the Export file screen.',
-                
-                //Should define a suggestion function for naming the output, makes it a lot easier for user to store files.
-                suggestDestinationOutput:{
-                    pipelineInputKey:inputKeys.img1,
-                    transform:suggestSuffixedFileName('_sum','png')
+                requiredInput: dataKeys.foci,
+                title: 'Foci Table',
+                description: 'An excel file with foci stats. Cells that are excluded are not counted/mentioned in the file. All cell numbers relate to the set without excluded cells. All foci have a cell number associated with them. If your dataset file had a scale associated with it, the result here will be in µm otherwise just pixels.',
+                suggestDestinationOutput: {
+                    pipelineInputKey: inputKeys.dataset,
+                    transform: suggestSuffixedFileName('_foci', 'xlsx')
                 },
+                exporterParams:{type:'xlsx'}
+            },
+            {
+                requiredInput: dataKeys.foci,
+                title:'Labeled Dataset',
+                description:'This output is a copy of the original dataset enriched with the foci you identified. You can therefore safely overwrite the old dataset file.\nDoing this allows you to use two dataset files in the colocalisation pipeline later on.',
+                suggestDestinationOutput: {
+                    pipelineInputKey: inputKeys.dataset,
+                    transform: suggestSuffixedFileName('', 'cells')
+                },
+                exporterParams:{type:'cells'}
             }
         ],
-        inputParameters:[
-            /**If the single datbatches in this pipeline require inputs they go here.
-             * The keys should be the same as defined by the ParametrizedFociDetectionBatchParameters type above.*/
+        inputParameters: [
+            getTextfieldInputParams('1px', '1px in nm', 'How many nanometers correspond to 1px. This is useful for your dataset to have the proper scale and allow downstream processing steps to access this information. If blank no conversion will be used and all downstream values will be in px.', 'Scale...', '', null, false, 'number'),
+            getSliderParams('cellstoprocess', 'Use Subset in %', 'If your dataset is large, you might only want to process the first x% of it, to get a feel for the result. At this point you might determine to use another model, or process the whole dataset. Use this slider to adjust the percentage of cells to process.', 1, 100, 0.5, 100),
         ],
         
         //Info for user

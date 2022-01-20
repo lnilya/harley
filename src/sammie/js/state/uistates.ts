@@ -18,6 +18,10 @@ import {Pipeline, PipelineStep} from "../types/pipelinetypes";
 
 /**All Pipelines the user can select*/
 export const allPipelines = connectedAtom<Record<PipelineName,Pipeline>>({key:'all_pipelines',default:{}});
+
+/**A pipelinegroup helps the UI to group related pipeolines in the swutch pipelne screen. This structure is created autoamtically at startup and should not be edited at runtime.*/
+export const pipelineGroups = connectedAtom<Record<string,Pipeline>[]>({key:'all_pipelines_groups',default:[]});
+
 /**The name of the current selected pipeline*/
 export const selectedPipelineName = connectedAtom<PipelineName>({key:'sel_pipeline_name',default:''})
 /**Convenience Selector for the actual Pipeline Object*/

@@ -1,6 +1,7 @@
 import {LocalFileWithPreview, PipelineDataKey, PipelineImage} from "../types/datatypes";
 import {parseValueToParamType} from "../state/stateutil";
 import {Parameter, ParameterKey} from "../modules/paramtypes";
+import {Pipeline} from "../types/pipelinetypes";
 
 /**
  * Merges the settings for a pipeline batch with the metadata data coming from a local file with preview

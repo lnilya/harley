@@ -19,6 +19,13 @@ export function useInitalLoadCallback(recoilState:RecoilState<any>, initCallBack
     
 }
 
+/***
+ * Connects recoil state to local store. Making the state persistent across executions
+ * @param recoilState The recoil atom to sync local store with.
+ * @param scope if pipeline a value for each pipeline is stored
+ * @param initalLoad If true will load the localStore with a useEffect hook on first render. This is not necessary, if the atom has been previously loaded during the current execution and will save a repaint.
+ * @param pipelineName name of the pipeline to use, if scope is global, this parameter is ignored/not needed
+ */
 export function useLocalStoreRecoilHook(recoilState:RecoilState<any>,scope:'global'|'pipeline' = 'pipeline', initalLoad:boolean = true, pipelineName:PipelineName = null){
     const [curSettings, setCurSettings] = useRecoilState(recoilState);
     if(scope == 'pipeline' && pipelineName == null)

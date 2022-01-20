@@ -23,11 +23,12 @@ import WelcomeScreen from "./ui/modules/WelcomeScreen";
 import {Pipeline} from "./types/pipelinetypes";
 
 interface IApp{
-    getPipelineDefinitions:()=>Pipeline[]
+    /**Pipeline can receive either a pipeline defintion or a record, where the keys are used as labels for tabs
+     * where each tab is an alternative to a pipeline. This way pipelines can be grouped. If there are 3 alternative algorithms
+     * to do the same task, it is advisiable to group pipelines in such a way.*/
+    getPipelineDefinitions:()=>Array<Pipeline|Record<string, Pipeline>>
 }
 
-/**Debugging Recoil issue with retrieving pipeline names*/
-export var __debugAllPipelineNames:string[];
 
 const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
     const overlay = useRecoilValue(ui.overlay);
@@ -42,7 +43,7 @@ const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
     
     useEffect(() => {
         const pd = getPipelineDefinitions();
-        __debugAllPipelineNames = pd.map((pl)=>pl.name);
+        
         initializePipelineStack(pd);
         listenTo<ToastEventPayload>(EventTypes.ToastEvent, 'apptoast', (data) => {
             enqueueSnackbar(data.msg,{content:<Alert severity={data.severity}>{data.msg}</Alert>})

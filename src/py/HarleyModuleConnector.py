@@ -80,5 +80,8 @@ class HarleyModuleConnector(ModuleConnector):
         elif moduleName == 'ColocGraphs':
             from src.py.modules.ColocGraphs import ColocGraphs
             return ColocGraphs(moduleID,session)
+        elif moduleName == 'FociDetectionParams':
+            from src.py.modules.FociDetectionParams import FociDetectionParams
+            return FociDetectionParams(moduleID,session)
         # %NEW_MODULE%
         # Keep the New Module Comment at this location, for automatically adding new modules via scripts. Do not delete it, or the script will not work.

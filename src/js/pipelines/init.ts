@@ -15,5 +15,5 @@ export function getPipelineDefinitions() {
     const fps: Pipeline = fociDetectionPipelineAlt()
     const svm: Pipeline = modelPipeline()
     const clc: Pipeline = colocPipeline()
-    return [cd,dvs,svm,fds,fps,clc];
+    return [cd,dvs,svm, {'via Model':fds, 'via Parameters':fps},clc];
 }
