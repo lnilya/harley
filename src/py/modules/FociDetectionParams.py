@@ -55,10 +55,8 @@ class FociDetectionParams(ModuleBase):
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = FociDetectionParamsKeys(inputkeys, outputkeys)
         if action == 'applyselect':
-            self.trace('RUNNING COMMAND %s'%action)
             self.cellsInExport = set(params['cells'])
             self.userSelectedFociPerCell = params['foci']
-            self.trace('COMMAND %s COMPLETED'%action)
             return True
         elif action == 'apply':
 
@@ -254,11 +252,11 @@ class FociDetectionParams(ModuleBase):
         if scale != -1: unit = 'nm'
 
         wss.write_row(6, 0, ['Avg Foci area in %s²'%unit, float('%.3f'%(avgAreaTotal))])
-        wss.write_row(7, 0, ['Avg Raw Foci Mean Brightness', float('%.3f'%avgIntensityTotal)])
+        wss.write_row(7, 0, ['Avg Raw Foci Brightness', float('%.3f'%avgIntensityTotal)])
 
         wsf.set_column(0, 1, 12)
         wsf.set_column(2, 3, 20)
-        wsf.write_row(1, 0, ['Cell Number', 'Foci in Cell','Avg Raw Foci Mean Brightness','Avg Foci Area in %s²'%unit])
+        wsf.write_row(1, 0, ['Cell Number', 'Foci in Cell','Avg Raw Foci Brightness','Avg Foci Area in %s²'%unit])
         for cellnum, numFoci in enumerate(histData):
             if numFoci > 0:
                 ic = float('%.3f'%np.mean(avgIntensityPerCell[cellnum]))

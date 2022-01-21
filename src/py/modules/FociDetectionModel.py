@@ -232,13 +232,13 @@ class FociDetectionModel(ModuleBase):
 
         ws = wb.add_worksheet('Foci Details')
         ws.set_column(2, 7, 15)
-        ws.write_row(0,0,['Cells that do not have foci, have no entries here.'])
+        ws.write_row(0,0,['Cells that do not have foci, have no entries here. Brightness levels(0-1) are unnormalized.'])
         if scale != 1:
             ws.write_row(1,0,['Cell', 'Focus', 'x in nm', 'y in nm', 'Area in nm^2',
-                         'peakBrightness', 'meanBrightness', 'contourBrightness'])
+                         'Peak Raw Brightness', 'Avg Raw Brightness', 'Contour Raw Brightness'])
         else:
             ws.write_row(1,0,['Cell', 'Focus', 'x in px', 'y in px', 'Area in px^2',
-                         'peakBrightness', 'meanBrightness', 'contourBrightness'])
+                         'Peak Raw Brightness', 'Avg Raw Brightness', 'Contour Raw Brightness'])
 
         r = 2
         avgIntensityPerCell = []
@@ -301,11 +301,11 @@ class FociDetectionModel(ModuleBase):
         if scale != -1: unit = 'nm'
 
         wss.write_row(6, 0, ['Avg Foci area in %s²'%unit, float('%.3f'%(avgAreaTotal))])
-        wss.write_row(7, 0, ['Avg Foci Mean Brightness', float('%.3f'%avgIntensityTotal)])
+        wss.write_row(7, 0, ['Avg Raw Foci Brightness', float('%.3f'%avgIntensityTotal)])
 
         wsf.set_column(0, 1, 12)
         wsf.set_column(2, 3, 20)
-        wsf.write_row(1, 0, ['Cell Number', 'Foci in Cell','Avg Foci Mean Brightness','Avg Foci Area in %s²'%unit])
+        wsf.write_row(1, 0, ['Cell Number', 'Foci in Cell','Avg Raw Foci Brightness','Avg Foci Area in %s²'%unit])
         for cellnum, numFoci in enumerate(histData):
             if numFoci > 0:
                 ic = float('%.3f'%np.mean(avgIntensityPerCell[cellnum]))

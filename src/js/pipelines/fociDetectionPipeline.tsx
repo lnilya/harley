@@ -63,7 +63,12 @@ function getPipeline(): Pipeline {
             {
                 requiredInput: dataKeys.foci,
                 title: 'Foci Table',
-                description: 'An excel file with foci stats. Cells that are excluded are not counted/mentioned in the file. All cell numbers relate to the set without excluded cells. All foci have a cell number associated with them. If your dataset file had a scale associated with it, the result here will be in µm otherwise just pixels.',
+                description: <>
+                    An excel file with foci stats. Cells that are excluded are not counted/mentioned in the file. All cell numbers relate to the set without excluded cells (They will only correspond to the numbers you see in the UI up until the first excluded cell).
+                    <br/><br/>
+                    <strong>Brightness values</strong>: While the microscope delivers data as a 16-bit (0-65535) or 8-bit (0-255) integer, all values in this table are scaled 0-1. However
+                    they are not normalized/modified cell by cell. If you need integers simply multiply the 0-1 numbers in this table with 65535 (or 255 respectively).
+                    </>,
                 suggestDestinationOutput: {
                     pipelineInputKey: inputKeys.dataset,
                     transform: suggestSuffixedFileName('_foci', 'xlsx')
