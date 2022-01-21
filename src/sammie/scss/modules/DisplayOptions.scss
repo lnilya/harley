@@ -1,8 +1,45 @@
 .display-options {
+
+	&.col-black{
+		background-color: black;
+		color:$colWhite;
+	}
+
 	position: sticky;
 	top: 33px;
 	z-index: 3;
 	background-color: white;
+	&__binary{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		> span:first-child{
+			line-height: 1;
+			padding-right: 12px;
+			font-weight: bold;
+		}
+		&:not(:first-of-type){
+			margin-left: 40px;
+		}
+	}
+	&__slider{
+		&:not(:first-of-type){
+			margin-left: 40px;
+		}
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		.MuiSlider-root{
+			min-width: 150px;
+		}
+		> span:first-child{
+			line-height: 1;
+			padding-right: 12px;
+			font-weight: bold;
+		}
+	}
 	&__dropdown{
 		display: flex;
 		flex-direction: row;
