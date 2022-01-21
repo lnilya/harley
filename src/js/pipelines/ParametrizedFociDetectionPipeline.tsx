@@ -88,7 +88,7 @@ function getPipeline(): Pipeline {
         outputs: [
             {
                 requiredInput: dataKeys.foci,
-                title: 'Foci Table',
+                title: 'Foci Excel Table',
                 description: 'An excel file with foci stats. Cells that are excluded are not counted/mentioned in the file. All cell numbers relate to the set without excluded cells. All foci have a cell number associated with them. If your dataset file had a scale associated with it, the result here will be in µm otherwise just pixels.',
                 suggestDestinationOutput: {
                     pipelineInputKey: inputKeys.dataset,
@@ -115,7 +115,7 @@ function getPipeline(): Pipeline {
         //Info for user
         descriptions: {
             title: 'FociDetection (without model)',
-            description: 'This pipeline detects foci in a dataset using a set of parameters. It is an alternative to using a trained model to detect foci. Use it when you tend to have a single bright focus per cell, there are few or no non-foci making model training impractical and the detection task can be easily handled by a simple threshhold. The result is a XLSX file with information on each foci in each cell.',
+            description: 'This pipeline detects foci in a dataset using a set of parameters. It is an alternative to using a trained model to detect foci. Use it when you tend to have a single bright focus per cell, there are few or no non-foci making model training impractical or when the detection task can seems to be easily handled by a threshhold. The result is an Excel file with information on each foci in each cell.',
             thumb: <img src={thumb}/>,
             helpscreen: helpScreen
         }

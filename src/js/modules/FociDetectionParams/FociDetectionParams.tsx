@@ -21,13 +21,13 @@ import {Tooltip} from "@mui/material";
 import TooltipCellResult from "./TooltipCellResult";
 import {printf} from "fast-printf";
 import {useLocalStoreRecoilHook} from "../../../sammie/js/ui/uihooks";
+import {mean} from "../../util/math";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<FociDetectionParamsResult,string>({key:'foci-detection-params_demo',default:null});
 const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs:self.Inputs, params:self.Parameters},string>({key:'foci-detection-params_initial',default:null});
 const asSorting = atomFamily<string,string>({key:'foci-detection-params-sorting',default:'none'});
 const asColCount = atomFamily<number,string>({key:'foci-detection-params-colcount',default:3});
-const asShowTooltips = atomFamily<boolean,string>({key:'foci-detection-params-show-tooltip',default:true});
 const asIncludedCells = atomFamily<number[],string>({key:'foci-detection-params_included',default:null});
 const asFociInfo = atomFamily<FociInfo[][],string>({key:'foci-detection-params_foci',default:null});
 
@@ -48,13 +48,24 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
         setResult(res.error ? null: res.data);
         if(includedCells == null && !res.error){
             setIncludedCells(_.range(0,res.data.foci.length))
-            setFociInfo(analyzeFoci(res.data,curParams,fociInfo));
+            
+            const info:FociInfo[][] = analyzeFoci(res.data,curParams,fociInfo);
+            syncSelection(info)
+            setFociInfo(info);
         }
         return res.error ? {error:res.error} : true;
     };
     
-    const runFiltering = ()=>{
-        setFociInfo(analyzeFoci(result,curParams,fociInfo));
+    const syncSelection = (info:FociInfo[][], cells:number[] = null)=>{
+        const foci = info.map((fia,i)=>getFociSelection(i,info));
+        //Translate info into server format and send it out, do not wait
+        server.runSelection(curParams,curStep,cells ? cells : includedCells,foci)
+    }
+    const reRunFiltering = ()=>{
+        if(!result) return;
+        const info:FociInfo[][] = analyzeFoci(result,curParams,fociInfo);
+        setFociInfo(info);
+        syncSelection(info);
     }
     
     /**CORE HOOK FOR SETTING UP STATE*/
@@ -64,9 +75,9 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
         {msg: 'Running FociDetectionParams', display: "overlay",progress:0},
         true,
         {
-            rawbrightnessrange:runFiltering,
-            normbrightnessrange:runFiltering,
-            brightnessdrop:runFiltering,
+            rawbrightnessrange:reRunFiltering,
+            normbrightnessrange:reRunFiltering,
+            brightnessdrop:reRunFiltering,
         });
     
     /**UI SPECIFIC STATE*/
@@ -90,6 +101,7 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
         })
         const nfi = copyChange(fociInfo,i,ft);
         setFociInfo(nfi);
+        syncSelection(nfi);
     }
     const onCellInclusionToggle = (idx) => {
         if(includedCells.indexOf(idx) == -1)
@@ -97,28 +109,54 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
         else
             na = copyRemove(includedCells,idx);
         
+        syncSelection(fociInfo,na)
         setIncludedCells(na)
     };
     
     const [sorting,setSorting] = useRecoilState(asSorting(curStep.moduleID))
     const [colCount,setColCount] = useLocalStoreRecoilHook(asColCount(curStep.moduleID))
     const [includedCells,setIncludedCells] = useRecoilState(asIncludedCells(curStep.moduleID))
-    const [showTT,setshowTT] = useLocalStoreRecoilHook(asShowTooltips(curStep.moduleID))
     const [fociInfo,setFociInfo] = useRecoilState(asFociInfo(curStep.moduleID))
     const displayOptions:DisplayOptionSetting<any>[] = [
         {type:'dropdown',label:'Sort by',options:{none:'No Sorting', numfoci:'Selected Foci', avfoci:'Available Foci'}, value:sorting,setter:setSorting},
         {type:'slider',label:'Columns',sliderParams:[3,7,1], value:colCount,setter:setColCount},
-        {type:'binary',label:'Foci Tooltips', value:showTT,setter:setshowTT}
     ]
     
     //curInputs.dataset
     //Figure out sorting order
-    const order = result && _.range(0,result?.foci?.length)
+    const order = fociInfo && result && getSortingOrder(sorting,fociInfo);
+    
+    const fcc = fociInfo && result && includedCells.map(cell => getFociSelection(cell,fociInfo))
+    const numCells = fcc?.length;
+    const numCellsWithFoci = fcc?.filter(k=>k.length > 0).length
+    const meanFociPerCell = fcc && mean(fcc?.map((k)=>k.length))
     
 	return (<div className={'foci-detection-params ' + cl(modKeys['1'],'mod-1') + cl(modKeys['2'],'mod-2')}>
 	    {error && <ErrorHint error={error}/> }
-        {!error && result &&
+        {!error && result && fociInfo &&
             <>
+                
+                <div className="foci-detection-model__box pad-100-excepttop pad-50-top margin-100-bottom">
+                    <Tooltip title={`Total number of included cells`} placement={'bottom'}>
+                        <div className="box-row">
+                            <span>Number of Cells:</span>
+                            <span>{numCells}</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip title={`Number of included cells that have foci absolute and in %`} placement={'bottom'}>
+                        <div className="box-row">
+                            <span>Cells with Foci:</span>
+                            <span>{numCellsWithFoci} ({printf('%.2f %%',100*numCellsWithFoci/numCells)})</span>
+                        </div>
+                    </Tooltip>
+                    <Tooltip title={`Mean number of foci over all included cells.`} placement={'bottom'}>
+                        <div className="box-row">
+                            <span>Mean Foci per Cell:</span>
+                            <span>{printf('%.2f',meanFociPerCell)}</span>
+                        </div>
+                    </Tooltip>
+                </div>
+                
                 {curBatch.batchParameters['cellstoprocess'] < 100 &&
                     <div className="incomplete-hint col-error pad-100-bottom">Showing only first {curBatch.batchParameters['cellstoprocess']}% of dataset as preview. Change parameter in Data Input if not desired.</div>
                 }
@@ -129,8 +167,8 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
                         const img = curInputs.cellImages[i]
                         return <TooltipCellResult key={i} img={img} foci={result.foci[i]}
                                            idx={i}
-                                           showTooltips={showTT}
                                            focusInfo={fociInfo[i]}
+                                           brighntessInfo={result.fociData[i]}
                                            cellOutline={curInputs.cellContours[i]}
                                            onChangeSelection={(v)=>onFociToggle(i,v)}
                                            curSelection={getFociSelection(i,fociInfo)}
@@ -151,9 +189,26 @@ var modKeysDesc: DisplayOptionModKey[] = [
     {name: '2', desc: 'Hold "2" key to temporarily display all selectable foci in cell.'},
 ]
 
+function getSortingOrder(sorting:string, fociInfo:FociInfo[][]){
+    var sortOrder: number[] = _.range(0, fociInfo.length);
+    if(sorting == 'numfoci'){
+        return sortOrder.sort((a, b) => {
+            const nfa = fociInfo[a].filter(fi => (fi.in && fi.manual === undefined)||fi.manual === true).length
+            const nfb = fociInfo[b].filter(fi => (fi.in && fi.manual === undefined)||fi.manual === true).length
+            return nfa > nfb ? -1 : 1;
+        })
+    }else if(sorting == 'avfoci'){
+        return sortOrder.sort((a, b) => {
+            return fociInfo[a].length > fociInfo[b].length ? -1 : 1;
+        })
+    }
+    
+    return sortOrder
+}
+
 function getFociSelectionModel(cell:number,fociInfo:FociInfo[][]):number[]{
     if(!fociInfo || !fociInfo[cell]) return [];
-    return fociInfo[cell].map((fi,k)=>(fi.in && fi.manual !== false) ? k : -1 ).filter(k=>k!=-1)
+    return fociInfo[cell].map((fi,k)=>fi.in ? k : -1 ).filter(k=>k!=-1)
 }
 function getFociSelection(cell:number,fociInfo:FociInfo[][]):number[]{
     if(!fociInfo || !fociInfo[cell]) return [];
@@ -166,25 +221,29 @@ function analyzeFoci(res:FociDetectionParamsResult,params:self.Parameters, oldAn
     
     const checkRawBrightness = _.curryRight(isIn)(params.rawbrightnessrange)
     const checkNormBrightness = _.curryRight(isIn)(params.normbrightnessrange)
-    const checkDrop = _.curryRight(isIn)([params.rawbrightnessrange,255])
+    const checkDrop = _.curryRight(isIn)([params.brightnessdrop,255])
     
     return res.fociData.map((fd,cell)=>{
         return fd.map((sfd,foci)=>{
             
-            //Foci that have been manually included or excluded, do not get refiltered
-            //only mind old Oldanalysis if the number of foci remained the same, otherwise discard
-            if(oldAnalysis && oldAnalysis[cell].length == fd.length && oldAnalysis[cell][foci].manual === true)
-                return oldAnalysis[cell][foci];
+            
+            var res:{in:boolean, manual?:boolean, reason?:string} = {in:true};
             
             //Other foci are subject to automatic filtering
             if(!checkNormBrightness(sfd.mean[0]))
-                return {in:false,reason:printf('Normalized Brightness (%.2f) not in range',sfd.mean[0])}
+                res = {in:false,reason:'NB'}
             else if(!checkRawBrightness(sfd.mean[1]))
-                return {in:false,reason:printf('Raw Brightness (%.2f) not in range',sfd.mean[1])}
-            else if(checkDrop(sfd.drop))
-                return {in:false,reason:printf('Brightness drop (%.2f) not in range',sfd.drop)}
+                res = {in:false,reason:'RB'}
+            else if(!checkDrop(sfd.drop))
+                res = {in:false,reason:'D'}
             
-            return {in:true};
+            //only mind old Oldanalysis if the number of foci remained the same, otherwise discard
+            if(oldAnalysis && oldAnalysis[cell].length == fd.length && oldAnalysis[cell][foci].manual !== undefined){
+                //Foci that have been manually included or excluded, do not get refiltered
+                if(res.in != oldAnalysis[cell][foci].manual)
+                    res.manual = oldAnalysis[cell][foci].manual;
+            }
+            return res;
         })
     })
     

@@ -316,44 +316,6 @@ class FociDetectionModel(ModuleBase):
 
         wb.close()
 
-    def __exportCSV(self, key:str, path:str,**args):
-        scale = args['1px'] if '1px' in args else 1
-
-        with open(path, 'w', newline='') as csvfile:
-            wr = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            #write header
-            if scale != 1:
-                wr.writerow( ['Cell', 'Focus', 'x in nm', 'y in nm', 'Area in nm^2',
-                     'peakBrightness','meanBrightness', 'contourBrightness'])
-            else:
-                wr.writerow( ['Cell', 'Focus', 'x in px', 'y in px', 'Area in px^2',
-                     'peakBrightness','meanBrightness', 'contourBrightness'])
-
-            d = self.session.getData(self.keys.outFoci)
-            adjustedFociChoices = d['foci']
-            selectedChoices = d['selection']
-
-            for i,c in enumerate(list(self.cellsInExport)):
-                cc = adjustedFociChoices[c]
-                selFoci = selectedChoices[c]
-                nf = 0
-                for f, lvl in enumerate(cc):
-                    if f not in selFoci: continue
-                    binMaskOuter, offx, offy = getPolygonMaskPatch(self.trainingData.contours[c][f][lvl][:, 1], self.trainingData.contours[c][f][lvl][:, 0], 0)
-                    region:RegionProperties = skimage.measure.regionprops(binMaskOuter.astype('int'),
-                                                            self.trainingData.imgs[c][offy:offy + binMaskOuter.shape[0],
-                                                            offx:offx + binMaskOuter.shape[1]])[0]
-
-                    area = Polygon(self.trainingData.contours[c][f][lvl]).area
-                    center = self.trainingData.getFociCenters(c,[f])
-                    wr.writerow([i,nf,center[0,1] * scale,center[0,0] * scale,
-                                 area * (scale**2),
-                                 region.max_intensity,
-                                 region.mean_intensity,
-                                 self.trainingData.contourLevels[c][f][lvl]])
-
-                    nf += 1
-
     def __exportDataSetWithLabels(self,key:str,path:str,**args):
         #Get the raw contents of the inital dataset file
         data = self.session.getData(self.keys.inDataset)

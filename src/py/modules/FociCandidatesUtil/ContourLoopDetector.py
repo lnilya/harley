@@ -5,7 +5,6 @@ import skimage
 import skimage.filters
 import src.sammie.py.util.imgutil as imgutil
 from src.py.modules.FociCandidatesUtil.ContourLoopsInCell import ContourLoopsInCell
-from src.py.modules.FociDetectionUtil.FociDetectorContourResult import FociDetectorContourResult
 from src.sammie.py.util import shapeutil
 from src.sammie.py.util.util import MplColorHelper
 
@@ -37,17 +36,6 @@ class ContourLoopDetector:
 
     def __isPointInContour(self,p, cnt):
         return np.count_nonzero(skimage.measure.points_in_poly([p], cnt)) > 0
-
-    def __plotResult(self,img, res:FociDetectorContourResult, mask):
-        mch = MplColorHelper('jet', 0, 1)
-        ax = imgutil.displayImageGrid([img], ['Image', 'Contours'], windowTitle=self.debugTitle)
-        for i, (outer,seed) in enumerate(res.contours):
-            if res.mergableContours[i] is not None:
-                ax[0].plot(seed[:, 1], seed[:, 0], color=mch.get_rgb(0.4))
-            else:
-                ax[0].plot(seed[:, 1], seed[:, 0], color=mch.get_rgb(0.8))
-
-            ax[0].plot(outer[:, 1], outer[:, 0], color=mch.get_rgb(0.2))
 
     def run(self, cellImg, debug = False)->ContourLoopsInCell:
 

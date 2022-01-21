@@ -1,34 +1,59 @@
-import React, {useState} from "react"
+import React, {ReactNode, useState} from "react"
 import CellResult, {ICellResultProps} from "../FociDetectionModel/CellResult";
 import {FociInfo} from "./FociDetectionParams";
-import {Tooltip} from "@mui/material";
+import './scss/TooltipCellResult.scss'
+import {printf} from "fast-printf";
+import {SingleFocusData} from "./server";
+import {cl} from "../../../sammie/js/util";
 
 interface ITooltipCellResultProps extends ICellResultProps{
     focusInfo:FociInfo[]
-    showTooltips:boolean
+    brighntessInfo:SingleFocusData[]
 }
 const TooltipCellResult:React.FC<ITooltipCellResultProps> = (props) => {
     
-    const [info,setInfo] = useState<FociInfo>(null);
+    const [idx,setIdx] = useState<number>(-1);
+    const info = idx != -1 && props.focusInfo[idx];
+    const data = idx != -1 && props.brighntessInfo[idx];
     
     const showTooltip = (focusIdx) => {
-        setInfo(props.focusInfo[focusIdx])
+        setIdx(focusIdx)
     };
     const hideTooltip = (focusIdx) => {
-        setInfo(null)
+        setIdx(-1)
     };
     
-    const show:boolean = props.showTooltips && info && (info.manual !== undefined || !info.in)
-    var text = '';
-    if(show && info.manual !== undefined)
-        text = 'Manually ' + (info.manual ? 'added' : 'removed');
-    else if(show) text = info.reason;
+    var text:ReactNode = '';
+    if(idx != -1){
+        // if(info.manual !== undefined) text = 'Manually ' + (info.manual ? 'added' : 'removed');
+        // else if(!info.in) text = info.reason;
+        // else
+        var classes = [cl(info.reason == 'NB','err'),
+            cl(info.reason == 'RB','err'),
+            cl(info.reason == 'D','err')];
+        text = <div className={'props'}>
+            <div className={classes[0]}><span>NB</span>{printf('%.2f',data.mean[0])}</div>
+            <div className={classes[1]}><span>RB</span>{printf('%.2f',data.mean[1])}</div>
+            <div className={classes[2]}><span>Drop</span>{printf('%.2f',data.drop)}</div>
+        </div>
+        if(info.manual !== undefined){
+            text = <>
+                <div className={'fl-col'}>
+                    <span className={'margin-25-bottom'}>Manually {info.manual ? 'added' : 'rejected'}</span>
+                    {text}
+                </div>
+            </>
+        }
+    }
+    
 	return (
-        <Tooltip title={text} followCursor={true} open={show} arrow>
-            <div className="cell">
-                <CellResult {...props} fociEnter={showTooltip} fociLeave={hideTooltip}/>
-            </div>
-        </Tooltip>
+        <div className="tt-cell-result" onMouseLeave={hideTooltip} onClick={hideTooltip}>
+            <CellResult {...props} fociEnter={showTooltip} fociLeave={hideTooltip}>
+                {idx != -1 &&
+                    <div className="tt">{text}</div>
+                }
+            </CellResult>
+        </div>
     );
 }
 export default TooltipCellResult;

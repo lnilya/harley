@@ -24,6 +24,7 @@ export interface ICellResultProps{
     onChangeSelection:(newSel:number[]) => void
     fociEnter?:(id:number) => void
     fociLeave?:(id:number) => void
+    children?:any
 }
 /**
  * CellResult
@@ -46,7 +47,7 @@ const AvailablePolygon = styled.polygon({
         opacity:1,
     }
 })
-const CellResult:React.FC<ICellResultProps> = ({fociEnter,fociLeave, idx, cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className}) => {
+const CellResult:React.FC<ICellResultProps> = ({fociEnter,fociLeave, idx, cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className,...props}) => {
 	const selFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? null : pd)
 	const avFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? pd : null)
     const onToggleFoci = (f:number)=>{
@@ -73,6 +74,7 @@ const CellResult:React.FC<ICellResultProps> = ({fociEnter,fociLeave, idx, cellOu
                     <PolygonCloud onMouseEnter={fociEnter} onMouseLeave={fociLeave} className={'available-foci'} onClick={onToggleFoci} polygons={avFoci} canvasDim={img} PolyComp={AvailablePolygon}/>
                 }
             </div>
+            {props.children}
             <div className="cell-result__footer">
                 {!excluded &&
                     <>

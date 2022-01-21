@@ -14,14 +14,18 @@ export type FociDetectionParamsResult = {
     foci:PipelinePolygons[],
     fociData:SingleFocusData[][],
 }
-export async function runFociDetectionParams(curParams:self.Parameters, curStep:self.Step,portion:number):Promise<EelResponse<FociDetectionParamsResult>>{
-    
-    //Run the algorithm associated with this module in python
-    var res:EelResponse<FociDetectionParamsResult> = await eel.runStep<FociDetectionParamsResult>(self.moduleName,'apply',{...curParams, portion:portion},curStep)
+export async function runSelection(curParams:self.Parameters, curStep:self.Step,cells:number[], foci:number[][]):Promise<EelResponse<boolean>>{
+    var res:EelResponse<boolean> = await eel.runStepAsync<boolean>(self.moduleName,'applyselect',{...curParams, ...{cells,foci}},curStep)
 
-    //update pipeline, on error, delete the output again.
+    //update pipeline data; on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.foci);
-    else updatePipelineData(curStep.outputKeys.foci,res.data);
+    else updatePipelineData(curStep.outputKeys.foci,{cells:cells, foci:foci});
+    
+    return res;
+}
+export async function runFociDetectionParams(curParams:self.Parameters, curStep:self.Step,portion:number):Promise<EelResponse<FociDetectionParamsResult>>{
+    //Run the algorithm associated with this module in python
+    var res:EelResponse<FociDetectionParamsResult> = await eel.runStepAsync<FociDetectionParamsResult>(self.moduleName,'apply',{...curParams, portion:portion},curStep)
 
     return res
 }
