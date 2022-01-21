@@ -32,6 +32,8 @@ type AtomFamily<P> = (param: P) => RecoilState<P>
  * @param runMainAlgorithm Will return true if all went well, or an o object containing an error description
  * @param overlayMessageOnRun
  * @param canAbort If true the UI will display some sort of abort button. The abortID of the process is the moduleID, which is the default parameter for runStep.
+ * @param paramChangeListener A dictionary with Parameterkeys as keys and a listener function that is invoked when respecitve parameter changes. Since the component uses the recoil state for the parameters, it will repaint anyway. So this
+ * option is very close to a useEffect with the parameter as dependency. With a small difference that it will not get invoked when the component is destroyed and rerendered again. In which case useEffect will repaint, while this function is not invoked, because it stores the last value of the parameter and compares it to the current one to invoke.
  */
 export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, any>, BatchParamType = Record<ParameterKey, any>>(
     settingsAtomFamily: AtomFamily<any>,
@@ -39,7 +41,7 @@ export function useStepHook<Inputs, Parameters, Step extends PipelineStep<any, a
     runMainAlgorithm: (params: Parameters, step: Step) => true|Promise<true|{error:string}>,
     overlayMessageOnRun?: OverlayState,
     canAbort:boolean = false,
-    paramChangeListener:Record<string, (newValue,oldValue)=>void> = null
+    paramChangeListener:Partial<Record<keyof Parameters, (newValue,oldValue)=>void>> = null
     ): StepState<Inputs, Parameters, Step, BatchParamType> {
     
         const curParams:Parameters = useRecoilValue(alg.curPipelineStepParameterValues) as Parameters;
