@@ -7,12 +7,17 @@ import thumb from "../../assets/images/fd_thumb.jpg";
 import {getSliderParams, getTextfieldInputParams} from "../../sammie/js/modules/paramutil";
 import * as FociDetectionParamsParams from '../modules/FociDetectionParams/params'
 import FociDetectionParams from "../modules/FociDetectionParams/FociDetectionParams";
+import FociCandidates from "../modules/FociCandidates/FociCandidates";
+import * as FociCandidatesParams from "../modules/FociCandidates/params";
 //%NEWMODULE_IMPORT%
 
 const inputKeys = {
     dataset: 'Dataset'
 }
 const dataKeys = {
+    cellImages: 'Cell Images',
+    cellContours: 'Cell Contours',
+    candidateSizes: 'Candidate Sizes',
     foci: 'Foci',
 }
 
@@ -32,7 +37,7 @@ const helpScreen = <div>
 /**Optional Typing for the Batch parameters*/
 export type ParametrizedFociDetectionBatchParameters = {
     '1px': number
-    cellstoprocess:number
+    cellstoprocess: number
 }
 
 function getPipeline(): Pipeline {
@@ -41,29 +46,40 @@ function getPipeline(): Pipeline {
     
     return {
         steps: [
-            //No Steps defined yet. Use the main create Script to add Steps automatically.
-            //This will work, as long as you keep the comment below.
-            { 
-            title:'FociDetectionParams',
-            moduleID:'FociDetectionParams',
-            renderer: <FociDetectionParams/>,
-            parameters:FociDetectionParamsParams.parameters,
-            inputKeys:{dataset:inputKeys.dataset},
-            outputKeys:{foci:dataKeys.foci}
-        } as FociDetectionParamsParams.Step,
-        //%NEWMODULE_STEP%
+            {
+                title: 'Foci Candidates',
+                moduleID: 'FociCandidates',
+                renderer: <FociCandidates/>,
+                parameters: FociCandidatesParams.parameters,
+                inputKeys: {dataset: inputKeys.dataset},
+                outputKeys: {
+                    cellImages: dataKeys.cellImages,
+                    sizes: dataKeys.candidateSizes,
+                    cellContours: dataKeys.cellContours
+                }
+            } as FociCandidatesParams.Step,
+            {
+                title: 'FociDetectionParams',
+                moduleID: 'FociDetectionParams',
+                renderer: <FociDetectionParams/>,
+                parameters: FociDetectionParamsParams.parameters,
+                inputKeys: {dataset: inputKeys.dataset,cellImages: dataKeys.cellImages,sizes: dataKeys.candidateSizes,cellContours: dataKeys.cellContours},
+                outputKeys: {foci: dataKeys.foci}
+            } as FociDetectionParamsParams.Step,
+            //%NEWMODULE_STEP%
         ],
         
-        disableBatchMode:true, //wether or not batch mode is allowed.
+        disableBatchMode: true, //wether or not batch mode is allowed.
         
         name: 'Parametrized Foci Detection', //name of your pipeline
         
         //Define what data needs to be provided in DataInput screen to start the pipeline
         inputs: [
+            
             {
                 key: inputKeys.dataset,
                 title: 'Dataset file', description: datasetDesc,
-                loaders: {'cells': ['loadCells',{normalize:false}]},
+                loaders: {'cells': ['loadCells', {normalize: false}]},
                 postProcessForJS: util.postProcessForImage,
                 modifyBatchParameters: util.mergeMetaInformationWithBatchSettings
             },
@@ -78,17 +94,17 @@ function getPipeline(): Pipeline {
                     pipelineInputKey: inputKeys.dataset,
                     transform: suggestSuffixedFileName('_foci', 'xlsx')
                 },
-                exporterParams:{type:'xlsx'}
+                exporterParams: {type: 'xlsx'}
             },
             {
                 requiredInput: dataKeys.foci,
-                title:'Labeled Dataset',
-                description:'This output is a copy of the original dataset enriched with the foci you identified. You can therefore safely overwrite the old dataset file.\nDoing this allows you to use two dataset files in the colocalisation pipeline later on.',
+                title: 'Labeled Dataset',
+                description: 'This output is a copy of the original dataset enriched with the foci you identified. You can therefore safely overwrite the old dataset file.\nDoing this allows you to use two dataset files in the colocalisation pipeline later on.',
                 suggestDestinationOutput: {
                     pipelineInputKey: inputKeys.dataset,
                     transform: suggestSuffixedFileName('', 'cells')
                 },
-                exporterParams:{type:'cells'}
+                exporterParams: {type: 'cells'}
             }
         ],
         inputParameters: [
@@ -97,11 +113,11 @@ function getPipeline(): Pipeline {
         ],
         
         //Info for user
-        descriptions:{
-            title:'FociDetection (without model)',
-            description:'This pipeline detects foci in a dataset using a set of parameters. It is an alternative to using a trained model to detect foci. Use it when you tend to have a single bright focus per cell, there are few or no non-foci making model training impractical and the detection task can be easily handled by a simple threshhold. The result is a XLSX file with information on each foci in each cell.',
+        descriptions: {
+            title: 'FociDetection (without model)',
+            description: 'This pipeline detects foci in a dataset using a set of parameters. It is an alternative to using a trained model to detect foci. Use it when you tend to have a single bright focus per cell, there are few or no non-foci making model training impractical and the detection task can be easily handled by a simple threshhold. The result is a XLSX file with information on each foci in each cell.',
             thumb: <img src={thumb}/>,
-            helpscreen:helpScreen
+            helpscreen: helpScreen
         }
     }
 }

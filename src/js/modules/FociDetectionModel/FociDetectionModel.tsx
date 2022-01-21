@@ -117,7 +117,7 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
                     </Tooltip>
                 </div>
                 {curBatch.batchParameters['cellstoprocess'] < 100 &&
-                <div className="incomplete-hint col-error pad-100-bottom">Showing only first {curBatch.batchParameters['cellstoprocess']}% of dataset as preview. Change parameter in Data Input if not desired.</div>
+                    <div className="incomplete-hint col-error pad-100-bottom">Showing only first {curBatch.batchParameters['cellstoprocess']}% of dataset as preview. Change parameter in Data Input if not desired.</div>
                 }
                 <DisplayOptions settings={displayOptions} modKeys={modKeysDesc} activeModKeys={Object.keys(modKeys).filter(k=>modKeys[k])}/>
                 <div className={`grid cols-${curParams.fociperrow} half-gap`}>

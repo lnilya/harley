@@ -3,4 +3,21 @@
 
 .foci-detection-params{
 
+	.cell > *{
+		height: 100%;
+	}
+	&.mod-1{
+		.polygon-cloud{
+			display: none;
+		}
+	}
+	&.mod-2{
+		.polygon-cloud.available-foci{
+			svg polygon{
+				transition: none !important;
+				opacity: 1 !important;
+			}
+		}
+
+	}
 }

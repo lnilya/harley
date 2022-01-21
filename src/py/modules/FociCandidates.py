@@ -43,7 +43,7 @@ class FociCandidates(ModuleBase):
             self.fociData = FociCandidateData(allCells)
 
             #generate preview Images for all cells
-            previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i) for i, img in enumerate(allCells)]
+            previews = [getPreviewImage(img, self.keys.outFoci + '_%d' % i,normalize=True) for i, img in enumerate(allCells)]
 
             self.onGeneratedData(self.keys.outFoci, self.fociData, params)
             return {'imgs':previews,'contours':allContours}

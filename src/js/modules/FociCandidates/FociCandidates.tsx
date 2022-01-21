@@ -12,6 +12,7 @@ import {cl} from "../../../sammie/js/util";
 import PolygonCloud from "../../../sammie/js/ui/elements/PolygonCloud";
 import styled from "@emotion/styled";
 import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
+import DisplayOptions from "../../../sammie/js/ui/modules/DisplayOptions";
 
 
 export const MinPolygon = styled.polygon({
@@ -134,11 +135,6 @@ const FociCandidates:React.FC<IFociCandidatesProps> = () => {
                 }
                 {cellImages &&
                     <>
-                        {selectedCell == -1 &&
-                            <div className="text-center pad-100 col-white">
-                                Click on cells in dataset to see the detected foci outlines.
-                            </div>
-                        }
                         {selectedCell != -1 &&
                             <div className="text-center pad-100 col-white font-small site-block narrow">
                                 Use the <ButtonIcon btnText={'1'}/> and <ButtonIcon btnText={'2'}/> keys to hide the foci outlines.
