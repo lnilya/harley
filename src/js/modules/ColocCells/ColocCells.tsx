@@ -1,28 +1,21 @@
-import React from "react";
-import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
-import * as alg from "../../../sammie/js/state/algstate";
-import * as ui from "../../../sammie/js/state/uistates";
-import * as eventbus from "../../../sammie/js/state/eventbus";
+import React, {useState} from "react";
+import {atomFamily, useRecoilState} from "recoil";
 import * as self from "./params";
 import * as server from "./server";
+import {ColocCellsResult} from "./server";
 import './scss/ColocCells.scss'
 import {useDisplaySettings, useStepHook, useToggleKeys} from "../../../sammie/js/modules/modulehooks";
 import ErrorHint from "../../../sammie/js/ui/elements/ErrorHint";
 import {EelResponse} from "../../../sammie/js/eel/eel";
-import {PipelineImage} from "../../../sammie/js/types/datatypes";
-import {useState} from "react";
 import ColocCellResult from "./ColocCellResult";
-import ButtonIcon from "../../../sammie/js/ui/elements/ButtonIcon";
-import DisplayOptions, {DisplayOptionModKey} from "../../../sammie/js/ui/modules/DisplayOptions";
+import DisplayOptions, {DisplayOptionModKey, DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
 import {Alert, Tooltip} from "@mui/material";
-import {cl, copyRemove, doesPolygonContain} from "../../../sammie/js/util";
-import {changeCellSelection} from "../FociDetectionModel/server";
-import {SelectedPolygon, SplitablePolygon, SplitPolygon} from "../Labeling/_polygons";
+import {cl, copyRemove} from "../../../sammie/js/util";
 import _ from "lodash";
-import {ColocCellsResult} from "./server";
 import {ColocalizationBatchParameters} from "../../pipelines/ColocalizationPipeline";
 import {printf} from "fast-printf";
 import {mean} from "../../util/math";
+import {useLocalStoreRecoilHook} from "../../../sammie/js/ui/uihooks";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<server.ColocCellsResult, string>({key: 'coloc-cells_result', default: null});
@@ -31,6 +24,8 @@ const asLastRunSettings = atomFamily<{ batchTimeStamp:number, inputs: self.Input
     key: 'coloc-cells_initial',
     default: null
 });
+const asSorting = atomFamily<string,string>({key:'coloc-cells-sorting',default:'none'});
+const asColCount = atomFamily<number,string>({key:'coloc-cells-colcount',default:3});
 const asShowOutline = atomFamily<boolean, string>({key: 'coloc-cells_show_outline', default: true});
 const asUseGrayscale = atomFamily<boolean, string>({key: 'coloc-cells_grayscale', default: false});
 
@@ -70,14 +65,22 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
     const [result, setResult] = useRecoilState(asResult(curStep.moduleID))
     const [selected, setSelection] = useRecoilState(asSelectedCells(curStep.moduleID))
     const [error, setError] = useState<EelResponse<any>>(null)
+    const [colCount,setColCount] = useLocalStoreRecoilHook(asColCount(curStep.moduleID))
+    const [sorting,setSorting] = useLocalStoreRecoilHook(asSorting(curStep.moduleID))
+    const [grayscale,setGrayscale] = useLocalStoreRecoilHook(asUseGrayscale(curStep.moduleID))
+    const [cellBorders,setCellBorders] = useLocalStoreRecoilHook(asShowOutline(curStep.moduleID))
+    
     const mod = useToggleKeys(['1', '2', '3'])
     
     var selMod = mod['1'] ? 0 : mod['2'] ? 1 : mod['3'] ? 2 : 3
     
-    const [displayOptions, cellBorders, scb, grayscale] = useDisplaySettings(curStep, {
-        'Show Cell Borders': asShowOutline,
-        'Show Grayscale': asUseGrayscale
-    })
+    const displayOptions:DisplayOptionSetting<any>[] = [
+        {type:'dropdown',label:'Sort by',options:{none:'No Particular Sorting', pcc:'Pearson Correlation (cell)',fpcc:'Pearson Correlation (foci)',nf:'Total Number of Foci', nf1:'Number of Foci Channel 1', nf2:'Number of Foci Channel 2', cellsize:'Cell Area'},
+            value:sorting,setter:setSorting},
+        {type:'slider',label:'Columns',sliderParams:[3,7,1], value:colCount,setter:setColCount},
+        {type:'binary',label:'Cell Borders', value:cellBorders,setter:setCellBorders},
+        {type:'binary',label:'Grayscale', value:grayscale,setter:setGrayscale},
+    ]
     
     const onCellInclusionToggle = async (idx: number) => {
         if (selected.indexOf(idx) == -1)
@@ -89,7 +92,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
         await server.runCellSelection(curParams, curStep, na,result)
     };
     
-    const sortingSeq = result?.imgs && getResultSorting(curParams, result)
+    const sortingSeq = result?.imgs && getResultSorting(sorting, result)
     
     const pccs = getPCCs(selected,result);
     const fociStats = getFociStats(selected,result);
@@ -126,7 +129,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
             </div>
             
             <DisplayOptions settings={displayOptions} modKeys={modKeysDesc} activeModKeys={['' + (selMod + 1)]}/>
-            <div className={`grid quarter-gap cols-${curParams.cellsperrow[0]}`}>
+            <div className={`grid quarter-gap cols-${colCount}`}>
                 {sortingSeq.map((i) => {
                     const r = result.imgs[i]
                     return (
@@ -184,28 +187,28 @@ function getPCCs(selected:number[], result: ColocCellsResult): [number,number] {
     ]
 }
 
-function getResultSorting(curParams: self.Parameters, result: ColocCellsResult): number[] {
+function getResultSorting(sorting:string, result: ColocCellsResult): number[] {
     var sortOrder: number[] = _.range(0, result?.imgs.length);
     
-    if (curParams.sorting == 'pcc')
+    if (sorting == 'pcc')
         return sortOrder.sort((a, b) => result.pccs[a][0] > result.pccs[b][0] ? -1 : 1)
-    else if (curParams.sorting == 'fpcc')
+    else if (sorting == 'fpcc')
         return sortOrder.sort((a, b) => {
             if(result.fpccs[a] === null) return 1
             else if(result.fpccs[b] === null) return -1
             return result.fpccs[a][0] > result.fpccs[b][0] ? -1 : 1
         })
-    else if (curParams.sorting == 'cellsize')
+    else if (sorting == 'cellsize')
         return sortOrder.sort((a, b) => result.cellAreas[a] > result.cellAreas[b] ? -1 : 1)
-    else if (curParams.sorting == 'nf')
+    else if (sorting == 'nf')
         return sortOrder.sort((a, b) => {
             const nf1 = (result.foci[0][a].length + result.foci[1][a].length);
             const nf2 = (result.foci[0][b].length + result.foci[1][b].length);
             return nf1 > nf2 ? -1 : 1;
         })
-    else if (curParams.sorting == 'nf1')
+    else if (sorting == 'nf1')
         return sortOrder.sort((a, b) => result.foci[0][a].length > result.foci[0][b].length ? -1 : 1)
-    else if (curParams.sorting == 'nf2')
+    else if (sorting == 'nf2')
         return sortOrder.sort((a, b) => result.foci[1][a].length > result.foci[1][b].length ? -1 : 1)
     
     return sortOrder
