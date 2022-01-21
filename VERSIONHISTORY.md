@@ -1,6 +1,12 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.0
+
+Major:
+
+- Added a new Pipeline for parametrized foci detection without model, useful to quickly extract obvious foci.
+
 ### Version: 1.1.7
 
 Minor:

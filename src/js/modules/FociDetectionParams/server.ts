@@ -15,7 +15,7 @@ export type FociDetectionParamsResult = {
     fociData:SingleFocusData[][],
 }
 export async function runSelection(curParams:self.Parameters, curStep:self.Step,cells:number[], foci:number[][]):Promise<EelResponse<boolean>>{
-    var res:EelResponse<boolean> = await eel.runStepAsync<boolean>(self.moduleName,'applyselect',{...curParams, ...{cells,foci}},curStep)
+    var res:EelResponse<boolean> = await eel.runStep<boolean>(self.moduleName,'applyselect',{...curParams, ...{cells,foci}},curStep)
 
     //update pipeline data; on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.foci);

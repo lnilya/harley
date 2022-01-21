@@ -47,25 +47,25 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
         setError(res.error ? res : null)
         setResult(res.error ? null: res.data);
         if(includedCells == null && !res.error){
-            setIncludedCells(_.range(0,res.data.foci.length))
-            
+            const inc = _.range(0,res.data.foci.length);
+            setIncludedCells(inc)
             const info:FociInfo[][] = analyzeFoci(res.data,curParams,fociInfo);
-            syncSelection(info)
+            await syncSelection(info,inc)
             setFociInfo(info);
         }
         return res.error ? {error:res.error} : true;
     };
     
-    const syncSelection = (info:FociInfo[][], cells:number[] = null)=>{
+    const syncSelection = async (info:FociInfo[][], cells:number[] = null)=>{
         const foci = info.map((fia,i)=>getFociSelection(i,info));
         //Translate info into server format and send it out, do not wait
-        server.runSelection(curParams,curStep,cells ? cells : includedCells,foci)
+        return server.runSelection(curParams,curStep,cells ? cells : includedCells,foci)
     }
-    const reRunFiltering = ()=>{
+    const reRunFiltering = async ()=>{
         if(!result) return;
         const info:FociInfo[][] = analyzeFoci(result,curParams,fociInfo);
         setFociInfo(info);
-        syncSelection(info);
+        await syncSelection(info);
     }
     
     /**CORE HOOK FOR SETTING UP STATE*/
@@ -85,7 +85,7 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
     const [error,setError] = useState<EelResponse<any>>(null)
     const modKeys = useToggleKeys(['1','2'])
     
-    const onFociToggle = (i,v) => {
+    const onFociToggle = async (i,v) => {
         const ft = [...fociInfo[i]].map((info,idx)=>{
             const isSelected = v.indexOf(idx) != -1;
             if(isSelected != info.in && info.manual === undefined){
@@ -101,15 +101,15 @@ const FociDetectionParams:React.FC<IFociDetectionParamsProps> = () => {
         })
         const nfi = copyChange(fociInfo,i,ft);
         setFociInfo(nfi);
-        syncSelection(nfi);
+        await syncSelection(nfi);
     }
-    const onCellInclusionToggle = (idx) => {
+    const onCellInclusionToggle = async (idx) => {
         if(includedCells.indexOf(idx) == -1)
             var na = [...includedCells, idx];
         else
             na = copyRemove(includedCells,idx);
         
-        syncSelection(fociInfo,na)
+        await syncSelection(fociInfo,na)
         setIncludedCells(na)
     };
     

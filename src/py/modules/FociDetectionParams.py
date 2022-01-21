@@ -1,3 +1,4 @@
+import pickle
 from typing import List, Set, Tuple, Dict
 
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ from shapely.geometry import Polygon
 from skimage.measure._regionprops import RegionProperties
 import skimage.measure
 
+from src.py.aggregators.focidataset import resetFociInCellSet, addFocusToCellSet
 from src.py.modules.FociCandidatesUtil.FociCandidateData import FociCandidateData
 from src.py.modules.FociDetectionUtil.fdu_types import FociInfo
 from src.py.modules.LabelingUtil.TrainingData import TrainingData
@@ -52,10 +54,11 @@ class FociDetectionParams(ModuleBase):
 
     def run(self, action, params, inputkeys,outputkeys):
         self.keys = FociDetectionParamsKeys(inputkeys, outputkeys)
-
         if action == 'applyselect':
+            self.trace('RUNNING COMMAND %s'%action)
             self.cellsInExport = set(params['cells'])
             self.userSelectedFociPerCell = params['foci']
+            self.trace('COMMAND %s COMPLETED'%action)
             return True
         elif action == 'apply':
 
@@ -266,11 +269,38 @@ class FociDetectionParams(ModuleBase):
 
         wb.close()
 
+    def __exportDataSetWithLabels(self, key: str, path: str, **args):
+        # Get the raw contents of the inital dataset file
+        data = self.session.getData(self.keys.inDataset)
+
+        rawPickle = data['rawData']
+        convertFun = data['convertIndex']
+
+
+        resetFociInCellSet(rawPickle)
+        for i, c in enumerate(list(self.cellsInExport)):
+            # Gather all foci in this cell
+            cc = self.fociContourSlections[c]
+            selFoci = self.userSelectedFociPerCell[c]
+            fociInCell = []
+            for f, lvl in enumerate(cc):
+                if f not in selFoci: continue
+                fociInCell += [self.trainingData.contours[c][f][lvl]]
+
+            # Get the location of the cell in dataset
+            batchNum, cellNumInBatch = convertFun(c)
+            addFocusToCellSet(rawPickle, batchNum, cellNumInBatch, fociInCell)
+
+        with open(path, 'wb') as handle:
+            pickle.dump(rawPickle, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
     def exportData(self, key: str, path: str, type:str, **args):
         #Get the data that needs to be exported
         data = self.session.getData(key)
         if type =='xlsx' :
             self.__exportXLSX(key,path,**args)
+        elif type =='cells' :
+            self.__exportDataSetWithLabels(key,path,**args)
 
         #Write a file with this data or postprocess it in some way
         #...

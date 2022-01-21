@@ -7,7 +7,7 @@ import numpy as np
 
 from src.py.loaders.fileloaders import LoaderResult
 from src.py.types.CellsDataset import CellsDataset
-from src.sammie.py.util.imgutil import getPreviewImage
+from src.sammie.py.util.imgutil import getPreviewImage, norm
 
 
 def __generateDataSetPreview(allImages, previewGridSize):
@@ -30,7 +30,7 @@ def __generateDataSetPreview(allImages, previewGridSize):
         r,c = np.unravel_index(j,previewGridSize)
         sliceR = slice(r*maxDim + offR,r*maxDim + offR + img.shape[0])
         sliceC = slice(c*maxDim + offC,c*maxDim + offC + img.shape[1])
-        p[sliceR,sliceC] = img
+        p[sliceR,sliceC] = norm(img.copy())
 
     return p
 
