@@ -38,8 +38,6 @@ export const parameters:Array<Parameter<any>> = [
                   yb:'Yellow-Blue',by:'Blue-Yellow',
                   ob:'Orange-Blue',bo:'Blue-Orange',
          }),
-     getSliderParams('cellsperrow','Cells per Row','Number of cells displayed in a row. The less dispalyed, the bigger the magnification.',3,8,1,4,false,null,true),
-     getDropdownParams('sorting','Cell Sorting','Order of sorting in the UI','pcc',{none:'No Particular Sorting', pcc:'Pearson Correlation (cell)',fpcc:'Pearson Correlation (foci)',nf:'Total Number of Foci', nf1:'Number of Foci Channel 1', nf2:'Number of Foci Channel 2', cellsize:'Cell Area'},null,true),
      getTextfieldInputParams('shift','Channel Shift',shiftDesc,'X;Y shift...','',null,false),
     getCheckboxParams('norm','Normalize Brightness',normDesc,
         'Enabled',true)
@@ -59,10 +57,8 @@ export type Step = PipelineStep<Inputs, Outputs>;
 /**Parameter Object of ColocCells - Include all Parameters with their types that this step has. Should match the actual parameter definiton on top.*/
 export type Parameters = {
     color:string,
-    cellsperrow:[number],
     shift:string,
     norm:boolean,
-    sorting:'none'|'pcc'|'fpcc'|'nf'|'nf1'|'nf2'|'cellsize',
     //A few example data types:
     /*
     dropdown:'blue'|'yellow'

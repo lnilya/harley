@@ -5,6 +5,7 @@ import {useRecoilValue} from "recoil";
 import PipelineListEntry from "./pipelineswitchscreen/PipelineListEntry";
 import {PipelineName} from "../../types/datatypes";
 import {loadPipeline} from "../../pipelines/pipeline";
+import {Pipeline} from "../../types/pipelinetypes";
 
 interface IPipelineSwitchScreenProps{
 	
@@ -18,16 +19,15 @@ interface IPipelineSwitchScreenProps{
 const cl = ccl('pipeline-switch-screen--')
 const PipelineSwitchScreen:React.FC<IPipelineSwitchScreenProps> = ({className}) => {
     
-    const allPipelines = useRecoilValue(ui.allPipelines);
-    
-    const onLoadPipeline = (pl:PipelineName)=>{
-        loadPipeline(allPipelines[pl])
+    const allPipelineGroups = useRecoilValue(ui.pipelineGroups);
+    const onLoadPipeline = (pl:Pipeline)=>{
+        loadPipeline(pl)
     }
     
 	return (
 		<div className={`pipeline-switch-screen`}>
-            {Object.keys(allPipelines).map((ok)=>
-                <PipelineListEntry key={ok} pl={allPipelines[ok]} onChoose={()=>onLoadPipeline(ok)}/>
+            {allPipelineGroups.map((group,ok)=>
+                <PipelineListEntry key={ok} groupName={''+ok} group={group} onChoose={onLoadPipeline}/>
             )}
 		</div>
 	);

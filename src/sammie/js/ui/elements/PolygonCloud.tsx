@@ -35,13 +35,16 @@ interface IPolygonCloudProps{
     onMouseEnter?:(id:number) => void,
     
     /**Callback hover for a single polygon*/
+    onMouseLeave?:(id:number) => void,
+    
+    /**Callback hover for a single polygon*/
     onMouseDown?:(id:number,e) => void,
 }
 /**
  * PolygonCloud
  * @author Ilya Shabanov
  */
-const PolygonCloud:React.FC<IPolygonCloudProps> = ({onMouseDown, onMouseEnter, onClick, polygons,PolyCompFactory, PolyComp,canvasDim,className}) => {
+const PolygonCloud:React.FC<IPolygonCloudProps> = ({onMouseLeave, onMouseDown, onMouseEnter, onClick, polygons,PolyCompFactory, PolyComp,canvasDim,className}) => {
     
     if(!PolyComp){
         PolyComp = DefaultPolygon
@@ -65,6 +68,7 @@ const PolygonCloud:React.FC<IPolygonCloudProps> = ({onMouseDown, onMouseEnter, o
                         return <Comp key={i}
                                          points={points}
                                          onMouseEnter={!!onMouseEnter ? ()=>onMouseEnter(i) : null}
+                                         onMouseLeave={!!onMouseLeave ? ()=>onMouseLeave(i) : null}
                                          onMouseDown={!!onMouseDown ? (e)=>onMouseDown(i,e) : null}
                                          onTouchStart={!!onMouseDown ? (e)=>onMouseDown(i,e) : null}
                                          onClick={!!onClick ? ()=>onClick(i) : null} />

@@ -1,6 +1,13 @@
 import {getConnectedValue, updateConnectedValue} from "../state/ConnectedStore";
 import * as ui from "../state/uistates";
-import {allPipelines, allPipelineSteps, curPipelineStepNum, selectedPipelineName, UIScreens} from "../state/uistates";
+import {
+    allPipelines,
+    allPipelineSteps,
+    curPipelineStepNum,
+    pipelineGroups,
+    selectedPipelineName,
+    UIScreens
+} from "../state/uistates";
 import * as alg from '../state/algstate';
 import {allPipelineBatches, allPipelineData, allPipelineInputs, SingleDataBatch} from '../state/algstate';
 import React from "react";
@@ -324,11 +331,28 @@ export function setDefaultParametersForPipelineStep(pstep: number = -1) {
 /**
  * Initializes all selectable pipelines and sets a default pipeline
  */
-export function initializePipelineStack(pipelines:Pipeline[]) {
+export function initializePipelineStack(pipelines:Array<Pipeline|Record<string, Pipeline>>) {
     var avPipelines = {}
-    pipelines.forEach((p)=>{ avPipelines[p.name] = p })
+    var pipeGroups = []
+    
+    pipelines.forEach((p)=>{
+        if(p.name){ // @ts-ignore , identify what is a pipeline by simply checking if it has a name field
+            const pipeName = p.name as string;
+            avPipelines[pipeName] = p;
+            pipeGroups.push({single:p}) //Key does not matter here
+        }else{
+            //This is an alternative group
+            const group = {};
+            Object.keys(p).map((altName)=>{
+                group[altName] = p[altName];
+                avPipelines[p[altName].name] = p[altName];
+            })
+            pipeGroups.push(group);
+        }
+    })
     
     updateConnectedValue(allPipelines, avPipelines)
+    updateConnectedValue(pipelineGroups, pipeGroups)
     const lastPipeline = storage.loadGlobalData('loaded_pipeline')
     if (lastPipeline && avPipelines[lastPipeline])
         loadPipeline(avPipelines[lastPipeline])

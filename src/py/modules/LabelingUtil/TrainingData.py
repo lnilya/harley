@@ -155,7 +155,7 @@ class TrainingData:
             levels[0] - levels[-1],  # levels range
         ]
 
-    def addCell(self,img:np.ndarray, foci, debug:bool = False ):
+    def addCell(self,img:np.ndarray, foci, debug:bool = False, extractFeatures:bool = True ):
         self.imgs += [img]
         cnts = [[np.column_stack((cnt['y'], cnt['x'])) for cnt in f] for f in foci]
         lvls = [[cnt['lvl'] for cnt in f] for f in foci]
@@ -169,7 +169,8 @@ class TrainingData:
 
 
         #extract the features for new cell and add to dataset
-        self.features += [self.extractCellFeatures(img, lvls, cnts)]
+        if(extractFeatures):
+            self.features += [self.extractCellFeatures(img, lvls, cnts)]
 
     def getFociPerCell(self):
         cells = range(0,len(self.features))

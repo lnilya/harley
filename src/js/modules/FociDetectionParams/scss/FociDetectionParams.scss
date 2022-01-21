@@ -1,0 +1,23 @@
+@import '../../../../sammie/scss/global/variables';
+@import '../../../../sammie/scss/global/mixins';
+
+.foci-detection-params{
+
+	.tt-cell-result > *{
+		height: 100%;
+	}
+	&.mod-1{
+		.polygon-cloud{
+			display: none;
+		}
+	}
+	&.mod-2{
+		.polygon-cloud.available-foci{
+			svg polygon{
+				transition: none !important;
+				opacity: 1 !important;
+			}
+		}
+
+	}
+}

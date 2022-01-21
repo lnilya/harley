@@ -4,13 +4,14 @@ import * as ui from './uistates'
 import * as events from './eventbus'
 import {selectedPipelineName} from './uistates'
 import {SettingDictionary} from "../modules/paramtypes";
-import {__debugAllPipelineNames} from "../App";
 
 enum keys{
     PIPELINE_PARAMS='pipelineparams',
     PIPELINE_DATA='pipelinedata',
     GLOBAL_DATA='globaldata'
 }
+
+const debug = false;
 
 /**The default name for the current parameter set.*/
 export const PARAM_SET_NAME_CURRENT = 'current';
@@ -31,7 +32,7 @@ export type ParamSet = {
 
 /**Saves arbitrary data that is global for the application*/
 export function saveGlobalData(data:any,key:string){
-    console.log(`[persistance]: Saved Global Data for ${key}`,data);
+    debug && console.log(`[persistance]: Saved Global Data for ${key}`,data);
     localStorage.setItem(keys.GLOBAL_DATA + '_' + key,JSON.stringify(data))
 }
 /**Loads arbitrary data that is global for the application*/
@@ -49,9 +50,6 @@ export function loadGlobalData(key:string){
 export function saveDataForPipeline(data:any, key:string, pipeName:PipelineName){
     if(typeof pipeName !== 'string'){
         alert(`Corruption in Recoil Pipeline Name. Provided getter/setter pair instead of name.`)
-    }else if(__debugAllPipelineNames.indexOf(pipeName) == -1){
-        alert(`Corruption in Recoil Pipeline Name. Could not store Pipeline Data: ${key}. Illegal PipeName: ${pipeName} `)
-        events.showToast(`Error saving ${key}.`)
     }else{
        localStorage.setItem(keys.PIPELINE_DATA+'_'+pipeName+'_'+key,JSON.stringify(data))
     }
@@ -81,7 +79,7 @@ export function saveParameters(parameters:Array<SettingDictionary>, paramSetKey:
         timestamp: new Date().getTime(),
         data: parameters
     }
-    console.log(`[persistance] Stored pipelineParams ${pn}/${paramSetKey}`,allSets);
+    debug && console.log(`[persistance] Stored pipelineParams ${pn}/${paramSetKey}`,allSets);
     localStorage.setItem(keys.PIPELINE_PARAMS+'_'+pn,JSON.stringify(allSets))
 }
 
@@ -140,6 +138,6 @@ export function loadParameters(defaults:Array<SettingDictionary>,pipeName:Pipeli
         newP.push(mergedStep)
     }
     
-    console.log(`[persistance]: Loaded Pipeline(${pipeName}) Parameters ${paramSetKey}: `,parsedRes);
+    debug && console.log(`[persistance]: Loaded Pipeline(${pipeName}) Parameters ${paramSetKey}: `,parsedRes);
     return newP;
 }

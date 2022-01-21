@@ -1,0 +1,43 @@
+.tt-cell-result{
+	position: relative;
+	.tt{
+		background-color: black;
+		padding: 5px 8px;
+		position: absolute;
+		left:0;
+		right:0;
+		bottom: 32px;
+		color:white;
+		font-size: 12px;
+		opacity: .7;
+
+
+		div.props{
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			color: #a5d238;
+			.err{
+				color: #ff6363;
+				span{
+					color: #faafaf;
+					font-weight: bold;
+					background-color: rgba(#ff6363,.4);
+				}
+			}
+
+			line-height: 1;
+			font-weight: bold;
+			span{
+				color: white;
+				padding: 0 4px;
+				margin-right: 2px;
+				border-radius: 3px;
+				font-weight: normal;
+				background-color: rgba(#a5d238,.3);
+			}
+		}
+
+	}
+}

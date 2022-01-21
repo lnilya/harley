@@ -10,7 +10,7 @@ import _ from "lodash";
 import {OutlinePolygonLabeling} from "../Labeling/_polygons";
 import {OutlinePolygon} from "../FociCandidates/FociCandidates";
 
-interface ICellResultProps{
+export interface ICellResultProps{
 	idx:number,
 	/**Additional classnames for this component*/
 	className?:string,
@@ -18,10 +18,13 @@ interface ICellResultProps{
     cellOutline:PolygonData
     foci:PipelinePolygons,
     curSelection:number[], //foci as modified by user later on
-    modelSelection:number[], //foci as selected by model
+    modelSelection?:number[], //foci as selected by model
     excluded:boolean,
     onToggleCellInclusion:()=>void
     onChangeSelection:(newSel:number[]) => void
+    fociEnter?:(id:number) => void
+    fociLeave?:(id:number) => void
+    children?:any
 }
 /**
  * CellResult
@@ -44,7 +47,7 @@ const AvailablePolygon = styled.polygon({
         opacity:1,
     }
 })
-const CellResult:React.FC<ICellResultProps> = ({idx, cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className}) => {
+const CellResult:React.FC<ICellResultProps> = ({fociEnter,fociLeave, idx, cellOutline, modelSelection, onChangeSelection,curSelection, img,foci,excluded,onToggleCellInclusion,className,...props}) => {
 	const selFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? null : pd)
 	const avFoci = foci.map((pd,j)=>curSelection.indexOf(j) == -1 ? pd : null)
     const onToggleFoci = (f:number)=>{
@@ -56,7 +59,7 @@ const CellResult:React.FC<ICellResultProps> = ({idx, cellOutline, modelSelection
     const removeAllFoci = () => onChangeSelection([])
     const resetFoci = () => onChangeSelection(modelSelection)
     
-    const isModelSelection = _.isEmpty(_.xor(curSelection, modelSelection))
+    const isModelSelection = !modelSelection ? false : _.isEmpty(_.xor(curSelection, modelSelection))
     
 	return (
 		<div className={`cell-result ${className || ''} ` + cl(excluded,'is-excluded')}>
@@ -65,18 +68,21 @@ const CellResult:React.FC<ICellResultProps> = ({idx, cellOutline, modelSelection
                 <img src={img.url} />
                 <PolygonCloud className={'outline'} polygons={[cellOutline]} canvasDim={img} PolyComp={OutlinePolygon}/>
                 {selFoci.length > 0 && !excluded &&
-                    <PolygonCloud className={'selected-foci'} onClick={onToggleFoci} polygons={selFoci} canvasDim={img} PolyComp={SelectedPolygon}/>
+                    <PolygonCloud onMouseEnter={fociEnter} onMouseLeave={fociLeave} className={'selected-foci'} onClick={onToggleFoci} polygons={selFoci} canvasDim={img} PolyComp={SelectedPolygon}/>
                 }
                 {avFoci.length > 0 && !excluded &&
-                    <PolygonCloud className={'available-foci'} onClick={onToggleFoci} polygons={avFoci} canvasDim={img} PolyComp={AvailablePolygon}/>
+                    <PolygonCloud onMouseEnter={fociEnter} onMouseLeave={fociLeave} className={'available-foci'} onClick={onToggleFoci} polygons={avFoci} canvasDim={img} PolyComp={AvailablePolygon}/>
                 }
             </div>
+            {props.children}
             <div className="cell-result__footer">
                 {!excluded &&
                     <>
                     <ToolTipIconButton onClick={onToggleCellInclusion} className={'del-btn'}  Icon={VisibilityOff} tooltipText={'Exclude this cell from export'} tooltipDelay={1000}/>
                     <ToolTipIconButton onClick={removeAllFoci} className={'del-btn' + cl(curSelection.length <= 0, 'disabled')}  Icon={Cancel} tooltipText={'Unselect all foci in this cell'} tooltipDelay={1000}/>
-                    <ToolTipIconButton onClick={resetFoci} className={'del-btn' + cl(isModelSelection, 'disabled')}  Icon={Autorenew} tooltipText={'Reset foci selection to inital model selection'} tooltipDelay={1000}/>
+                    {modelSelection &&
+                        <ToolTipIconButton onClick={resetFoci} className={'del-btn' + cl(isModelSelection, 'disabled')}  Icon={Autorenew} tooltipText={'Reset foci selection to inital model selection'} tooltipDelay={1000}/>
+                    }
                     <div className="fl-grow"/>
                     </>
                 }

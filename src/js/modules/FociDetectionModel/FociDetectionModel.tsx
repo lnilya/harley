@@ -16,13 +16,15 @@ import {showToast} from "../../../sammie/js/state/eventbus";
 import DisplayOptions, {DisplayOptionModKey, DisplayOptionSetting} from "../../../sammie/js/ui/modules/DisplayOptions";
 import {ColocCellsResult} from "../ColocCells/server";
 import _ from "lodash";
+import {useLocalStoreRecoilHook} from "../../../sammie/js/ui/uihooks";
 
 /**PERSISTENT UI STATE DEFINITIONS*/
 const asResult = atomFamily<FociDetectionModelResult,string>({key:'foci-detection-model_result',default:null});
 const asIncludedCells = atomFamily<number[],string>({key:'foci-detection-model_included',default:null});
 const asSelectedFoci = atomFamily<number[][],string>({key:'foci-detection-model_foci',default:null});
 const asModelFoci = atomFamily<number[][],string>({key:'foci-detection-model_foci_model',default:null});
-const asSorting = atomFamily<string,string>({key:'foci-detection-sorting',default:'none'});
+const asSorting = atomFamily<string,string>({key:'foci-detection-model-sorting',default:'none'});
+const asColCount = atomFamily<number,string>({key:'foci-detection-model-colcount',default:3});
 const asLastRunSettings = atomFamily< {batchTimeStamp:number, inputs: self.Inputs, params: self.Parameters},string>({key:'foci-detection-model_initial',default:null});
 
 interface IFociDetectionModelProps{}
@@ -60,13 +62,15 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
     const [includedCells,setIncludedCells] = useRecoilState(asIncludedCells(curStep.moduleID))
     const [selectedFoci,setSelectedFoci] = useRecoilState(asSelectedFoci(curStep.moduleID))
     const [modelFoci,setModelFoci] = useRecoilState(asModelFoci(curStep.moduleID))
-    const [sorting,setSorting] = useRecoilState(asSorting(curStep.moduleID))
+    const [colCount,setColCount] = useLocalStoreRecoilHook(asColCount(curStep.moduleID))
+    const [sorting,setSorting] = useLocalStoreRecoilHook(asSorting(curStep.moduleID))
     const [error,setError] = useState<EelResponse<any>>(null)
     const modKeys = useToggleKeys(['1','2'])
     
     const displayOptions:DisplayOptionSetting<string>[] = [
         {type:'dropdown',label:'Sort by',options:{none:'No Sorting', numfoci:'Selected Foci', avfoci:'Available Foci', mods:'Modified first'},
-            value:sorting,setter:setSorting}
+            value:sorting,setter:setSorting},
+        {type:'slider',label:'Columns',sliderParams:[3,7,1], value:colCount,setter:setColCount},
     ]
     
     const onCellInclusionToggle = (idx:number) => {
@@ -117,10 +121,10 @@ const FociDetectionModel:React.FC<IFociDetectionModelProps> = () => {
                     </Tooltip>
                 </div>
                 {curBatch.batchParameters['cellstoprocess'] < 100 &&
-                <div className="incomplete-hint col-error pad-100-bottom">Showing only first {curBatch.batchParameters['cellstoprocess']}% of dataset as preview. Change parameter in Data Input if not desired.</div>
+                    <div className="incomplete-hint col-error pad-100-bottom">Showing only first {curBatch.batchParameters['cellstoprocess']}% of dataset as preview. Change parameter in Data Input if not desired.</div>
                 }
                 <DisplayOptions settings={displayOptions} modKeys={modKeysDesc} activeModKeys={Object.keys(modKeys).filter(k=>modKeys[k])}/>
-                <div className={`grid cols-${curParams.fociperrow} half-gap`}>
+                <div className={`grid cols-${colCount} half-gap`}>
                     {order.map((i,k)=>{
                         const img = result.imgs[i]
                         return <CellResult key={i} img={img} foci={result.foci[i]}
