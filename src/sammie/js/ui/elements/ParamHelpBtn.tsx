@@ -1,5 +1,6 @@
 import React, {ReactNode, useState} from "react"
 import {ClickAwayListener, Tooltip} from "@mui/material";
+import _ from "lodash";
 
 interface IParamHelpBtnProps {
     content: ReactNode
@@ -20,6 +21,10 @@ interface IParamHelpBtnProps {
 
 const ParamHelpBtn: React.FC<IParamHelpBtnProps> = ({toolTipPlacement, className, content}) => {
     toolTipPlacement = toolTipPlacement || 'right'
+    
+    if(typeof content == 'string'){
+        content = _.flatMap(content.split('\n'), (e=>[e,<br key= {e} />]));
+    }
     
     const [open, setOpen] = useState(false);
     return (
