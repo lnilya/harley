@@ -177,17 +177,25 @@ class FociDetectionParams(ModuleBase):
     def extractFociStats(self, cnt:np.ndarray, img:np.ndarray, lvl:float, normFactor:Tuple[float, float]):
         binMaskOuter, offx, offy = getPolygonMaskPatch(cnt[:, 1],
                                                        cnt[:, 0], 0)
-        region: RegionProperties = skimage.measure.regionprops(binMaskOuter.astype('int'),
+
+        regionArr:List[RegionProperties] = skimage.measure.regionprops(binMaskOuter.astype('int'),
                                                                img[offy:offy + binMaskOuter.shape[0],
-                                                               offx:offx + binMaskOuter.shape[1]])[0]
+                                                               offx:offx + binMaskOuter.shape[1]])
+
+        area = Polygon(cnt).area
         nmin, nmax = normFactor
+        #If regions are very small, the binary mask won't have any pixels and regionprops will be empty.
+        if (len(regionArr) == 0):
+            return FociInfo(area,(0,0),(0,0),(lvl,lvl*(nmax - nmin) + nmin),1)
+        else:
+            region:RegionProperties = regionArr[0]
+
         meanIntensityRaw = (region.mean_intensity * (nmax - nmin)) + nmin
         maxIntensityRaw = (region.max_intensity * (nmax - nmin)) + nmin
-        area = Polygon(cnt).area
         return FociInfo(area,(region.max_intensity,maxIntensityRaw),
                         (region.mean_intensity,meanIntensityRaw),
                         (lvl,lvl*(nmax - nmin) + nmin),
-                        255 if lvl == 0  else region.max_intensity/lvl)
+                        255 if lvl == 0 else region.max_intensity/lvl)
 
     def __exportXLSX(self, key:str, path:str,**args):
 
