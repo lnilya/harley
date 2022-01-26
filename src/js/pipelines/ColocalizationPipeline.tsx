@@ -26,8 +26,7 @@ const dataKeys = {
 }
 
 const helpScreen = <div>
-    Todo: Create Help Video for Colocalization
-    <ResponsiveEmbed src='https://www.youtube.com/embed/QtzI1SwOdbY' allowFullScreen/>
+    <ResponsiveEmbed src='https://www.youtube.com/embed/goTFsdEi1PU' allowFullScreen/>
 </div>
 
 /**Type for the Input Parameter of the whole pipeline*/

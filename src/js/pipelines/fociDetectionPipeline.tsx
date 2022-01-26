@@ -19,7 +19,7 @@ const dataKeys = {
 }
 
 const helpScreen = <div>
-    <ResponsiveEmbed src='https://www.youtube.com/embed/KRvW-F2ED6g' allowFullScreen/>
+    <ResponsiveEmbed src='https://www.youtube.com/embed/1aMCvWfax6s' allowFullScreen/>
 </div>
 
 function getPipeline(): Pipeline {

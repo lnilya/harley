@@ -24,7 +24,7 @@ const TooltipCellResult:React.FC<ITooltipCellResultProps> = (props) => {
     };
     
     var text:ReactNode = '';
-    if(idx != -1){
+    if(idx != -1 && info && data){
         // if(info.manual !== undefined) text = 'Manually ' + (info.manual ? 'added' : 'removed');
         // else if(!info.in) text = info.reason;
         // else

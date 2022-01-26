@@ -28,10 +28,8 @@ const helpScreen = <div>
     Using the parameter approach in this case is faster and more convenient than training a model.
     Video on Foci Detection using model (exports and general flow is same):
     <div className="pad-50-ver">
-        <ResponsiveEmbed src='https://www.youtube.com/embed/KRvW-F2ED6g' allowFullScreen/>
+        <ResponsiveEmbed src='https://www.youtube.com/embed/088jeRmwMhc' allowFullScreen/>
     </div>
-    Video on Foci Detection via paramters:
-    TODO
 </div>
 
 /**Optional Typing for the Batch parameters*/
@@ -119,7 +117,7 @@ function getPipeline(): Pipeline {
         
         //Info for user
         descriptions: {
-            title: 'FociDetection (without model)',
+            title: 'Foci Detection (without model)',
             description: 'This pipeline detects foci in a dataset using a set of parameters. It is an alternative to using a trained model to detect foci. Use it when you tend to have a single bright focus per cell, there are few or no non-foci making model training impractical or when the detection task can seems to be easily handled by a threshhold. The result is an Excel file with information on each foci in each cell.',
             thumb: <img src={thumb}/>,
             helpscreen: helpScreen
