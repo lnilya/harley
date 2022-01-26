@@ -1,6 +1,12 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.1
+
+Minor:
+- Changed embedded Tutorial Videos
+- Bugfixes: Regarding Foci Detection under certain conditions
+
 ### Version: 1.2.0
 
 Major:
