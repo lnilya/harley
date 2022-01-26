@@ -128,8 +128,10 @@ class TrainingData:
         # get foci mask
         binMaskOuter, offx, offy = getPolygonMaskPatch(contourSet[cl][:, 1], contourSet[cl][:, 0], 0)
 
-        # get image region and analyze it
-        regCenter = skimage.measure.regionprops(binMaskOuter.astype('int'),
+        # get image region and analyze it, sometimes contour will be very slim and not capture any pixels.
+        regCenter = None
+        if min(binMaskOuter.shape) > 0:
+            regCenter = skimage.measure.regionprops(binMaskOuter.astype('int'),
                                                                   img[offy:offy + binMaskOuter.shape[0],
                                                                   offx:offx + binMaskOuter.shape[1]])
 
@@ -137,7 +139,7 @@ class TrainingData:
         #less than one pixel across, meaning that close to no pixels constitute the focus
         #Because of rounding errors the mask becomes all 0 and there is no area to analyze
         #in that case we simply return a 0 vector.
-        if(len(regCenter) == 0):
+        if(regCenter is None or len(regCenter) == 0):
             return [0]*10
         else:
             regCenter = regCenter[0]

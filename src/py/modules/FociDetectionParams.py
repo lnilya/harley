@@ -178,14 +178,16 @@ class FociDetectionParams(ModuleBase):
         binMaskOuter, offx, offy = getPolygonMaskPatch(cnt[:, 1],
                                                        cnt[:, 0], 0)
 
-        regionArr:List[RegionProperties] = skimage.measure.regionprops(binMaskOuter.astype('int'),
+        regionArr = None
+        if min(binMaskOuter.shape) > 0:
+            regionArr:List[RegionProperties] = skimage.measure.regionprops(binMaskOuter.astype('int'),
                                                                img[offy:offy + binMaskOuter.shape[0],
                                                                offx:offx + binMaskOuter.shape[1]])
 
         area = Polygon(cnt).area
         nmin, nmax = normFactor
         #If regions are very small, the binary mask won't have any pixels and regionprops will be empty.
-        if (len(regionArr) == 0):
+        if (regionArr is None or len(regionArr) == 0):
             return FociInfo(area,(0,0),(0,0),(lvl,lvl*(nmax - nmin) + nmin),1)
         else:
             region:RegionProperties = regionArr[0]
