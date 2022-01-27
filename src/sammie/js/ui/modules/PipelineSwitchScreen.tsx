@@ -6,6 +6,7 @@ import PipelineListEntry from "./pipelineswitchscreen/PipelineListEntry";
 import {PipelineName} from "../../types/datatypes";
 import {loadPipeline} from "../../pipelines/pipeline";
 import {Pipeline} from "../../types/pipelinetypes";
+import PipelineDebugDropdown from "../elements/PipelineDebugDropdown";
 
 interface IPipelineSwitchScreenProps{
 	

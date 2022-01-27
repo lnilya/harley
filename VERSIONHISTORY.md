@@ -4,6 +4,7 @@ Updates by version
 ### Version: 1.2.1
 
 Minor:
+- Added debug menu for single pipelines when 'd' is pressed. Currently can only delete cookies for a single pipeline.
 - Changed embedded Tutorial Videos
 - Bugfixes: Regarding Foci Detection under certain conditions
 

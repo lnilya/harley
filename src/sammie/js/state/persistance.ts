@@ -4,6 +4,7 @@ import * as ui from './uistates'
 import * as events from './eventbus'
 import {selectedPipelineName} from './uistates'
 import {SettingDictionary} from "../modules/paramtypes";
+import {showToast} from "./eventbus";
 
 enum keys{
     PIPELINE_PARAMS='pipelineparams',
@@ -140,4 +141,17 @@ export function loadParameters(defaults:Array<SettingDictionary>,pipeName:Pipeli
     
     debug && console.log(`[persistance]: Loaded Pipeline(${pipeName}) Parameters ${paramSetKey}: `,parsedRes);
     return newP;
+}
+
+export function clearPipelineStore(plname:PipelineName){
+    const allStorage = {...localStorage};
+    var del:number = 0;
+    for (let ask in allStorage) {
+        if(ask.indexOf('_'+plname) != -1){
+            localStorage.removeItem(ask)
+            del++;
+        }
+    }
+    
+    showToast(`Succesfully deleted ${del} entries for pipeline ${plname}`)
 }

@@ -1,0 +1,43 @@
+@import "../global/variables";
+@import "../global/mixins";
+@import "../global/padding";
+
+.pipeline-debug-dropdown{
+	@include stick-to($fix-right);
+	&:after{
+		@include stick-to($fix-left);
+		left: 3px;
+		width: 1px;
+		content: '';
+		background-color: rgba(black, .1);
+	}
+	bottom:87px;
+	color: $colWhite;
+	border-radius: $defBorderRadius;
+	transition: all 0.3s;
+	&:not(.show){
+		pointer-events: none;
+	}
+	&.show{
+		pointer-events: all;
+		transform: translateX(101%);
+	}
+	font-size: 12px;
+	background-color: $colBGDark;
+	@extend .pad-50-ver;
+	@extend .pad-100-hor;
+	.entry{
+		cursor: pointer;
+		transition: all .2s;
+		&:hover{
+			background-color: rgba(black,.1);
+		}
+	}
+	.pdd__header{
+		margin-top: -5px;
+		padding-bottom: 5px;
+		margin-bottom: 5px;
+		color: $colMain;
+		border-bottom: 1px solid rgba($colWhite, .2);
+	}
+}
