@@ -36,7 +36,7 @@ export type DisplayOptionSetting<T> = {
  */
 const DisplayOptions: React.FC<IDisplayOptionsProps> = ({col,children,activeModKeys, modKeys, className, settings}) => {
     
-    if(!Array.isArray(activeModKeys)){
+    if(activeModKeys && !Array.isArray(activeModKeys)){
         activeModKeys = Object.keys(activeModKeys).filter(k=>activeModKeys[k])
     }
     
