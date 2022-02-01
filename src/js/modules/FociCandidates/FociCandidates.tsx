@@ -61,6 +61,7 @@ const FociCandidates:React.FC<IFociCandidatesProps> = () => {
         var loadCell = selectedCell;
         if(cellImages == null){ //Images need to be loaded first
             const res = await server.loadCellImages(curParams,curStep)
+            setError(res.error ? res : null)
             setCellImages(res.error ? null : res.data.imgs)
             setCellContours(res.error ? null : res.data.contours)
             if(res.error) return res;
@@ -114,7 +115,7 @@ const FociCandidates:React.FC<IFociCandidatesProps> = () => {
             setFociInSelCell(res.data)
         }
     };
-    
+    console.log(`ERROR;`, error);
 	return (<div className={'foci-candidates margin-100-neg pad-100 pad-200-top'}>
 	    {error && <ErrorHint error={error}/> }
         {!error &&

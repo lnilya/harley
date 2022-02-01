@@ -138,7 +138,7 @@ class CellsDataset:
                 print('Error loading cell image %d'%i)
                 # self.show()
 
-            if normalize:
+            if normalize and maxIntensity > minIntensity:
                 img = (img - minIntensity) / (maxIntensity - minIntensity)
 
             img[maskPatch == False] = 0

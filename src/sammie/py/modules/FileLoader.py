@@ -31,8 +31,15 @@ class FileLoader(ModuleBase):
     def __findInFileList(self, fileList, patternList: List[str] = None):
         # fileList is the form [filename,wildcard1,wildcard2...] while patternList is [wildcard1,wildcard2...]
         for f in fileList:
-            if f[1:] == patternList:
+            # we do not have any patterns to match, so just use the file
+
+            if len(f) == 1: return f[0]
+            #patternlist has more wildcoards, int hat case we match the first (which would usually be ** (or folder) and not *)
+            if len(f) == 2 and len(patternList) == 2 and patternList[0] == f[1]: #we have 2 placeholders in one and
                 return f[0]
+
+            #same number of wildcoards
+            if len(f) == (len(patternList)+1) and f[1:] == patternList: return f[0]
         return None
 
     def getFileGlob(self, patterns: List[str], extenstions: List[List[str]]):

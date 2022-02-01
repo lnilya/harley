@@ -56,6 +56,7 @@ def getTmpFilePath(fileName:str):
 # Will retrieve the JS preview image url for a given array and key.
 # will not resave if force is set to false and the preview image is already available.
 def getPreviewImage(img: np.ndarray, key: str, force: bool = True, inColor:Tuple[int,int,int] = None, normalize:bool = False):
+    print('Key: %s'%key)
     relPath = os.path.join(settings.TMP_FOLDER, key + '.jpg')
     absPath = eelutil.getFilePath(relPath)
 

@@ -9,9 +9,9 @@ DOI: https://doi.org/10.1101/2021.11.29.470484
 # Quick Start for Users
 
 
-1. Download the latest version for Windows or Mac OS and demo data: https://drive.google.com/drive/folders/1G9lOVfcQwahqiYS3pKJ0UdHJ7_YmvG0A?usp=sharing and launch the program. You need to have Google Chrome installed for this software to work.
-2. Using any browser (not necessarily Chrome) navigate to http://localhost:1234 which is the local server started by the application.
-3. Use the demo data to explore software with different fluorescence datasets.
+1. Download the latest version for Windows or Mac OS and demo data: https://drive.google.com/drive/folders/1G9lOVfcQwahqiYS3pKJ0UdHJ7_YmvG0A?usp=sharing and launch the program. **You need to have Google Chrome installed for this software to work.**
+2. Using any browser (not necessarily Chrome) navigate to http://localhost:1234 which is the local server started by the application. If the site cannot be reached, simply wait a little bit. It sometimes takes up to 30-60s for the server to become responsive.
+3. Use the demo data to explore the software with different fluorescence datasets.
 
 Please watch the introductionary videos on how to use the software:
 
@@ -21,8 +21,13 @@ Please watch the introductionary videos on how to use the software:
 
 **Model Training:** https://www.youtube.com/watch?v=QtzI1SwOdbY
 
-**Automated Foci Detection:** https://www.youtube.com/watch?v=KRvW-F2ED6g
- 
+**Foci Detection using model:** https://www.youtube.com/watch?v=1aMCvWfax6s
+
+**Foci Detection using threhsholds, without model:** https://www.youtube.com/watch?v=088jeRmwMhc
+
+**Colocalizaton:** https://www.youtube.com/watch?v=goTFsdEi1PU
+
+(Some videos are made with older versions of Harley. The general flow of data and the influence of parameters are not affected by this.)
 
 # Setting up Develompent Environment
 
