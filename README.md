@@ -6,6 +6,8 @@ for details on how Harley works internally.
 
 DOI: https://doi.org/10.1101/2021.11.29.470484
 
+Harley is based on [SAMMIE](https://github.com/lnilya/sammie), which is a framework that anyone can use in order to add GUI to existing python algorithms as well as common functions such as managing inputs, outputs, algorithm parameters, pipeline dependencies etc and finally have the output be an executable file.
+
 # Quick Start for Users
 
 
