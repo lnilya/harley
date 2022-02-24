@@ -281,16 +281,20 @@ class ColocGraphs(ModuleBase):
             overlap = self.distData.getOverlapCSV(args['name0'],args['name1'],units)
             coloc = self.distData.getPCCCSV(args['name0'],args['name1'],colocdata.pcc,colocdata.fpcc)
 
-            titles = [self.scatterData[0][0].getCSVRowTitles(units)]
-            c0 = titles + [i.getCSVRow(k,False) for k,i in enumerate(self.scatterData[0])]
-            c1 = titles + [i.getCSVRow(k,False) for k,i in enumerate(self.scatterData[1])]
-
-            writeXLSX([nn,centroid,coloc, overlap,c0,c1],
-                      ['Nearest Neighbours','Centroids','Pearson Correlation','Overlap','Foci Details Channel 0','Foci Details Channel 1'],path)
+            if len(self.scatterData[0]) > 0:
+                titles = [self.scatterData[0][0].getCSVRowTitles(units)]
+                c0 = titles + [i.getCSVRow(k,False) for k,i in enumerate(self.scatterData[0])]
+                c1 = titles + [i.getCSVRow(k,False) for k,i in enumerate(self.scatterData[1])]
+                writeXLSX([nn,centroid,coloc, overlap,c0,c1],
+                          ['Nearest Neighbours','Centroids','Pearson Correlation','Overlap','Foci Details Channel 0','Foci Details Channel 1'],path)
+            else:
+                writeXLSX([nn,centroid,coloc, overlap],
+                          ['Nearest Neighbours','Centroids','Pearson Correlation','Overlap'],path)
         elif args['format'] == 'json':
             fullJSON = colocdata.getExportJSON()
             fullJSON.update(self.distData.getExportJSON())
-            fullJSON['scatter'] = {'explanation':'Data used to generate the scatter plots. For each channel. Array indices are used as addresses to refer to nearest neighbours and overlap partners between channels. '
+            if len(self.scatterData[0]) > 0:
+                fullJSON['scatter'] = {'explanation':'Data used to generate the scatter plots. For each channel. Array indices are used as addresses to refer to nearest neighbours and overlap partners between channels. '
                                                  'Columns field stores the meaning of each of the columns in c0, c1 fields',
                                    'columns': self.scatterData[0][0].getCSVRowTitles(units),
                                    'c0':[i.getCSVRow(k) for k,i in enumerate(self.scatterData[0])],

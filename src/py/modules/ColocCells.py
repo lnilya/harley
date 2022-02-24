@@ -161,8 +161,8 @@ class ColocCells(ModuleBase):
         # Get the data that needs to be exported
         data = self.session.getData(key)
         res = {
-            'fociInChannel0': data[0],
-            'fociInChannel1': data[1],
+            'fociInChannel0': data.foci1,
+            'fociInChannel1': data.foci2,
             'imgs': [img for i, img in enumerate(self.rawImages) if i in self.selectedCells]
         }
         with open(path, 'wb') as handle:

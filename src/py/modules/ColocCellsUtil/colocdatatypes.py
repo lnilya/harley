@@ -137,6 +137,9 @@ class NNData:
         return res
 
     def getPCCCSV(self, name0:str, name1:str, pccCell, pccFoci):
+        if not name0: name0 = 'Channel 0'
+        if not name1: name1 = 'Channel 1'
+
         res = [['Pearson correlation %s and %s'%(name0,name1)] + ['']*8]
         res += [['Cell','Full Cell Area','(P)','Foci Area Only','(P)','%s area only'%(name0),'(P)','%s area only'%(name1),'(P)']]
         for i in range(0,len(self.pccFwd)):
@@ -149,6 +152,9 @@ class NNData:
         return res
 
     def getOverlapCSV(self, name0:str, name1:str, units:str):
+        if not name0: name0 = 'Channel 0'
+        if not name1: name1 = 'Channel 1'
+
         res = [['Cell','Abs Overlap (in %s^2)'%(units),'Overlap as %% of %s area'%(name0),'Overlap as %% of %s area'%(name1)]]
         for i,c in enumerate(self.overlapCellNum):
             res += [[c,self.overlapAbs[i],self.overlapRelFwd[i],self.overlapRelBck[i]]]
@@ -156,12 +162,18 @@ class NNData:
         return res
 
     def getCentroidDistCSV(self, name0:str, name1:str, units:str):
+        if not name0: name0 = 'Channel 0'
+        if not name1: name1 = 'Channel 1'
+
         res = [['Distance Centroid to Centroid in %s'%units] + ['']*5]
         res += [['Cell','Foci','%s to %s (%s)'%(name0,name1,units),'Cell','Foci','%s to %s (%s)'%(name1,name0, units)]]
         res += self.__getCSV(self.cellNumCentroidDistFwd,self.cellNumCentroidDistBack, self.centroidDistFwd, self.centroidDistBack)
         return res
 
     def getNNDistCSV(self, name0:str, name1:str, units:str):
+        if not name0: name0 = 'Channel 0'
+        if not name1: name1 = 'Channel 1'
+
         res = [['Distance to Nearest Neighbour in %s'%units] + ['']*5]
         res += [['Cell','Foci','%s to %s (%s)'%(name0,name1,units),'Cell','Foci','%s to %s (%s)'%(name1,name0, units)]]
         res += self.__getCSV(self.cellNumDistFwd,self.cellNumDistBack, self.nnDistFwd, self.nnDistBack)
