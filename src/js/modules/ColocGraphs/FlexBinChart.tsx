@@ -58,27 +58,41 @@ const FlexBinChart: React.FC<IFlexBinChartProps> = ({xlabel,colFromEntry, titleI
                     <ParamHelpBtn className={'margin-100-left'} content={curEx}/>
                 }
                 <div className="fl-grow"/>
-                <div className="lbl">Bins:</div>
-                <Slider valueLabelDisplay={'auto'} size={'small'} value={numBins} min={3} max={40} step={1}
-                        onChange={(e, v) => setNumBins(v as number)}/>
+                {data[dataKey].length > 0 &&
+                    <>
+                        <div className="lbl">Bins:</div>
+                        <Slider valueLabelDisplay={'auto'} size={'small'} value={numBins} min={3} max={40} step={1}
+                                onChange={(e, v) => setNumBins(v as number)}/>
+                    </>
+                }
             </div>
-            <ResponsiveContainer width="100%" height='100%'>
-                <BarChart height={200} data={bins} margin={{left: -25}}>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip content={CustomTooltip}/>
-                    <Bar dataKey="count">
-                          {bins.map((entry, index) => {
-                              const col = colFromEntry ? colFromEntry(entry.xmean,entry.count) : '#FF7F50';
-                              return <Cell key={`cell-${index}`} fill={col}/>
-                          })}
-                    </Bar>
-                    {/* @ts-ignore */}
-                    <XAxis {...{dataKey:'xmean',...curFormat}}/>
-                    <YAxis dataKey='count'/>
-                </BarChart>
-            </ResponsiveContainer>
-            {xlabel &&
-                <div className="xaxis-lbl">{xlabel}</div>
+            {data[dataKey].length == 0 &&
+                <div className="flex-bin-chart__nodata pad-200">
+                    <div>N/A</div>
+                    No data
+                </div>
+            }
+            {data[dataKey].length > 0 &&
+                <>
+                    <ResponsiveContainer width="100%" height='100%'>
+                        <BarChart height={200} data={bins} margin={{left: -25}}>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <Tooltip content={CustomTooltip}/>
+                            <Bar dataKey="count">
+                                  {bins.map((entry, index) => {
+                                      const col = colFromEntry ? colFromEntry(entry.xmean,entry.count) : '#FF7F50';
+                                      return <Cell key={`cell-${index}`} fill={col}/>
+                                  })}
+                            </Bar>
+                            {/* @ts-ignore */}
+                            <XAxis {...{dataKey:'xmean',...curFormat}}/>
+                            <YAxis dataKey='count'/>
+                        </BarChart>
+                    </ResponsiveContainer>
+                    {xlabel &&
+                        <div className="xaxis-lbl">{xlabel}</div>
+                    }
+                </>
             }
         </div>
     );

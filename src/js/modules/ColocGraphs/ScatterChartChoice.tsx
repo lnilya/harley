@@ -82,6 +82,7 @@ const ScatterChartChoice:React.FC<IScatterChartChoiceProps> = ({onDataChanged, u
     const [yMultiHandling,setYMultiHandling] = useState('avg');
     
     useEffect(()=>{
+        
         if(xFociType < 0  || xFociProp == 'none' || yFociProp == 'none' || yFociType < 0){
             onDataChanged(null)
             return

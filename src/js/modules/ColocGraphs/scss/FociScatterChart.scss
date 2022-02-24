@@ -8,6 +8,15 @@
 		justify-content: flex-start;
 		align-items: center;
 	}
+	&__nodata{
+		opacity:  .2;
+		background-color: $colMainLight;
+		text-align: center;
+		div{
+			font-size: 30px;
+			font-weight: bold;
+		}
+	}
 	.scatter-plot-container{
 		height: 500px !important;
 	}

@@ -52,12 +52,12 @@ const FociScatterChart: React.FC<IFociScatterChartProps> = ({curStep,cellImageDa
     const [regResult, setRegresult] = useState<RegressionResult>(null);
     const [exportDownloadLink, setExportDownloadLink] = useState<string>(null);
     const [screen,setScreen] = useRecoilState(ui.appScreen)
-    
     const runExport = async () => {
         const res = await server.runExportScatter(curStep,graphData,regResult);
         if(res.error) alert('Something went wrong: ' + res.error)
         else setExportDownloadLink(res.data)
     };
+    const noData = graphData.points.length == 0;
     
     //Generate Data
     return (
@@ -83,14 +83,22 @@ const FociScatterChart: React.FC<IFociScatterChartProps> = ({curStep,cellImageDa
                 <img src={titleImg} className={'flex-bin-chart__title-img'}/>
                 Scatter Plot
                 <div className="fl-grow"/>
-                <Button variant={'outlined'} onClick={runExport}>Export Current Data</Button>
+                <Button variant={'outlined'} onClick={runExport} disabled={graphData && noData}>Export Current Data</Button>
             </h3>
             <div className="fl-row-between pad-100-ver fl-align-center">
                 <ScatterChartChoice onDataChanged={setGraphData} className={''} unit={unit} names={names}
                                     data={data}/>
-                <RegressionChoice onSetRegression={setRegresult} graphData={graphData}/>
+                {graphData && !noData &&
+                    <RegressionChoice onSetRegression={setRegresult} graphData={graphData}/>
+                }
             </div>
-            {graphData &&
+            {graphData && noData &&
+                <div className="scatter-chart__nodata pad-200">
+                    <div>N/A</div>
+                    No data
+                </div>
+            }
+            {graphData && !noData &&
             <>
                 <div className={'fl-row-start'}>
                     <div className="yaxis-lbl-container">

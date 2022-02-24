@@ -18,6 +18,15 @@
 		justify-content: flex-start;
 		align-items: center;
 	}
+	&__nodata{
+		opacity:  .2;
+		background-color: $colMainLight;
+		text-align: center;
+		div{
+			font-size: 30px;
+			font-weight: bold;
+		}
+	}
 	&__title-img{
 		max-height: 30px;
 		margin-right: 20px;

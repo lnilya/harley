@@ -59,32 +59,32 @@ const Box = (props: { name0: string,name1:string, result: ColocGraphsResult,i:nu
             <Tooltip title={`Percentage of ${name0} that overlap ${name1}.`}  placement={'bottom'}>
                 <div className="box-row">
                     <span>Overlapping {name1}</span>
-                    <span>{printf('%.2f %% (%d)', percOverlap * 100, percOverlap*n)}</span>
+                    <span>{isNaN(percOverlap) ? '-' : printf('%.2f %% (%d)', percOverlap * 100, percOverlap*n)}</span>
                 </div>
             </Tooltip>
             <Tooltip title={`Percentage of ${name0} fully included (overlap of >95% of ${name0} area) in ${name1}.`}  placement={'bottom'}>
                 <div className="box-row">
                     <span>Fully included in {name1}</span>
-                    <span>{printf('%.2f %% (%d)', numInclusion * 100, numInclusion*n)}</span>
+                    <span>{isNaN(numInclusion) ? '-' : printf('%.2f %% (%d)', numInclusion * 100, numInclusion*n)}</span>
                 </div>
             </Tooltip>
             <Tooltip title={`Average percentage of area of ${name0} covered by ${name1}. A value of 100% means that the focus is fully included.`} placement={'bottom'}>
                 <div className="box-row">
                     <span>Avg. overlap</span>
-                    <span>{printf('%.2f %%', avgOverlap * 100)}</span>
+                    <span>{isNaN(avgOverlap) ? '-' : printf('%.2f %%', avgOverlap * 100)}</span>
                 </div>
             </Tooltip>
             <Tooltip title={`Average distance of ${name0} to nearest ${name1} inside the cell for non-overlapping foci only. A value of 0 indicates that the two foci are touching, but not overlapping.
             Cells with only ${name0} but no ${name1} are excluded.`} placement={'bottom'}>
                 <div className="box-row">
                     <span>Avg. distance to {name1}</span>
-                    <span>{printf(avgDistFormat + ' %s', avgDist,units)}</span>
+                    <span>{isNaN(avgDist) ? '-' : printf(avgDistFormat + ' %s', avgDist,units)}</span>
                 </div>
             </Tooltip>
             <Tooltip title={`Average Pearson Correlation of signal located inside ${name0} foci with signal of cell in ${name1} channel.`} placement={'bottom'}>
                 <div className="box-row">
                     <span>Avg. Pearson Correlation</span>
-                    <span>{printf('%.2f', avgPCC)}</span>
+                    <span>{isNaN(avgPCC) ? '-' : printf('%.2f', avgPCC)}</span>
                 </div>
             </Tooltip>
         </div>)

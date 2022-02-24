@@ -5,7 +5,9 @@ Updates by version
 
 Minor:
 - Long folder names in file and batch dialogues are now shortened with [...] for clarity. 
-- Full file name now displayed in popover in data input.  
+- Full file name now displayed in popover in data input.
+- Coloc: Bugfix on export and display if no foci present
+- Coloc: Graph view displays hints if no data is present, instead of empty graphs
 
 ### Version: 1.2.1
 
