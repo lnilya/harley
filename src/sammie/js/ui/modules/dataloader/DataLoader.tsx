@@ -161,7 +161,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
         <Dialog open={multiBatchDialog} maxWidth={'md'} onClose={()=>setMultiBatchDialog(false)}>
             <BatchCreator onDone={()=>setMultiBatchDialog(false)}/>
         </Dialog>
-        <Dialog open={!!askingForInput}
+        <Dialog open={!!askingForInput} fullWidth={true}
                 maxWidth={"md"} onClose={()=>resolvePickerDialog(true)}>
             <div className="pad-200">
                 {!!askingForInput &&

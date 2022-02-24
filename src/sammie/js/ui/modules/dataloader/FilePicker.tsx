@@ -11,6 +11,7 @@ import FilePreview from "./FilePreview";
 import ToolTipHint from "../../elements/ErrorHint";
 import * as ui from '../../../state/uistates'
 import {PipelineInput} from "../../../types/pipelinetypes";
+import {InputWithShortening, shortenFolders} from "../../elements/InputWithShortening";
 
 interface IFilePickerProps {
     /**This file will be selected, overrides initial Folder*/
@@ -136,8 +137,9 @@ const FilePicker: React.FC<IFilePickerProps> = ({batchID, input, initialFile, up
             <div className="file-picker__table pad-100 margin-100-top">
                 <div className="fl-row fl-align-center">
                     <strong className="file-picker__label margin-50-right">Folder:</strong>
-                    <Input className={'full-w'} placeholder={'Data Folder...'}
+                    <InputWithShortening className={'full-w'} placeholder={'Data Folder...'}
                            value={curFolder}
+                             shortenFun={shortenFolders}
                            onChange={e => setCurFolder(e.target.value)}
                            onKeyUp={onKeyUpInput}
                            onBlur={onInputSubmit}/>

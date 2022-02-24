@@ -15,6 +15,7 @@ import ConfirmToolTip from "../../elements/ConfirmToolTip";
 import {addBatches, unloadPipeline} from "../../../pipelines/pipeline";
 import * as store from "../../../state/persistance";
 import {PARAM_SET_NAME_CURRENT, ParamSet} from "../../../state/persistance";
+import {shortenFolders, TextFieldWithShortening} from "../../elements/InputWithShortening";
 
 interface IBatchCreatorProps {
     
@@ -128,7 +129,8 @@ const BatchCreator: React.FC<IBatchCreatorProps> = ({onDone, className}) => {
                             allowedExtensions = allExt.map(s => '*.' + s).join(', ')
                         }
                         return (<div className="batch-creator__single-input margin-100-bottom" key={pinp.key}>
-                            <TextField value={allInputs[pinp.key]}
+                            <TextFieldWithShortening value={allInputs[pinp.key]}
+                                       shortenFun={shortenFolders}
                                        onChange={e => setAllInputs({...allInputs, [pinp.key]: e.currentTarget.value})}
                                        label={!allowedExtensions ? pinp.title : `${pinp.title} (${allowedExtensions})`}
                                        variant={'outlined'}/>
