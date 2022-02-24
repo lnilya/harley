@@ -47,6 +47,9 @@ const DataBatchPreviewImage: React.FC<IDataBatchPreviewImageProps> = ({img, onCl
             </div>)
         }
     )
+    
+    metaData.unshift(<div className="data-batch-preview-image__filename">{img.file.name}</div>)
+    
     return (<Tooltip title={metaData} arrow placement={'bottom'}>
         {content}
     </Tooltip>);

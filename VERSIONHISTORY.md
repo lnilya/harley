@@ -1,6 +1,12 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.2
+
+Minor:
+- Long folder names in file and batch dialogues are now shortened with [...] for clarity. 
+- Full file name now displayed in popover in data input.  
+
 ### Version: 1.2.1
 
 Minor:
