@@ -86,10 +86,17 @@ const ColocCellResult:React.FC<IColocCellResultProps> = ({cellNum, fpcc,pcc,colo
                 {!excluded &&
                     <>
                         <div className="fl-grow"/>
-                        
-                        <Tooltip title={`Pearson correlation coefficient for pixels in cell bounds (p = ${pcc[1]})`} arrow>
-                            <span className={'text-tooltip'}> r<sub>cell</sub> = {printf('%.3f',pcc[0])}</span>
-                        </Tooltip>
+    
+                        {pcc &&
+                            <Tooltip title={`Pearson correlation coefficient for pixels in cell bounds (p = ${pcc[1]})`} arrow>
+                                <span className={'text-tooltip'}> r<sub>cell</sub> = {printf('%.3f',pcc[0])}</span>
+                            </Tooltip>
+                        }
+                        {!pcc &&
+                            <Tooltip title={`Pearson correlation coefficient for pixels in cell bounds. Can't be determined, usually because one of the cells completely lacks signal in one or both channels.`} arrow>
+                                <span className={'text-tooltip'}> r<sub>cell</sub> = ?</span>
+                            </Tooltip>
+                        }
                         {fpcc &&
                             <Tooltip title={`Pearson correlation coefficient for pixels in foci bounds (p = ${fpcc[1]})`} arrow>
                                 <span className={'text-tooltip'}> r<sub>foci</sub> = {printf('%.3f',fpcc[0])}</span>

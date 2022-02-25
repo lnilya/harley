@@ -57,7 +57,7 @@ const FociScatterChart: React.FC<IFociScatterChartProps> = ({curStep,cellImageDa
         if(res.error) alert('Something went wrong: ' + res.error)
         else setExportDownloadLink(res.data)
     };
-    const noData = graphData.points.length == 0;
+    const noData = graphData?.points?.length === 0;
     
     //Generate Data
     return (

@@ -64,9 +64,12 @@ class ColocGraphs(ModuleBase):
                     mp, offx, offy = shapeutil.getPolygonMaskPatch(np.array(x), np.array(y), 0)
                     corrCorrds0 += img1[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
                     corrCorrds1 += img2[offy:mp.shape[0] + offy, offx:mp.shape[1] + offx][mp == True].tolist()
-
-                pcc = pearsonr(corrCorrds0,corrCorrds1)
-                if pcc[0] == pcc[0]: fwd += [pcc]
+                #for very small foci, pearson can't be determined, you cannot correlate 1 pixel...
+                #in that case we ignore
+                if(len(corrCorrds0) >= 2 and len(corrCorrds1) >= 2):
+                    pcc = pearsonr(corrCorrds0,corrCorrds1)
+                    if pcc[0] == pcc[0]: fwd += [pcc]
+                    else: fwd += [None]
                 else: fwd += [None]
             else:
                 fwd += [None]

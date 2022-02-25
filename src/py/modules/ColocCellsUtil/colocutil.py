@@ -34,7 +34,7 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
     allCorrelations = []
     for p1,p2 in partners:
         maskPatch1, dx1, dy1 = shapeutil.getPolygonMaskPatch(d1.contours[p1]['x'], d1.contours[p1]['y'], 0)
-        maskPatch2, dx2, dy2 = shapeutil.getPolygonMaskPatch(d1.contours[p2]['x'], d1.contours[p2]['y'], 0)
+        maskPatch2, dx2, dy2 = shapeutil.getPolygonMaskPatch(d2.contours[p2]['x'], d2.contours[p2]['y'], 0)
 
         dx = min(dx1,dx2)
         dy = min(dy1,dy2)
@@ -44,7 +44,12 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
         #Intensity images for each cell individually
         img1 = np.copy(d1.img[dy:h,dx:w])
         img2 = np.copy(d2img[dy:h,dx:w])
-        allCorrelations += [pearsonr(img1[maskPatch1 == True].flat,img2[maskPatch2 == True].flat)]
+        corr = pearsonr(img1[maskPatch1 == True].flat,img2[maskPatch2 == True].flat)
+        if corr[0] != corr[0] or corr[1] != corr[1]:
+            corr = None
+            print('Warning: Cell Pearson cannot be determined, because one of the channels is constant. Correlation is set to 0 artificially with a p value of 1 to indicate that it should not be considered.')
+
+        allCorrelations += [corr]
         img1[maskPatch1 == False] = 0
         img2[maskPatch2 == False] = 0
         if border > 0:

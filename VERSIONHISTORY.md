@@ -8,6 +8,7 @@ Minor:
 - Full file name now displayed in popover in data input.
 - Coloc: Bugfix on export and display if no foci present
 - Coloc: Graph view displays hints if no data is present, instead of empty graphs
+- Coloc: Fixed various bugs occuring with messy data, mostly fail safes.
 
 ### Version: 1.2.1
 

@@ -182,7 +182,7 @@ function getFociStats(selected:number[], result: ColocCellsResult): {both:number
 function getPCCs(selected:number[], result: ColocCellsResult): [number,number] {
     if(!selected || !result) return [0,0];
     return [
-        mean(selected.map((idx)=>result.pccs[idx][0])),
+        mean(selected.map((idx)=>(result.pccs[idx] ? result.pccs[idx][0] : NaN)).filter(s=>!isNaN(s))),
         mean(selected.map((idx)=>(result.fpccs[idx] ? result.fpccs[idx][0] : NaN)).filter(s=>!isNaN(s))),
     ]
 }
@@ -191,7 +191,10 @@ function getResultSorting(sorting:string, result: ColocCellsResult): number[] {
     var sortOrder: number[] = _.range(0, result?.imgs.length);
     
     if (sorting == 'pcc')
-        return sortOrder.sort((a, b) => result.pccs[a][0] > result.pccs[b][0] ? -1 : 1)
+        return sortOrder.sort((a, b) => {
+            if(result.pccs[b] === null || result.pccs[a] === null) return -1
+            return result.pccs[a][0] > result.pccs[b][0] ? -1 : 1
+        })
     else if (sorting == 'fpcc')
         return sortOrder.sort((a, b) => {
             if(result.fpccs[a] === null) return 1
