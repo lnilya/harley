@@ -58,10 +58,10 @@ const MainMenu: React.FC<ISideMenuProps> = ({onChangeOpenState, className}) => {
     // useEffect(()=>onChangeOpenState(showing),[showing])
     
     const onLoadSettings = () => {
-        setOpenPopup(UIPopups.paramload)
+        setOpenPopup({type:UIPopups.paramload})
     }
     const onSaveSettings = () => {
-        setOpenPopup(UIPopups.paramsave)
+        setOpenPopup({type:UIPopups.paramsave})
     }
     const onSwitchPipeline = () => {
         setUIState(UIScreens.pipelineswitch)

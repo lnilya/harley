@@ -12,11 +12,11 @@ window['eel']?.set_host('ws://localhost:1234');
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
-        <RecoilRoot>
-            <SnackbarProvider maxSnack={3}
-                              autoHideDuration={3000}
-                              TransitionComponent={Zoom} anchorOrigin={ { vertical: 'bottom', horizontal: 'right'}}>
+        <SnackbarProvider maxSnack={3}
+                          autoHideDuration={3000}
+                          TransitionComponent={Zoom} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
+            <RecoilRoot>
                 <App getPipelineDefinitions={pipelineDefinitions}/>
-            </SnackbarProvider>
-        </RecoilRoot>
+            </RecoilRoot>
+        </SnackbarProvider>
     </ThemeProvider>, document.getElementById('root'));

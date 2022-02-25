@@ -63,7 +63,7 @@ const DataBatch: React.FC<IDataBatchProps> = ({
     }
     const isReady = curPipeline.inputs.filter((p)=>batch?.inputs[p.key] == null).length == 0;
     return (<AnimateHeight height={deleted ? 0 : 'auto'} onAnimationEnd={()=>(deleted ? onDeleteBatch() : null)}>
-            <div className={className + '  data-batch pad-50 site-block narrow bg-bglight ' + cl(loadedBatch == batchIdx, 'active-batch')}>
+            <div className={className + '  data-batch pad-50 site-block medium bg-bglight ' + cl(loadedBatch == batchIdx, 'active-batch')}>
                 {loadedBatch == batchIdx &&
                     <div className="data-batch__active-indicator">
                         <div>Batch in Execution</div>

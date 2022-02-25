@@ -10,17 +10,23 @@ import {loadStoredParametersIntoPipeline} from "../../pipelines/pipeline";
 import ParamSetListentry from "../elements/ParamSetListentry";
 import {EventTypes, fireEvent, ToastEventPayload} from "../../state/eventbus";
 
-interface IParamLoaderDialogProps{
+export interface IParamLoaderDialogProps{
 	
 	/**Additional classnames for this component*/
 	className?:string
+    
+    /**Optional title for the popup - otherwise a default one is provided.*/
+    title?:string
+    
+    /**Optional callback for when a parameter is chosen, otherwise the global loadStoredParametersIntoPipeline function is used*/
+    loadSettingCallback?:(ps:ParamSet)=>void
 }
 /**
  * ParamLoaderDialog Loads parameters stored in local storage
  * @author Ilya Shabanov
  */
 const cl = ccl('param-loader-dialog--')
-const ParamLoaderDialog:React.FC<IParamLoaderDialogProps> = ({className}) => {
+const ParamLoaderDialog:React.FC<IParamLoaderDialogProps> = ({title, loadSettingCallback, className}) => {
     
     const [popupOpen, setPopupOpen] = useRecoilState(ui.popupOpen);
     const pipelineName = useRecoilValue(ui.selectedPipelineName);
@@ -37,14 +43,17 @@ const ParamLoaderDialog:React.FC<IParamLoaderDialogProps> = ({className}) => {
         fireEvent<ToastEventPayload>(EventTypes.ToastEvent, {severity: 'info', msg: 'Deleted Setting Set: '+e.name})
     }
     const onLoadSettings = (e:ParamSet) => {
-        const success = loadStoredParametersIntoPipeline(e.name,true)
+        if(loadSettingCallback) loadSettingCallback(e)
+        else loadStoredParametersIntoPipeline(e.name,true)
+        
+        //Close popup
         setPopupOpen(null)
     }
     
 	return (
 		<Dialog open={true} onClose={e=>setPopupOpen(null)}>
             <div className="param-loader-dialog">
-                <h2 className={'pad-100 margin-0'}>Load settings for {pipelineName}</h2>
+                <h2 className={'pad-100 margin-0'}>{title || `Load settings for ${pipelineName}`}</h2>
                 <div className={'param-loader-dialog__content'}>
                     {allParamSets.map((e)=>
                         <ParamSetListentry onDelete={deleteEntry} key={e.name} ps={e} onClick={onLoadSettings} />)

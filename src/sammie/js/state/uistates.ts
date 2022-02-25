@@ -68,8 +68,14 @@ export enum UIPopups{
     /**Saving parameters*/
     paramsave,
 }
+export type UIPopupData = {
+    /**Type of the popup being opened*/
+    type:UIPopups,
+    /**Component Parameters being passed to the open popup, if any.*/
+    popupParams?:any
+}
 /**Indicates an open popup*/
-export const popupOpen = connectedAtom<UIPopups>({key:'popup-open',default:null});
+export const popupOpen = connectedAtom<UIPopupData>({key:'popup-open',default:null});
 
 /**Wethre or not server can be contacted*/
 export const serverConnected = connectedAtom<boolean>({key:'eel_connection',default:window['eel'] !== undefined});

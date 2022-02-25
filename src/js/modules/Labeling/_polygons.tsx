@@ -30,9 +30,11 @@ export const SplitablePolygon = styled.polygon({
     }
 })
 export const SplitPolygon = styled.polygon({
+    
     cursor:'not-allowed',
     stroke:'#ff7700',
-    fill:'none',
+    fill:'transparent',
+    zIndex:2,
     strokeWidth:1.5,
     '&:hover':{
         fill:'#ff770066',

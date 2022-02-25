@@ -59,8 +59,8 @@ const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
                 {curStep && <AutoPlayOverlay/>}
                 
                 
-                {openPopup == UIPopups.paramload && <ParamLoaderDialog/>}
-                {openPopup == UIPopups.paramsave && <ParamSaverDialog/>}
+                {openPopup?.type == UIPopups.paramload && <ParamLoaderDialog {...openPopup.popupParams}/>}
+                {openPopup?.type == UIPopups.paramsave && <ParamSaverDialog {...openPopup.popupParams}/>}
                 <MainMenu onChangeOpenState={s=>setSideMenuOpen(s)}/>
                 <Header/>
                 {curStep &&  <ProgressOverlay sidebarActive={showSidebar}/> }

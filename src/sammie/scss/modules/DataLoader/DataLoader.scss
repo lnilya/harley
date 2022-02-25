@@ -1,2 +1,9 @@
 .data-loader {
+	&.site-block.main{
+		max-width: 1000px;
+		margin: auto;
+		.data-batch{
+			width: 100%;
+		}
+	}
 }

@@ -1,0 +1,13 @@
+@import "../global/variables";
+@import "../global/mixins";
+
+.data-loader-menu{
+
+	position: sticky;
+	top: $topBarHeight;
+	z-index: 1;
+
+	.MuiSvgIcon-root{
+		margin-right: 10px;
+	}
+}

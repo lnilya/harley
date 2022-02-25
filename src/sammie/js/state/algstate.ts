@@ -38,7 +38,7 @@ export type SingleDataBatch<BatchParamType = Record<ParameterKey, any>> = {
     /**Parameters for this batch*/
     batchParameters: BatchParamType,
     
-    /**Name of settings set in this batch*/
+    /**Name of settings set in this batch corresponds to type ParamSet's field name*/
     settingsSetName:string
     
     /**Convenience variable, same as curLoadedBatchTimestamp, only loaded reliably when using the curLoadedBatch selector.

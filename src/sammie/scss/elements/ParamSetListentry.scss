@@ -3,6 +3,9 @@
 .param-set {
 	cursor: pointer;
 	transition: all 0.3s;
+	&:not(:last-child){
+		border-bottom: 1px solid rgba($colGray,.2);
+	}
 
 	background-color: $colBGLight;
 	&:hover{

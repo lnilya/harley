@@ -161,9 +161,9 @@ const CellCounter: React.FC<ICellCounterProps> = ({cellContour, onNext, classNam
                     <img src={cellImg.url} alt=""/>
                     {curCell &&
                     <>
+                        <PolygonCloud polygons={splittingSeeds} canvasDim={cellImg} PolyComp={SplitSeedPolygon}/>
                         <PolygonCloud polygons={[cellContour]} canvasDim={cellImg} PolyComp={OutlinePolygonLabeling}/>
                         <PolygonCloud onClick={onUnSelectSeed} className={''} polygons={selectedOutlines} canvasDim={cellImg} PolyCompFactory={selectedOutlinesStyle}/>
-                        <PolygonCloud polygons={splittingSeeds} canvasDim={cellImg} PolyComp={SplitSeedPolygon}/>
                         <PolygonCloud onMouseDown={onMouseDownIn} onClick={onSelectSeed}
                                       className={mod['1'] ? 'all-show' : ''} polygons={seeds} canvasDim={cellImg}
                                       PolyComp={SeedPolygon}/>

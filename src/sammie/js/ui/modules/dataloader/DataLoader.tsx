@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useRef, useState} from "react"
 import {useRecoilValue} from "recoil";
 import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
@@ -20,6 +20,7 @@ import BallotIcon from '@mui/icons-material/Ballot';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import {DeleteForever} from "@mui/icons-material";
 import ConfirmToolTip from "../../elements/ConfirmToolTip";
+import DataLoaderMenu from "../DataLoaderMenu";
 
 interface IDataLoaderProps{
 
@@ -59,8 +60,9 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
     const [allBatches, setAllBatches] = useLocalStoreRecoilHook(alg.allPipelineBatches,'pipeline',false, curPipeline.name);
     const [askingForInput,setAskingForInput] = useState<DialogState>(null);
     const [selectedInput,setSelectedInput] = useState<LocalFileWithPreview>(null);
-    const [multiBatchDialog,setMultiBatchDialog] = useState(false);
     const curLoadedBatch = useRecoilValue(alg.curLoadedBatchNumber);
+    const bottomElement = useRef();
+    
     //Initial Load of inputs
     const openPickerDialog = (pinp:PipelineInput, idx:number)=>{
         setSelectedInput(null)
@@ -95,10 +97,6 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
         if(curLoadedBatch == bidx)
             unloadPipeline();
     }
-    const addNewBatch = () =>{
-        const nb:SingleDataBatch = getBlankBatch(curPipeline)
-        setAllBatches([...allBatches,nb])
-    }
     
     //Will show the overlay instead
     if(overlay) return null;
@@ -107,18 +105,20 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
         startPipelineAutoPlay();
     };
     
-    const deleteAllBatches = () => {
-        //delete with an empty batch
-        setAllBatches([getBlankBatch(curPipeline)])
-        unloadPipeline();
-    };
+    const onScrollToBottom = () => {
+        setTimeout(()=>{
+             // @ts-ignore
+            bottomElement?.current?.scrollIntoView({ behavior: 'smooth' })
+        },100)
+    }
     
     //get some info for UI display
     const [needsCurrentSettingsWarning,hasReadyBatches] = analyzeBatches(allBatches,curPipeline.inputs);
     
     const startPipelineButton = <Button disabled={!hasReadyBatches || curPipeline.disableBatchMode} onClick={startPipeAutoMode} variant={"contained"} color={'primary'}>Start Pipeline</Button>;
     var counter = 0;
-	return (<div className={'site-block data-loader narrow pad-100'}>
+	return (<div className={'site-block data-loader main pad-100-excepttop'}>
+        <DataLoaderMenu scrollToBottom={onScrollToBottom}/>
         {allBatches.map((pb,i)=>{
             if(!pb) return null;
             return <DataBatch onDeleteBatch={()=>removeBatch(i)}
@@ -132,18 +132,7 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
                 In any of the following batches the "Current Parameters" become simply the same as a preceeding named set.
             </Alert>
         }
-        <div className="pad-100-top fl-row">
-            <Tooltip title={'Add a new empty batch'} placement={'top'} arrow>
-                <Button variant={"contained"} color={'secondary'} onClick={addNewBatch}><AddBoxIcon/></Button>
-            </Tooltip>
-            <div className="margin-100-right"/>
-            <Tooltip title={'Batch Creator: Allows to add multiple batches at once using placeholders'} placement={'top'} arrow>
-                <Button variant={"contained"} color={'secondary'} onClick={()=>setMultiBatchDialog(true)}><BallotIcon/></Button>
-            </Tooltip>
-            <div className="margin-100-right"/>
-            <ConfirmToolTip onConfirm={deleteAllBatches} question={`Delete all batches?`} options={['Delete','Cancel']} tooltipParams={{placement:'top', arrow:true}}>
-                <Button variant={"outlined"} color={'secondary'}><DeleteForever/></Button>
-            </ConfirmToolTip>
+        <div className="pad-100-top fl-row" ref={bottomElement}>
             <div className="fl-grow"/>
             {!hasReadyBatches && !curPipeline.disableBatchMode &&
                 <Tooltip title={'Define a batch with all data to be able to start the pipeline'} placement={'top'} arrow>
@@ -157,10 +146,8 @@ const DataLoader:React.FC<IDataLoaderProps> = () => {
             }
             {hasReadyBatches && !curPipeline.disableBatchMode && startPipelineButton }
         </div>
+        <div ref={bottomElement}/>
         
-        <Dialog open={multiBatchDialog} maxWidth={'md'} onClose={()=>setMultiBatchDialog(false)}>
-            <BatchCreator onDone={()=>setMultiBatchDialog(false)}/>
-        </Dialog>
         <Dialog open={!!askingForInput} fullWidth={true}
                 maxWidth={"md"} onClose={()=>resolvePickerDialog(true)}>
             <div className="pad-200">
