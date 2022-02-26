@@ -142,3 +142,10 @@ export function doesPolygonContain(outer: PolygonData, inner: PolygonData) {
     
     return inside;
 }
+
+const mnames = ['Jan','Feb','Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+export function convertPythonTimestamp(ts:number){
+    const d = new Date(ts*1000);
+    const mname = mnames[d.getMonth()]
+    return `${mname} ${d.getDate()}, ${d.getFullYear()} at ${d.toLocaleTimeString()}`;
+}

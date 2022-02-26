@@ -6,6 +6,7 @@ interface IConfirmToolTipProps{
 	/**Additional classnames for this component*/
 	className?:string
     question:string,
+    /**First option is confirmation, second is cancel*/
     options:[string,string],
     onConfirm:()=>void,
     disabled?:boolean

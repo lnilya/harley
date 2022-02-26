@@ -78,7 +78,7 @@ export function shortenFolders(s) {
     const folders = s.split(splitChar);
     
     if (folders.length > 2)
-        return '[...]/' + folders.slice(-2).join('/')
+        return '[...]' + splitChar + folders.slice(-2).join(splitChar)
     
     return s;
 }

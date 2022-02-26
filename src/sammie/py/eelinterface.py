@@ -87,12 +87,12 @@ def getAggregateDataInfo(aggregatorID:str, path:str, exporterArgs:Dict = None):
     return moduleConnector.getAggregatorFileInfo(aggregatorID,path).toDict()
 
 @eel.expose
-def resetAggregateData(aggregatorID:str, path:str):
-    return moduleConnector.resetAggregatorFile(aggregatorID, path)
+def resetAggregateData(aggregatorID:str, path:str,batchKey:List[str] = None):
+    return moduleConnector.resetAggregatorFile(aggregatorID, path,batchKey)
 
 @eel.expose
-def exportAggregateData(aggregatorID:str, path:str, batchnum:int, exporterArgs:Dict = None):
-    return moduleConnector.runAggregator(aggregatorID, path,session,modulesById,batchnum,exporterArgs).toDict()
+def exportAggregateData(aggregatorID:str, path:str, batchKey:List[str], exporterArgs:Dict = None):
+    return moduleConnector.runAggregator(aggregatorID, path,session,modulesById,batchKey,exporterArgs).toDict()
 
 @eel.expose
 def getBatchGlobs(patterns:List[str],allowedExtensions:List[List[str]]):

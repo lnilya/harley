@@ -204,3 +204,7 @@ body.admin-bar {
 	@include stick-to($fix-all);
 	position: absolute !important;
 }
+
+.MuiAlert-root{
+	border-radius: $defBorderRadius !important;
+}

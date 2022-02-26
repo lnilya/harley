@@ -153,7 +153,7 @@ export type AggregateDataResponse = { msg: string, info: AggregateDataInfo }
  * Exports data via an aggregator (which accumulates data from multiple batches into a single output file)
  * @param aggregatorID The ID of the aggregator as defined in pipeline settings. Identifies the function to use on server.
  *
- * @param batchnum The number of this batch. Useful on server if you don't want to accumulate data for the same batch, but overwrite it for this batch only.
+ * @param batchKey The key of this batch, which is just an array of filepaths used as inputs for this batch. Uniquely identifies the output, thats the idea.
  *
  * @param filePath The path of the output file.
  * @param batchSettings The settings for this batch, set in the data input screen.(e.g. An image scale parameter "1px = 23.4µm")
@@ -161,22 +161,28 @@ export type AggregateDataResponse = { msg: string, info: AggregateDataInfo }
  * @return An eelresponse with error information or AggregatorDataResponse.
  * @see AggregateDataResponse
  */
-export async function exportAggregateData(aggregatorID: PipelineDataAggregatorID, batchnum: number, filePath: LocalFilePath, batchSettings: Record<ParameterKey, any> = null, addtlParams = null): Promise<EelResponse<AggregateDataResponse>> {
+export async function exportAggregateData(aggregatorID: PipelineDataAggregatorID, batchKey: string[], filePath: LocalFilePath, batchSettings: Record<ParameterKey, any> = null, addtlParams = null): Promise<EelResponse<AggregateDataResponse>> {
     const params = {...addtlParams||{}, ...batchSettings||{}}
     return await runEelEndpoint<AggregateDataResponse>(EelPythonFunctions.exportAggregateData,
-        [aggregatorID, filePath, batchnum, params])
+        [aggregatorID, filePath, batchKey, params])
 }
 
-export type AggregateDataInfo = { exists: boolean, info: any, ready: boolean }
+/**Info on the Aggregate file, see AggregatorFileInfo class defined in ModuleConnector.py*/
+export type AggregateDataInfo = {
+    exists: boolean,
+    info: any,
+    ready: boolean
+    batchInfo:{timestamp:number, batchKey:string[]}[]
+}
 
 export async function getAggregateDataInfo(aggregatorID: string, filePath: LocalFilePath): Promise<EelResponse<AggregateDataInfo>> {
     return await runEelEndpoint<AggregateDataInfo>(EelPythonFunctions.getAggregateDataInfo,
         [aggregatorID, filePath])
 }
 
-export async function resetAggregateData(aggregatorID: string, filePath: LocalFilePath): Promise<EelResponse<boolean>> {
+export async function resetAggregateData(aggregatorID: string, filePath: LocalFilePath, onlyBatchKey:string[]): Promise<EelResponse<boolean>> {
     return await runEelEndpoint<boolean>(EelPythonFunctions.resetAggregateData,
-        [aggregatorID, filePath])
+        [aggregatorID, filePath,onlyBatchKey])
 }
 
 type FolderContents = { files: LocalFile[], folders: LocalFolder[] };

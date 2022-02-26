@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from src.py import loaders
 from src.py import aggregators
 
@@ -12,18 +12,18 @@ class HarleyModuleConnector(ModuleConnector):
         loaderFun = getattr(loaders, loaderName)  # will throw an error if doesnt exist
         return loaderFun(asPreview, key, filePath,**loaderArgs)
 
-    def resetAggregatorFile(self, aggregatorID: str, destinationPath: str) -> bool:
+    def resetAggregatorFile(self, aggregatorID: str, destinationPath: str, batchKey:List[str] = None) -> bool:
         aggregatorFun = getattr(aggregators, aggregatorID + '_Reset')
-        return aggregatorFun(destinationPath)
+        return aggregatorFun(destinationPath,batchKey)
 
     def getAggregatorFileInfo(self, aggregatorID: str, destinationPath: str) -> AggregatorFileInfo:
         aggregatorFun = getattr(aggregators, aggregatorID + '_Info')
         return aggregatorFun(destinationPath)
 
     def runAggregator(self, aggregatorID: str, destinationPath: str, data: SessionData,
-                      modulesById: Dict[str, ModuleBase], batchNum: int, adtlParams: Dict = None) -> AggregatorReturn:
+                      modulesById: Dict[str, ModuleBase], batchKey: List[str], adtlParams: Dict = None) -> AggregatorReturn:
         aggregatorFun = getattr(aggregators, aggregatorID)
-        return aggregatorFun(destinationPath, data, modulesById, batchNum, adtlParams)
+        return aggregatorFun(destinationPath, data, modulesById, batchKey, adtlParams)
 
     def initializeModule(self, moduleID: str, moduleName: str, params: Dict, session: SessionData) -> ModuleBase:
         if moduleName == 'Threshhold':

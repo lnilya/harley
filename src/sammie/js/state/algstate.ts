@@ -65,7 +65,7 @@ export const curLoadedBatch = connectedSelector<SingleDataBatch>({key:'cur_pl_se
     }
 })
 
-export type BatchInfo = {batch:number, displayedBatch:number, totalDispBatches:number};
+export type BatchInfo = {batch:number, displayedBatch:number, totalDispBatches:number, loadedFilePaths:string[]};
 /**Since allPipelineBatches is not a dense array, i.e. it has nulls in it, which is necessary due to preloading of images
  * we use this selector which always gives a batch number, corresponding to the batch number the user sees:
  * example if allBatches is: [b1,null,null,b2] and curLoadedBatch: 3  then displayedBatchNumber = 1
@@ -80,7 +80,11 @@ export const loadedBatchInfo = connectedSelector<BatchInfo>({key:'cur_displayed_
             if(i == bn) break;
             if(apb[i] != null) k++;
         }
-        return {batch:bn, displayedBatch:k, totalDispBatches:apb.filter(e=>e!=null).length};
+        //get array of all input file names
+        var filePaths = [];
+        if(apb && apb[bn])
+            filePaths = Object.values(apb[bn].inputs).map((file)=>file.file.path)
+        return {batch:bn, displayedBatch:k, totalDispBatches:apb.filter(e=>e!=null).length, loadedFilePaths:filePaths};
     }})
 
 
@@ -151,3 +155,12 @@ export const pipelineGlobalSettings = connectedAtom<GlobalPipelineSettings>({key
 
 export type PipelineLogEntry = {msg:string,type:'success'|'fail'|'info',duration:number|null, time:number};
 export const pipelineLog = connectedAtom<PipelineLogEntry[]>({key:'pl_log',default:[]})
+
+
+
+/**Input Files Hash is a unique identifier for all files in all current batches of the chosen pipeline.+
+ * Essentially it is just an array over batches x inputs that can easily be compared.
+ * It is used to identify all data that will go through the pipeline and the main usecase is to
+ * compare it to
+ * */
+export type InputFilesHash = string[][];

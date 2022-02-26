@@ -4,7 +4,7 @@ import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
 import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
 import {PipelineAggregatorOutput, PipelineOutput, PipelineStep} from "../../../types/pipelinetypes";
-import {Button, Input, Tooltip} from "@mui/material";
+import {Alert, Button, Input, Tooltip} from "@mui/material";
 import {LocalFilePath, PipelineDataAggregatorID} from "../../../types/datatypes";
 import * as server from "../../../eel/eel";
 import {AggregateDataInfo, EelResponse} from "../../../eel/eel";
@@ -16,6 +16,8 @@ import {EventTypes, ToastEventPayload} from "../../../state/eventbus";
 import "../../../../scss/modules/aggregator/AggregatorStep.scss";
 import {useDebounce} from "react-use";
 import ConfirmToolTip from "../../elements/ConfirmToolTip";
+import {InputWithShortening, shortenFolders} from "../../elements/InputWithShortening";
+import AggregatorFileInfo from "./AggregatorFileInfo";
 
 interface IAggregatorStepProps {
     onExport:(owner:PipelineStep<any,any>,
@@ -25,7 +27,7 @@ interface IAggregatorStepProps {
     step: PipelineAggregatorOutput,
 }
 
-const defaultInfo:EelResponse<AggregateDataInfo> = { data: { exists:false, info:'Loading info...' ,ready:false} }
+const defaultInfo:EelResponse<AggregateDataInfo> = { data: { exists:false, info:'Loading info...' ,ready:false, batchInfo:[]} }
 const asFolder = atomFamily<LocalFilePath,PipelineDataAggregatorID>({key: 'aggregator_input', default: ''});
 const asFileInfo = atomFamily<EelResponse<AggregateDataInfo>,PipelineDataAggregatorID>({key:'aggregator_folder_info',default:defaultInfo})
 const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
@@ -38,7 +40,6 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<EelResponse<boolean>>(null);
     const curBatch = useRecoilValue(alg.curLoadedBatch);
-    console.log(`LOADED BI: `, curBatchInfo);
     const missingKeys:string[] = step.requiredInputs.filter((a)=>{return allData[a] == null})
     //find the steps that generate the missing key, for legibility
     const missingSteps = missingKeys.map((k)=>{
@@ -56,7 +57,7 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
     
     const initExport = async (suppressToast:boolean = false)=>{
         setLoading(true)
-        const res = await server.exportAggregateData(step.aggregatorID,curBatchInfo.displayedBatch+1,curFolder,curBatch.batchParameters,step.exporterParams)
+        const res = await server.exportAggregateData(step.aggregatorID,curBatchInfo.loadedFilePaths,curFolder,curBatch.batchParameters,step.exporterParams)
         if(res.error)
             
             !suppressToast && eventbus.fireEvent<ToastEventPayload>(EventTypes.ToastEvent, {
@@ -73,13 +74,24 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
         setLoading(false)
         return res
     }
-    const onDeleteAggregateFile = async ()=>{
+    const onDeleteAggregateFile = async (batchKey:string[] = null)=>{
         setLoading(true)
-        const deleteSuccess:EelResponse<boolean> =  await server.resetAggregateData(step.aggregatorID,curFolder)
-        if(!deleteSuccess.error && deleteSuccess.data) eventbus.fireEvent<ToastEventPayload>(EventTypes.ToastEvent,{msg:`Aggregate file for ${step.title} reset.`,severity:"success"})
+        const deleteSuccess:EelResponse<boolean> =  await server.resetAggregateData(step.aggregatorID,curFolder,batchKey)
+        if(!deleteSuccess.error && deleteSuccess.data) {
+            if(batchKey)
+                eventbus.fireEvent<ToastEventPayload>(EventTypes.ToastEvent, {
+                    msg: `Deleted batch in ${step.title} file.`,
+                    severity: "success"
+                })
+            else
+                eventbus.fireEvent<ToastEventPayload>(EventTypes.ToastEvent, {
+                    msg: `Aggregate file for ${step.title} reset.`,
+                    severity: "success"
+                })
+        }
         else {
             eventbus.fireEvent<ToastEventPayload>(EventTypes.ToastEvent, {
-                msg: `Could not delete aggregate file for ${step.title}: ${deleteSuccess.error}`,
+                msg: `Could not modify/delete aggregate file for ${step.title}: ${deleteSuccess.error}`,
                 severity: "error"
             })
         }
@@ -114,15 +126,24 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
                 <div className="fl-row fl-align-start ">
                     <strong className="aggregator-step__label margin-50-right pad-25-top">Output File:</strong>
                     <div className={'full-w'} >
-                        <Input className={'full-w'} placeholder={'Filename...'} value={curFolder} onChange={e=>setCurFolder(e.target.value)} onBlur={e=>setCurFolder(e.target.value)}/>
+                        <InputWithShortening shortenFun={shortenFolders} className={'full-w'} placeholder={'Filename...'} value={curFolder} onChange={e=>setCurFolder(e.target.value)} onBlur={e=>setCurFolder(e.target.value)}/>
                         {curFileInfo?.data &&
-                            <div className="aggregator-step__info pad-50-top">
-                                {curFileInfo?.data?.info}
-                            </div>
+                            <AggregatorFileInfo id={step.aggregatorID} info={curFileInfo.data} deleteBatch={onDeleteAggregateFile}/>
                         }
                     </div>
                 </div>
             </div>
+            <Alert severity="warning" className={'margin-50-top'}>
+                Warning since the last time this file was used to store an aggregator input, the inputs have changed.
+                Keep in mind that batches inside the aggregator file are distinguished by batch number. So the first batch defined in input, will be
+                stored as batch 1 in the aggregator regardless of input files or anything else.
+                <br/>
+                <br/>
+                If you get this warning because after simply adding new batches to the input, everything is fine.
+                <br/>
+                More often though this happens because you changed your inputs entirely and you are at risk of overwriting
+                the data in this file, since it relates to older inputs.
+            </Alert>
             <div className="aggregator-step__btn-container fl-row-between margin-100-top">
                 <ConfirmToolTip disabled={!curFileInfo?.data?.exists} onConfirm={onDeleteAggregateFile} question={`This will delete the file, are you sure?`} options={['Delete','Cancel']} tooltipParams={{placement:'top', arrow:true}}>
                     <Button variant={"outlined"} disabled={!curFileInfo?.data?.exists} color={'secondary'}>Reset File</Button>

@@ -1,9 +1,11 @@
 @import "../../global/variables";
 @import "../../global/mixins";
 
-
 .aggregator-step {
 
+	&__settings{
+		border-radius: $defBorderRadius;
+	}
 	&__label{
 		display: inline-block;
 		white-space: nowrap;
@@ -11,6 +13,42 @@
 	&__info{
 		font-weight: bold;
 		font-size: 12px;
+		.details-btn{
+			cursor: pointer;
+			font-weight: normal;
+			opacity: .7;
+			&:hover{
+				text-decoration: underline;
+			}
+		}
+		.batch-info{
+			transition: all 0.3s;
+			border-radius: $defBorderRadiusInner;
+			background-color: rgba($colBGMedium, .1);
+			&:not(:last-child){
+				margin-bottom: 10px;
+			}
+			.title{
+				margin-bottom: 10px;
+				.deletebtn{
+					color: $colError;
+					cursor: pointer;
+					&:hover{
+						text-decoration: underline;
+					}
+				}
+			}
+
+			>*:not(.title){
+				padding-left: 10px;
+				margin-bottom: 5px;
+				span{
+					font-weight: normal;
+					opacity: .6;
+					padding-right: 5px;
+				}
+			}
+		}
 	}
 	&__btn-container{
 		//.MuiButton-label{

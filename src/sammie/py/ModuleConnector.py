@@ -1,23 +1,45 @@
 import abc
-from typing import Dict, Callable
+import time
+from typing import Dict, Callable, List, Tuple
 
 from src.sammie.py.SessionData import SessionData
 from src.sammie.py.modules.ModuleBase import ModuleBase
 
 
+class AggregatorBatchInfo:
+    timestamp:int
+    batchKey:List[str] #Batch key is an array of inputfile paths, to display to user and use as a unique key as well.
+
+    def __init__(self, batchKey:List[str], timestamp = -1):
+        self.batchKey = batchKey
+        if timestamp == -1: timestamp = time.time()
+        self.timestamp = timestamp
+
+    def compareToKey(self,other:List[str])->bool:
+        """Compares if two arrays of strings, i.e. keys are equal"""
+        for i,ibk in enumerate(self.batchKey):
+            if ibk != other[i]: return False
+
+        return True
+
+    def toDict(self):
+        return {'timestamp':self.timestamp, 'batchKey':self.batchKey}
+
 class AggregatorFileInfo:
     exists: bool  # Wether or not the file already exists
     ready: bool  # Wether or not the filename/path are valid, regardless wether it exists
     info: str  # Info regarding the file, displayed to the user (e.g. "file contains already 4 batches" or "file doesnt exists")
+    batchInfo:List[AggregatorBatchInfo] #for each stored batch will store a tuple containing a list of input files and paths, and a timestamp when the batch was saved
 
-    def __init__(self, exists:bool, ready:bool, info:str):
+    def __init__(self, exists:bool, ready:bool, info:str, batchInfo:List[AggregatorBatchInfo] = []):
         self.exists = exists
         self.ready = ready
         self.info = info
+        self.batchInfo = batchInfo
 
 
     def toDict(self):
-        return {'info':self.info, 'exists':self.exists, 'ready':self.ready}
+        return {'info':self.info, 'exists':self.exists, 'ready':self.ready, 'batchInfo':[bi.toDict() for bi in self.batchInfo]}
 
 class AggregatorReturn:
     msg: str  # Message to be displayed in a toast in the aggregator screen upon success
@@ -68,12 +90,14 @@ class ModuleConnector(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def resetAggregatorFile(self, aggregatorID: str, destinationPath:str, ) -> bool:
+    def resetAggregatorFile(self, aggregatorID: str, destinationPath:str, batchKey:List[str] = None ) -> bool:
         """
         Resets the aggregatorfile. Can be by simply deleting it or clearing it of any data.
+        If batchKey is provided, only a certain batch needs to be deleted, not the whole file.
         Args:
             aggregatorID (str): ID for this function, usually the function name. It is provided by JS as the aggregatorID field in PipelineAggregatorOutput datatype.
             destinationPath (str): Path of the file to write to
+            batchKey (List[str]): If this is provided, only the batch with the given key should be deleted, not the whole file.
 
         Returns:
 
@@ -93,7 +117,7 @@ class ModuleConnector(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def runAggregator(self, aggregatorID: str, destinationPath:str, data:SessionData, modulesById:Dict[str, ModuleBase], batchNum:int, adtlParams:Dict = None) -> AggregatorReturn:
+    def runAggregator(self, aggregatorID: str, destinationPath:str, data:SessionData, modulesById:Dict[str, ModuleBase], batchKey:List[str], adtlParams:Dict = None) -> AggregatorReturn:
         """
         An aggregator function will append data from a pipeline to a file provided by user.
         See PipelineAggregatorOutput datatype on js side.
@@ -102,7 +126,7 @@ class ModuleConnector(metaclass=abc.ABCMeta):
             destinationPath (str): Path of the file to write to
             data (SessionData): SessionData containing current pipeline state
             modulesById (Dict[str,ModuleBase]): Dictionary containing active module instances in the pipeline. Sometimes an aggregator need to communicate with the module directly, to get more than just the pipelinedata in SessionData.
-            batchNum (int): The index of the batch this data is coming from. This is used so that if the same batch is run multiple times, the aggregator can overwrite previous outputs, rather than appending them to the file.
+            batchKey (List[str]): The batchkey is simply a list of the file paths of each of the inputs. It is used to uniquely identify each batch and allow aggregators not to overwrite existing data.
             adtlParams (Dict): Additional parameters passed to the exporter by JS. These are static parameters defined in the pipeline (See PipelineAggregatorOutpur.exporterParams in JS) merged with with the parameters for the batch (see Pipeline.inputParameters in JS).
 
         Returns:
