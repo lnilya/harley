@@ -22,12 +22,12 @@ interface IDataBatchPreviewImageProps {
 const DataBatchPreviewImage: React.FC<IDataBatchPreviewImageProps> = ({img, onClick, title, className}) => {
     
     if (!img) {
-        var content = (<div className={`data-batch-preview-image ${className || ''} pad-100`}
+        var content = (<div key={1} className={`data-batch-preview-image ${className || ''} pad-100`}
                             onClick={onClick}>
             Add<br/>{title}
         </div>)
     } else {
-        content = (<div className={`data-batch-preview-image ${className || ''} selected`}
+        content = (<div key={2} className={`data-batch-preview-image ${className || ''} selected`}
                         onClick={onClick}>
             <img src={img.previewURL} alt=""/>
             <span>{img.file.name}</span>
@@ -48,7 +48,7 @@ const DataBatchPreviewImage: React.FC<IDataBatchPreviewImageProps> = ({img, onCl
         }
     )
     
-    metaData.unshift(<div className="data-batch-preview-image__filename">{img.file.name}</div>)
+    metaData.unshift(<div key={'filename'} className="data-batch-preview-image__filename">{img.file.name}</div>)
     
     return (<Tooltip title={metaData} arrow placement={'bottom'}>
         {content}

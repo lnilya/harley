@@ -37,7 +37,6 @@ const PipelineParamList:React.FC<IPipelineParamListProps> = ({batchIdx,className
         //overwrite the current Parameters for this databatch, it will be stored to localstore automatically.
         var nb:SingleDataBatch = {...thisBatch,batchParameters:{...thisBatch.batchParameters, [conf.key]: val}};
         setAllBatches(copyChange(allBatches,batchIdx,nb));
-        console.log(`CHANGED ${conf.key} => ${val}`);
     };
     
 	return (

@@ -23,11 +23,17 @@ interface IProps {
     type: 'input' | 'textfield'
 }
 
-export const InputWithShortening: React.FC<IInputWithShorteningProps> = (p)=>
-    <ElWithShortening type='input' shortenFun={p.shortenFun} elProps={p}/>
+export const InputWithShortening: React.FC<IInputWithShorteningProps> = (p)=> {
+    const elp = {...p};
+    delete elp["shortenFun"];
+    return <ElWithShortening type='input' shortenFun={p.shortenFun} elProps={elp}/>
+}
 
-export const TextFieldWithShortening: React.FC<ITextFieldWithShorteningProps> = (p)=>
-    <ElWithShortening type='textfield' shortenFun={p.shortenFun} elProps={p}/>
+export const TextFieldWithShortening: React.FC<ITextFieldWithShorteningProps> = (p)=>{
+    const elp = {...p};
+    delete elp["shortenFun"];
+    return <ElWithShortening type='textfield' shortenFun={p.shortenFun} elProps={elp}/>
+}
 
  /**
  * InputWithShortening is an Material UI input, where the input is only displayed
