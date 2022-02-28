@@ -11,6 +11,7 @@ import {EventTypes, ToastEventPayload} from "../../../state/eventbus";
 import {LocalFilePath, PipelineDataAggregatorID} from "../../../types/datatypes";
 import {useLocalStoreRecoilHook} from "../../uihooks";
 import AnimateHeight from "react-animate-height";
+import {Alert, AlertColor} from "@mui/material";
 
 interface IAggregatorFileInfoProps{
     info:AggregateDataInfo,
@@ -46,8 +47,13 @@ const AggregatorFileInfo:React.FC<IAggregatorFileInfoProps> = ({id,info,deleteBa
                         </ConfirmToolTip>
                     </div>
                     
-                    {binfo.batchKey.map((bk,j)=><div key={j}><span>{inputKeys[j]}:</span>{bk}</div>
-                    )}
+                    {inputKeys.map((bk,j)=> {
+                        return <div key={j}><span>{inputKeys[j]}:</span>{binfo.batchKey[j] || '-'}</div>
+                    })}
+                    {binfo.comment &&
+                        <em>{binfo.comment}</em>
+                    }
+                    
                 </div>)
             })}
         </AnimateHeight>

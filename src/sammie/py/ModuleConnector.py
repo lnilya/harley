@@ -7,13 +7,15 @@ from src.sammie.py.modules.ModuleBase import ModuleBase
 
 
 class AggregatorBatchInfo:
+    comment:str #any sort of extra info
     timestamp:int
     batchKey:List[str] #Batch key is an array of inputfile paths, to display to user and use as a unique key as well.
 
-    def __init__(self, batchKey:List[str], timestamp = -1):
+    def __init__(self, batchKey:List[str], timestamp = -1, comment = ''):
         self.batchKey = batchKey
         if timestamp == -1: timestamp = time.time()
         self.timestamp = timestamp
+        self.comment = comment
 
     def compareToKey(self,other:List[str])->bool:
         """Compares if two arrays of strings, i.e. keys are equal"""
@@ -23,23 +25,29 @@ class AggregatorBatchInfo:
         return True
 
     def toDict(self):
-        return {'timestamp':self.timestamp, 'batchKey':self.batchKey}
+        return {'timestamp':self.timestamp, 'batchKey':self.batchKey, 'comment':self.comment}
 
 class AggregatorFileInfo:
     exists: bool  # Wether or not the file already exists
     ready: bool  # Wether or not the filename/path are valid, regardless wether it exists
     info: str  # Info regarding the file, displayed to the user (e.g. "file contains already 4 batches" or "file doesnt exists")
     batchInfo:List[AggregatorBatchInfo] #for each stored batch will store a tuple containing a list of input files and paths, and a timestamp when the batch was saved
+    log: Dict #Keys have the format timestamp|severity
 
-    def __init__(self, exists:bool, ready:bool, info:str, batchInfo:List[AggregatorBatchInfo] = []):
+    def __init__(self, exists:bool, ready:bool, info:str, batchInfo:List[AggregatorBatchInfo] = [], log:Dict = {}):
         self.exists = exists
         self.ready = ready
         self.info = info
+        self.log = log
         self.batchInfo = batchInfo
 
 
     def toDict(self):
-        return {'info':self.info, 'exists':self.exists, 'ready':self.ready, 'batchInfo':[bi.toDict() for bi in self.batchInfo]}
+        return {'info':self.info,
+                'exists':self.exists,
+                'ready':self.ready,
+                'batchInfo':[bi.toDict() for bi in self.batchInfo],
+                'log': self.log}
 
 class AggregatorReturn:
     msg: str  # Message to be displayed in a toast in the aggregator screen upon success

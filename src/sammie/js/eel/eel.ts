@@ -172,7 +172,9 @@ export type AggregateDataInfo = {
     exists: boolean,
     info: any,
     ready: boolean
-    batchInfo:{timestamp:number, batchKey:string[]}[]
+    batchInfo:{timestamp:number, batchKey:string[],comment:string}[]
+    /**KEy Format is "python-timestamp|severity" with severity being the same as material UI uses for Toasts, Alerts etc. i.e. warning, success, info */
+    log: Record<string, string>
 }
 
 export async function getAggregateDataInfo(aggregatorID: string, filePath: LocalFilePath): Promise<EelResponse<AggregateDataInfo>> {

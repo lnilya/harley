@@ -1,10 +1,10 @@
 import React, {useState} from "react"
-import {cl, parseFilePath} from "../../../util";
+import {cl, convertPythonTimestamp, parseFilePath} from "../../../util";
 import * as ui from '../../../state/uistates'
 import * as alg from '../../../state/algstate'
 import {atomFamily, useRecoilState, useRecoilValue} from "recoil";
 import {PipelineAggregatorOutput, PipelineOutput, PipelineStep} from "../../../types/pipelinetypes";
-import {Alert, Button, Input, Tooltip} from "@mui/material";
+import {Alert, AlertColor, Button, Input, Tooltip} from "@mui/material";
 import {LocalFilePath, PipelineDataAggregatorID} from "../../../types/datatypes";
 import * as server from "../../../eel/eel";
 import {AggregateDataInfo, EelResponse} from "../../../eel/eel";
@@ -27,7 +27,7 @@ interface IAggregatorStepProps {
     step: PipelineAggregatorOutput,
 }
 
-const defaultInfo:EelResponse<AggregateDataInfo> = { data: { exists:false, info:'Loading info...' ,ready:false, batchInfo:[]} }
+const defaultInfo:EelResponse<AggregateDataInfo> = { data: { exists:false, info:'Loading info...' ,ready:false, batchInfo:[], log:{}} }
 const asFolder = atomFamily<LocalFilePath,PipelineDataAggregatorID>({key: 'aggregator_input', default: ''});
 const asFileInfo = atomFamily<EelResponse<AggregateDataInfo>,PipelineDataAggregatorID>({key:'aggregator_folder_info',default:defaultInfo})
 const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
@@ -133,17 +133,29 @@ const AggreagatorStep: React.FC<IAggregatorStepProps> = ({onExport, step}) => {
                     </div>
                 </div>
             </div>
-            <Alert severity="warning" className={'margin-50-top'}>
-                Warning since the last time this file was used to store an aggregator input, the inputs have changed.
-                Keep in mind that batches inside the aggregator file are distinguished by batch number. So the first batch defined in input, will be
-                stored as batch 1 in the aggregator regardless of input files or anything else.
-                <br/>
-                <br/>
-                If you get this warning because after simply adding new batches to the input, everything is fine.
-                <br/>
-                More often though this happens because you changed your inputs entirely and you are at risk of overwriting
-                the data in this file, since it relates to older inputs.
-            </Alert>
+            {curFileInfo.data.log &&
+                Object.keys(curFileInfo.data.log).map((ok)=>{
+                    const [time,severity] = ok.split('|')
+                    const msg = curFileInfo.data.log[ok]
+                    return <Alert key={ok} severity={'info' as AlertColor} className={'margin-50-top'}>
+                        <div className={'pad-25-bottom'}>
+                            <strong>{convertPythonTimestamp(parseFloat(time))}</strong>:
+                        </div>
+                        {msg}
+                    </Alert>
+                })
+            }
+            {/*<Alert severity="warning" className={'margin-50-top'}>*/}
+            {/*    Warning since the last time this file was used to store an aggregator input, the inputs have changed.*/}
+            {/*    Keep in mind that batches inside the aggregator file are distinguished by batch number. So the first batch defined in input, will be*/}
+            {/*    stored as batch 1 in the aggregator regardless of input files or anything else.*/}
+            {/*    <br/>*/}
+            {/*    <br/>*/}
+            {/*    If you get this warning because after simply adding new batches to the input, everything is fine.*/}
+            {/*    <br/>*/}
+            {/*    More often though this happens because you changed your inputs entirely and you are at risk of overwriting*/}
+            {/*    the data in this file, since it relates to older inputs.*/}
+            {/*</Alert>*/}
             <div className="aggregator-step__btn-container fl-row-between margin-100-top">
                 <ConfirmToolTip disabled={!curFileInfo?.data?.exists} onConfirm={onDeleteAggregateFile} question={`This will delete the file, are you sure?`} options={['Delete','Cancel']} tooltipParams={{placement:'top', arrow:true}}>
                     <Button variant={"outlined"} disabled={!curFileInfo?.data?.exists} color={'secondary'}>Reset File</Button>

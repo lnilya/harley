@@ -3,6 +3,9 @@ Updates by version
 
 ### Version: 1.2.3
 
+Major:
+- Changed the way *.cells files are stored. They are now keyed by input file names and it is possible to edit contents.
+
 Minor:
 - Model Training: Fixed labeling issue, where split polygons could not be removed easily by clicking.
 - Data Loader: UI Change for adding batches, batch creator and added option to apply pipeline parameters to all batches with one click.

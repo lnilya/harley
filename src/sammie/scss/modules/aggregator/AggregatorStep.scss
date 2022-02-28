@@ -22,6 +22,11 @@
 			}
 		}
 		.batch-info{
+			em{
+				color: inherit !important;
+				font-weight: normal;
+				font-size: 10px;
+			}
 			transition: all 0.3s;
 			border-radius: $defBorderRadiusInner;
 			background-color: rgba($colBGMedium, .1);
