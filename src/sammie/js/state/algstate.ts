@@ -155,12 +155,3 @@ export const pipelineGlobalSettings = connectedAtom<GlobalPipelineSettings>({key
 
 export type PipelineLogEntry = {msg:string,type:'success'|'fail'|'info',duration:number|null, time:number};
 export const pipelineLog = connectedAtom<PipelineLogEntry[]>({key:'pl_log',default:[]})
-
-
-
-/**Input Files Hash is a unique identifier for all files in all current batches of the chosen pipeline.+
- * Essentially it is just an array over batches x inputs that can easily be compared.
- * It is used to identify all data that will go through the pipeline and the main usecase is to
- * compare it to
- * */
-export type InputFilesHash = string[][];

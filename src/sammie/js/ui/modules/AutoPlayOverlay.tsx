@@ -18,6 +18,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import InfoIcon from '@mui/icons-material/Info';
 import {resumeAutoExecution, stopAutoExecution} from "../../pipelines/pipelineexec";
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import {Helmet} from "react-helmet";
 
 interface IAutoPlayOverlayProps{
 	
@@ -43,6 +44,8 @@ const AutoPlayOverlay:React.FC<IAutoPlayOverlayProps> = ({className}) => {
     const totalProgress = steps * batchInfo.totalDispBatches;
     const curProgress = curStepNum + (batchInfo.displayedBatch * steps) + 1;
     
+    
+    
     useEffect(()=>{
         if(appScreen == UIScreens.pipelineswitch) setAEDialogOpen(false);
     },[appScreen])
@@ -54,8 +57,8 @@ const AutoPlayOverlay:React.FC<IAutoPlayOverlayProps> = ({className}) => {
             return a.concat([<br key={u}/>, b]);
         });
         return (<div className="log-entry" key={key}>
-            {le.type == 'success' && <CheckCircleIcon/>}
-            {le.type == 'fail' && <ErrorIcon/>}
+            {le.type == 'success' && <CheckCircleIcon color={"success"}/>}
+            {le.type == 'fail' && <ErrorIcon color={"error"}/>}
             {le.type == 'info' && <InfoIcon/>}
             <span>{m}</span>
             <span>
@@ -72,6 +75,11 @@ const AutoPlayOverlay:React.FC<IAutoPlayOverlayProps> = ({className}) => {
     
 	return (
 		<div className={`auto-play-overlay ` + cl(showWindow, 'is-active')}>
+            {isRunning &&
+                <Helmet defer={false}>
+                    <title>{`Harley (${printf('%d%%',100 * curProgress/totalProgress)})`}</title>
+                </Helmet>
+            }
             <Backdrop sx={{ color: '#fff', zIndex:15 }} open={showBackDrop} />
             <div className="auto-play-overlay__content bg-bgwhite">
                 <div className="fl-row fl-align-center auto-play-overlay__main pad-50">

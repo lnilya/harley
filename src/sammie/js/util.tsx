@@ -2,6 +2,7 @@
  * Shorthand for an if statement tobe used in defining classes like is-disabled
  */
 import {PolygonData} from "./types/datatypes";
+import * as workerInterval from 'worker-interval';
 
 export function cl(v: boolean, className: string) {
     if (v) return ` ${className} `;
@@ -80,7 +81,13 @@ export function parseFilePath(path: string): { filename: string, folder: string,
  * @param durationMS milliseconds to wait.
  */
 export async function wait(durationMS: number) {
-    return new Promise((resolve) => setTimeout(resolve, durationMS));
+    return new Promise((resolve) => {
+        const wi = workerInterval.setInterval(
+            () => {
+                workerInterval.clearInterval(wi)
+                resolve(true)
+            }, durationMS)
+    });
 }
 
 

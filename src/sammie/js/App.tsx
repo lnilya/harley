@@ -21,6 +21,8 @@ import ProgressOverlay from "./ui/modules/ProgressOverlay";
 import Aggregator from "./ui/modules/aggregator/Aggregator";
 import WelcomeScreen from "./ui/modules/WelcomeScreen";
 import {Pipeline} from "./types/pipelinetypes";
+import {Helmet} from "react-helmet";
+import packageJson from "../../../package.json";
 
 interface IApp{
     /**Pipeline can receive either a pipeline defintion or a record, where the keys are used as labels for tabs
@@ -55,7 +57,9 @@ const App: React.FC<IApp> = ({getPipelineDefinitions}) => {
     
     return(
             <div className={"app " + (cl(sideMenuOpen,'app--side-menu-open'))}>
-    
+                <Helmet defer={false}>
+                    <title>{`Harley - v ${packageJson.version}`}</title>
+                </Helmet>
                 {curStep && <AutoPlayOverlay/>}
                 
                 

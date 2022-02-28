@@ -86,7 +86,7 @@ async function __onRunAutoExport(){
     return allSuccess
 }
 
-async function __onAutoStepCompleted(){
+async function __onAutoStepCompleted():Promise<boolean|'error'>{
     const pipe = getConnectedValue(ui.selectedPipeline);
     const curStepNum = getConnectedValue(ui.curPipelineStepNum)
     if (curStepNum < (pipe.steps.length - 1))
@@ -110,20 +110,14 @@ async function __onAutoStepCompleted(){
             
             //Abort execution if exporting fails
             const success = await __onRunAutoExport();
-            if(!success){
-                stopAutoExecution();
-                return true;
-            }
+            if(!success) return 'error';
         }
         
         if(settings.runAggregatorExports.length > 0){
             updateConnectedValue(ui.appScreen, UIScreens.aggregate);
             await wait(50);
             const success = await __onRunAutoAggregateExport();
-            if(!success){
-                stopAutoExecution();
-                return true;
-            }
+            if(!success) return 'error';
         }
     
         const bi = getConnectedValue(alg.loadedBatchInfo)
@@ -235,21 +229,25 @@ function __runAutoExecutionLoop(runningMode:RunningMode.running|RunningMode.runn
             if(gps.pauseUIToSeeResults > 0)
                 await wait(gps.pauseUIToSeeResults); //wait for bit so user sees the output, usually just loading an image from server
             
-            var batchCompleted = await __onAutoStepCompleted();
+            var batchCompleted:boolean|'error' = await __onAutoStepCompleted();
             
             //done with this batch, stop listening and restart
-            if(batchCompleted){
+            if(batchCompleted !== false){
                 eventbus.unlistenTo('rah')
                 const curMode = getConnectedValue(pipelineExecution);
-                
-                if(curMode == RunningMode.runningUntilNextExport){
+                if(batchCompleted === true && curMode == RunningMode.runningUntilNextExport){
                     //if we only wanted to run till end of this batch
                     updateConnectedValue(pipelineExecution,RunningMode.manual);
-                    __addToAutoExecLog('Stopping Pipeline at output','info');
+                    __addToAutoExecLog('Stopping pipeline at output','info');
                     //unlisten since this function will be called again
-                }else{
+                }else if(batchCompleted === true){
                     //if we wanted to run all batches
                     __onStepToNextBatch();
+                }else if(batchCompleted === 'error'){
+                    //if we wanted to run all batches
+                    __addToAutoExecLog('Stopping pipeline because of error','fail');
+                    stopAutoExecution()
+                    
                 }
             }
         }
@@ -293,10 +291,10 @@ export async function startPipelineAutoPlay(forBatchNum: number = 0, clearLog: b
         if (clearLog) updateConnectedValue(alg.pipelineLog, []);
         
         //Print debugs for data loaded
-        __addToAutoExecLog(`Loading data batch with parameter set: ${batch.settingsSetName}.`, 'info')
-        var msg = [];
-        for (let ik in batch.inputs) msg.push(ik + ':' + batch.inputs[ik].file.name);
-        __addToAutoExecLog(`Inputs:\n` + msg.join('\n'), 'info')
+        var msg = [`Loading data batch with parameter set: ${batch.settingsSetName} and inputs:`];
+        for (let ik in batch.inputs)
+            msg.push(ik + ':' + batch.inputs[ik].file.name);
+        __addToAutoExecLog(msg.join('\n'), 'info')
         
         //switch UI to first step of pieline
         updateConnectedValue(ui.curPipelineStepNum, 0)
