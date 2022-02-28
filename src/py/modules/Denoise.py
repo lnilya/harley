@@ -65,9 +65,16 @@ class Denoise(ModuleBase):
         denoisedImg = self.session.getData(key)
 
         dvImg = self.session.getData(self.keys.inDVImg)
-        pxScale = dvImg.Mrc.header.d[1]
+        pxScale = None
+        if '1px' in args and len(str(args['1px'])) > 0:
+            pxScale = float(args['1px'])
+        elif 'numpy' not in str(type(dvImg)): #make sure we have a dv image file, not a numpy array, which happens when an image is imported.
+            pxScale = dvImg.Mrc.header.d[1]
 
-        metaData = {'scale':'%.4f'%pxScale}
+        if pxScale is None:
+            metaData = {}
+        else:
+            metaData = {'scale':'%.4f'%pxScale}
 
         exporters.exportGrayScaleImage(path,denoisedImg,metaData=metaData)
 
