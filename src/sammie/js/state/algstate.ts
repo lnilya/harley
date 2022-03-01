@@ -83,7 +83,7 @@ export const loadedBatchInfo = connectedSelector<BatchInfo>({key:'cur_displayed_
         //get array of all input file names
         var filePaths = [];
         if(apb && apb[bn])
-            filePaths = Object.values(apb[bn].inputs).map((file)=>file.file.path)
+            filePaths = Object.values(apb[bn].inputs).map((file)=>file?.file?.path || null).filter(k=>k!==null)
         return {batch:bn, displayedBatch:k, totalDispBatches:apb.filter(e=>e!=null).length, loadedFilePaths:filePaths};
     }})
 
