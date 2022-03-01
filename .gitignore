@@ -6,3 +6,5 @@
 /public/tmp
 /_demo
 /test.py
+__pycache__
+/harley-1-2-3.spec
