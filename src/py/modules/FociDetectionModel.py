@@ -121,11 +121,11 @@ class FociDetectionModel(ModuleBase):
 
                 #Make predictions for all foci, for the user to be able to select it
                 self.allPossibleContourSelections = []
-                for c in self.cellInidices:
-                    allContoursInCell = self.trainingData.contours[c]
+                for cellIndex in self.cellInidices:
+                    allContoursInCell = self.trainingData.contours[cellIndex]
                     sel = []
-                    for f,cnt in enumerate(allContoursInCell):
-                        sel += [getCutoffLevel(self.trainingData.contourLevels[c][f],cnt)[1]]
+                    for fociIndex,cnt in enumerate(allContoursInCell):
+                        sel += [getCutoffLevel(self.trainingData.contourLevels[cellIndex][fociIndex],cnt)[1]]
                     self.allPossibleContourSelections += [sel]
                     if self.abortSignal():
                         raise RuntimeError('Aborted execution.')
@@ -136,8 +136,8 @@ class FociDetectionModel(ModuleBase):
 
                 #Create datastructure containing an array of foci indices per cell
                 self.userSelectedFociPerCell = []
-                for c in self.cellInidices:
-                    self.userSelectedFociPerCell += [[i for i, cc in enumerate(self.result.contourChoices[c]) if cc != -1]]
+                for cellIndex in self.cellInidices:
+                    self.userSelectedFociPerCell += [[i for i, cc in enumerate(self.result.contourChoices[cellIndex]) if cc != -1]]
 
                 self.modelSelectedFociPerCell = [k.copy() for k in self.userSelectedFociPerCell]
 
@@ -150,25 +150,26 @@ class FociDetectionModel(ModuleBase):
             #Adjust sizes for ALL choices
             adjustedChoices = self.getFociWithSizeAdjustment(sizeAdjustment)
 
+            #for each cell id stores the number of merges that occured
             merges = {}
             #after size adjustment some foci might have merged, we want to unselect those.
             #They won't get selected again if user increases the size though
-            for i,c in enumerate(self.cellInidices):
-                choices = adjustedChoices[c]
-                for k, c in enumerate(choices):
-                    if c == -1 and k in self.userSelectedFociPerCell[i]:
-                        self.userSelectedFociPerCell[i].remove(k)
-                        if not c in merges: merges[c] = 0
-                        merges[c] += 1
+            for i,cellIndex in enumerate(self.cellInidices):
+                choices = adjustedChoices[cellIndex]
+                for fociIndex, fociLevel in enumerate(choices):
+                    if fociLevel == -1 and fociIndex in self.userSelectedFociPerCell[i]:
+                        self.userSelectedFociPerCell[i].remove(fociIndex)
+                        if not cellIndex in merges: merges[cellIndex] = 0
+                        merges[cellIndex] += 1
 
             #get the polygon data for all possible foci
             allFoci = []
-            for c in self.cellInidices:
-                cc = adjustedChoices[c]
+            for cellIndex in self.cellInidices:
+                cc = adjustedChoices[cellIndex]
                 fociInCell = []
-                for f, lvl in enumerate(cc):
+                for fociIndex, fociLevel in enumerate(cc):
                     #get the contour at predicted level
-                    cnt = self.trainingData.contours[c][f][lvl]
+                    cnt = self.trainingData.contours[cellIndex][fociIndex][fociLevel]
                     fociInCell += [{'x': np.around((cnt[:, 1]), decimals=3).tolist(),
                                     'y': np.around((cnt[:, 0]), decimals=3).tolist()}]
 
@@ -252,15 +253,23 @@ class FociDetectionModel(ModuleBase):
             avgArea = []
             for f, lvl in enumerate(cc):
                 if f not in selFoci: continue
+
                 binMaskOuter, offx, offy = getPolygonMaskPatch(self.trainingData.contours[c][f][lvl][:, 1],
                                                                self.trainingData.contours[c][f][lvl][:, 0], 0)
-                region: RegionProperties = skimage.measure.regionprops(binMaskOuter.astype('int'),
-                                                                       self.trainingData.imgs[c][
-                                                                       offy:offy + binMaskOuter.shape[0],
-                                                                       offx:offx + binMaskOuter.shape[1]])[0]
+                imgPart = self.trainingData.imgs[c][offy:offy + binMaskOuter.shape[0], offx:offx + binMaskOuter.shape[1]]
 
-                maxIntensity = region.max_intensity
-                meanIntensity = region.mean_intensity
+                region: List[RegionProperties] = skimage.measure.regionprops(binMaskOuter.astype('int'), imgPart)
+
+                #sometimes foci are so small that no regions will be detecte (they are thinner than 1px and this yields an empty outermask)
+                #At some point all of that should be changed to interpolated version of the image
+                #here however we just take the max and mean of the rectangular fraction of the mask
+
+                if len(region) > 0:
+                    maxIntensity = region[0].max_intensity
+                    meanIntensity = region[0].mean_intensity
+                else:
+                    maxIntensity = imgPart.max()
+                    meanIntensity = imgPart.mean()
                 contourIntensity = self.trainingData.contourLevels[c][f][lvl]
                 nmin,nmax = self.normalizationFactors[c]
 

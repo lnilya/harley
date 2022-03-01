@@ -42,14 +42,19 @@ class TrainingData:
         #Extract the contours in question
         cnts = [self.contours[cellNum][fociNum][fociLevel] for fociNum,fociLevel in enumerate(levelIDs) if fociLevel != -1]
         #Transform to shapely polygons
-        poly:List[Polygon] = [Polygon(focus) for focus in cnts]
+        #Since first and last points are identical, this leads to a very rare mistake in shapely polygons
+        #where the resulting polygon is not "is_valid" and this crashes everything, we therefore exclude
+        #a last point. 
+        poly:List[Polygon] = [Polygon(focus[:-2,:]) for focus in cnts]
 
-        newLevelIDs = levelIDs.copy();
+        newLevelIDs = levelIDs.copy()
         #Check for overlaps in these contours
         for i,p1 in enumerate(poly):
+            if not p1.is_valid: continue
             for j,p2 in enumerate(poly):
 
                 if j <= i: continue
+                if not p2.is_valid: continue
                 if newLevelIDs[i] == -1 or newLevelIDs[j] == -1: continue #one partner already elimenated
 
                 #intersection is enough, since for closed contour loops it implies bigger contains smaller
