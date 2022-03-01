@@ -101,34 +101,48 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
         {error && <ErrorHint error={error}/>}
         {!error && result &&
         <>
-            <div className="coloc-cells__box pad-100-excepttop pad-50-top margin-100-bottom">
-                    <Tooltip title={`Total number of included cells`} placement={'bottom'}>
-                        <div className="box-row">
-                                <span>Number of Cells:</span>
-                            <span>{selected.length}</span>
-                        </div>
-                    </Tooltip>
-                    <Tooltip title={`Number of included cells that have foci in both channels absolute and in %`} placement={'bottom'}>
-                        <div className="box-row">
-                            <span>Cells with foci in both channels:</span>
-                            <span>{fociStats.both} ({printf('%.2f %%',100*fociStats.both/selected.length)})</span>
-                        </div>
-                    </Tooltip>
-                    <Tooltip title={`Number of included cells that have no foci at all absolute and in %`} placement={'bottom'}>
-                        <div className="box-row">
-                            <span>Cells without foci:</span>
-                            <span>{fociStats.noFoci} ({printf('%.2f %%',100*fociStats.noFoci/selected.length)})</span>
-                        </div>
-                    </Tooltip>
-                    <Tooltip title={`Average pearson correlation across all selected cells calculated over pixels in entire cell area or just foci area.`} placement={'bottom'}>
-                        <div className="box-row">
-                            <span>Average Pearson Correlation (Cells/Foci):</span>
-                            <span>{printf('%.4f / %.4f',pccs[0],pccs[1])}</span>
-                        </div>
-                    </Tooltip>
-            </div>
-            
-            <DisplayOptions settings={displayOptions} modKeys={modKeysDesc} activeModKeys={['' + (selMod + 1)]}/>
+            {sortingSeq.length > 0 &&
+                <div className="coloc-cells__box pad-100-excepttop pad-50-top margin-100-bottom">
+                        <Tooltip title={`Total number of included cells`} placement={'bottom'}>
+                            <div className="box-row">
+                                    <span>Number of Cells:</span>
+                                <span>{selected.length}</span>
+                            </div>
+                        </Tooltip>
+                        <Tooltip title={`Number of included cells that have foci in both channels absolute and in %`} placement={'bottom'}>
+                            <div className="box-row">
+                                <span>Cells with foci in both channels:</span>
+                                <span>{fociStats.both} ({printf('%.2f %%',100*fociStats.both/selected.length)})</span>
+                            </div>
+                        </Tooltip>
+                        <Tooltip title={`Number of included cells that have no foci at all absolute and in %`} placement={'bottom'}>
+                            <div className="box-row">
+                                <span>Cells without foci:</span>
+                                <span>{fociStats.noFoci} ({printf('%.2f %%',100*fociStats.noFoci/selected.length)})</span>
+                            </div>
+                        </Tooltip>
+                        <Tooltip title={`Average pearson correlation across all selected cells calculated over pixels in entire cell area or just foci area.`} placement={'bottom'}>
+                            <div className="box-row">
+                                <span>Average Pearson Correlation (Cells/Foci):</span>
+                                <span>{printf('%.4f / %.4f',pccs[0],pccs[1])}</span>
+                            </div>
+                        </Tooltip>
+                </div>
+            }
+    
+            {sortingSeq?.length == 0 &&
+                <Alert key={'notnn'} severity="error">
+                    It looks like the cells in your dataset have not been labeled yet. Labeling means identifying foci.
+                    Please run the input files through the foci detection pipeline by either using a model or a parameters.
+                    This step will find foci (or the lack of foci) and assign this information to each cell in the dataset, only
+                    then can this pipeline be used to generate colocalization results.
+                    <br/>
+                    While technically this does not produce an error and all exports will work. The outputs will be empty.
+                </Alert>
+            }
+            {sortingSeq?.length > 0 &&
+                <DisplayOptions settings={displayOptions} modKeys={modKeysDesc} activeModKeys={['' + (selMod + 1)]}/>
+            }
             <div className={`grid quarter-gap cols-${colCount}`}>
                 {sortingSeq.map((i) => {
                     const r = result.imgs[i]
@@ -146,7 +160,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
                 })
                 }
             </div>
-            {curParams.norm &&
+            {curParams.norm && sortingSeq?.length > 0 &&
                 <Alert key={'notnn'} severity="info" className={'margin-100-top'}>
                     Be aware that cells that have close to no signal will appear in full brightness for that channel, since
                     all cells are normalized in intensity. This does not effect pearson correlation, but might be visually suprising.
@@ -154,7 +168,7 @@ const ColocCells: React.FC<IColocCellsProps> = () => {
                 </Alert>
             }
             
-            {!curParams.norm &&
+            {!curParams.norm && sortingSeq?.length > 0 &&
                 <Alert key={'nn'} severity="info" className={'margin-100-top'}>
                     Some cells might appear very dim, to the point, where you cannot discern foci. While the signal is dim it is still there.
                     Check the normalization checkbox on the left hand side, to enable brightness normalization and see the foci more clearly.
