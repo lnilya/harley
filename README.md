@@ -135,7 +135,7 @@ change the webpack config that is provided with react-scripts in your node-modul
 This script is automatically prepended to the start:js command. So you do not need to deal with it explicitely. 
 
 ### eel shutdown on reload
-Eel, the underlying framework fro py-js communication will shut down the process whenever all websockets are closed.
+Eel, the underlying framework for py-js communication will shut down the process whenever all websockets are closed.
 This can lead to you having to restart the py server when react is reloaded, which is terribly annoying and doesn't work with
 hot reloading very well. To change this behaviour we edit the eel lab's init file, by simply disabling the _detect_shutdown function, like so: 
 ```
