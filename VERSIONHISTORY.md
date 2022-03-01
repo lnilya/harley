@@ -4,11 +4,13 @@ Updates by version
 ### Version: 1.2.3
 
 Major:
-- Changed the way *.cells files are stored. They are now keyed by input file names and it is possible to edit contents.
+- Changed the way *.cells files are stored. They are now keyed by input file names and it is possible to edit contents. Warning: Older files will automatically be upgraded on first load without prompt. 
 
 Minor:
 - Model Training: Fixed labeling issue, where split polygons could not be removed easily by clicking.
 - Data Loader: UI Change for adding batches, batch creator and added option to apply pipeline parameters to all batches with one click.
+- Worked on ability to run HARLEY more in the background (progress display, webworkers).
+- Small bug fixes and improved hints in various places. 
 
 ### Version: 1.2.2
 
