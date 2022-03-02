@@ -9,8 +9,9 @@ export const moduleName = 'FociCandidates'
 
 const sizeDesc = `
 Min/Max circumference of the foci in px. This is an approximate value that needs to be set according to the size of features in question.
-Choose a range that is tight enough not to encompass unnecessarily big areas or multiple foci but also small enough to capture the smallest foci. The actual sizes of the
-foci will lie in the range between these two values and are determined automatically.
+Choose the max value that is small enough not to encompass unnecessarily big areas or multiple foci. Choose the min value
+to be as big as possible but small enough to capture the smallest foci.\n\n
+The actual sizes of the foci will lie in the range between these two values and are determined automatically.
 `
 const granDesc = `It is recommended not to change this parameter, since it has only a very minor effect.\n\n
 Contour Loops are analyzed by first finding all contours at this many levels of intensity and then picking out closed loops.
