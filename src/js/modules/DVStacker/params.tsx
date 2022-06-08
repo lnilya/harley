@@ -26,8 +26,7 @@ const zstackdesc = (<div>
         <li><strong>1,2,3</strong>{'=> 1,2,3'}</li>
     </ul>
 </div>)
-const zstacks = getTextfieldInputParams('zstacks','ZStacks to use',zstackdesc,'ZStacks...','',null,false)
-
+const zstacks = getTextfieldInputParams('zstacks','Z Planes to use',zstackdesc,'Z Planes...','',null,false)
 
 
 /**Parameter UI Definition the user can set in DVStacker*/

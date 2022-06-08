@@ -69,7 +69,7 @@ const DVStacker: React.FC<IDVStackerProps> = () => {
             
             {curResult.z.length > 1 &&
             <>
-                <h2>Z Channels</h2>
+                <h2>Z Planes</h2>
                 <div className="pad-50-hor">
                     <div className="grid cols-3 half-gap">
                         {curResult.z.map((zp, k) => {
