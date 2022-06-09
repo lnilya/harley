@@ -20,10 +20,10 @@ var sbTutorial:ReactNode = <div>
 </div>
 const smallBlobs = getCheckboxParams('removeblobs','Small Blob Removal',sbTutorial,'Enable',true)
 const cond:Condition = (allSettings)=>allSettings['removeblobs'] ? 'active' : "hide";
-const sb_solidity = getSliderParams('sb_solidity','Solidity',solidity,0,1,0.01,[0,1],false,cond)
-const sb_size = getSliderParams('sb_size','Min Size',size,0,100,1,0,true,cond)
-const sb_ecc = getSliderParams('sb_eccentricity','Eccentricity',eccentricity,0,1,0.01,[0,1],false,cond)
-const sb_area = getSliderParams('sb_area','Min Area',area,0,5000,50,0,true,cond)
+const sb_solidity = getSliderParams('sb_solidity','Solidity Range',solidity,0,1,0.01,[0,1],false,cond)
+const sb_size = getSliderParams('sb_size','Size Range',size,0,100,1,0,true,cond)
+const sb_ecc = getSliderParams('sb_eccentricity','Eccentricity Range',eccentricity,0,1,0.01,[0,1],false,cond)
+const sb_area = getSliderParams('sb_area','Area Range',area,0,5000,50,0,true,cond)
 
 /**Parameters the user can set in this step*/
 export const parameters = [
