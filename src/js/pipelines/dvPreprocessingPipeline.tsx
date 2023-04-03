@@ -33,7 +33,7 @@ function getPipeline(): Pipeline {
             moduleID: 'stacking',
             renderer: <DVStacker/>,
             parameters: DVStackerParams.parameters,
-            inputKeys: {dvImg:keys.input},
+            inputKeys: {dvImg:keys.input,mask:keys.mask},
             outputKeys: {stackedImg:keys.stacked}
         } as DVStackerParams.Step,
         {

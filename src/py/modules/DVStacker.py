@@ -6,11 +6,13 @@ from src.sammie.py.util.util import parseRanges
 
 
 class DVStackerKeys:
+    inCellOutlines: str
     inMultiChannelDV: str
     outFlattenedImg: str
 
     def __init__(self, inputs, outputs):
         self.inMultiChannelDV = inputs[0]
+        self.inCellOutlines = inputs[1]
         self.outFlattenedImg = outputs[0]
 
 class DVStacker(ModuleBase):
@@ -32,6 +34,7 @@ class DVStacker(ModuleBase):
         if action == 'apply':
             # params['channel']
             inputImg = self.session.getData(self.keys.inMultiChannelDV) #multichannel DV
+            cellOutlines = self.session.getData(self.keys.inCellOutlines) #cell outlines
 
             #extract the zstack in correct channel
             if len(inputImg.shape) == 4:
@@ -55,6 +58,23 @@ class DVStacker(ModuleBase):
             elif params['stacking'] == 'mean':
                 stackedImg = np.mean(inputImg[zranges,:,:], axis=0)
             stackedImg = np.array(stackedImg)  # remove the numpy in arc type
+
+            borderR = (cellOutlines.ref.shape[0] - stackedImg.shape[0])>>1
+            borderC = (cellOutlines.ref.shape[1] - stackedImg.shape[1])>>1
+
+            if(borderR > 0):
+                simg = np.zeros((stackedImg.shape[0] + borderR * 2, stackedImg.shape[1]), dtype=stackedImg.dtype)
+                simg[borderR:-borderR, :] = stackedImg
+                stackedImg = simg
+            elif(borderR < 0):
+                stackedImg = stackedImg[borderR:-borderR,:]
+
+            if(borderC > 0):
+                simg = np.zeros((stackedImg.shape[0], stackedImg.shape[1] + borderC * 2), dtype=stackedImg.dtype)
+                simg[:,borderC:-borderC] = stackedImg
+                stackedImg = simg
+            elif(borderC < 0):
+                stackedImg = stackedImg[:,borderC:-borderC]
 
             #generate preview for stacked image
             stackPreview = getPreviewImage(self.norm(stackedImg,1,'float'),self.keys.outFlattenedImg)

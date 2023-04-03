@@ -1,6 +1,11 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.5
+
+Minor:
+- Added a fix for the preprocessing pipeline. If the ref image and the fluorescence image are not the same size, the latter will be adjusted by adding a border. This led to bugs with the cell files later on.
+
 ### Version: 1.2.3
 
 Major:

@@ -1,5 +1,9 @@
 import {PipelineStep} from "../../../sammie/js/types/pipelinetypes";
-import {getDropdownParams, getTextfieldInputParams} from "../../../sammie/js/modules/paramutil";
+import {
+    getDropdownParams,
+    getTextfieldInputParams,
+    getTitleSeparatorParams
+} from "../../../sammie/js/modules/paramutil";
 import React from "react";
 import {Parameter} from "../../../sammie/js/modules/paramtypes";
 import {PipelineImage} from "../../../sammie/js/types/datatypes";
@@ -34,7 +38,9 @@ export const parameters:Array<Parameter<any>> = [
     channel,
     beh,
     zstacks,
+    getTitleSeparatorParams('sizehint','Size Info','Your fluorescence image will be adjusted in size to match the reference/mask image. If it is smaller a black border is added, if it is bigger it will be cropped. What you see on the right is the bordered/cropped image.')
 ]
+
 
 /**Typing for DVStacker Inputs*/
 export type Inputs = {
