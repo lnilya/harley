@@ -6,7 +6,7 @@ from scipy.interpolate import interpolate
 from scipy.stats import pearsonr
 
 from src.py.types.CellsDataset import CellsDataset
-from src.sammie.py.util import shapeutil
+from src.sammie.py.util import shapeutil, imgutil
 from src.sammie.py.util.imgutil import makeSemiTransparent, getPreviewImage, joinChannels, norm, addBorder
 import xlsxwriter as xls
 
@@ -32,6 +32,9 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
     allImgs = []
     allImgsNumpy = []
     allCorrelations = []
+    usedP1 = []
+    usedP2 = []
+    numskipped = 0
     for p1,p2 in partners:
         maskPatch1, dx1, dy1 = shapeutil.getPolygonMaskPatch(d1.contours[p1]['x'], d1.contours[p1]['y'], 0)
         maskPatch2, dx2, dy2 = shapeutil.getPolygonMaskPatch(d2.contours[p2]['x'], d2.contours[p2]['y'], 0)
@@ -44,6 +47,15 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
         #Intensity images for each cell individually
         img1 = np.copy(d1.img[dy:h,dx:w])
         img2 = np.copy(d2img[dy:h,dx:w])
+
+        #due to an older bug where the sizes of ref images and fluorescence were allowed to differ sometimes the
+        #cell outlines (maskPatch1, maskPatch2) are out of bounds for the images (img1 and 2). This should not happeny since Harley 1.2.5
+        #to fix it for previous versions, we will simply ignore those images.
+        if(img1.shape != maskPatch1.shape or img2.shape != maskPatch2.shape):
+            numskipped += 1
+            continue
+
+
         corr = pearsonr(img1[maskPatch1 == True].flat,img2[maskPatch2 == True].flat)
         if corr[0] != corr[0] or corr[1] != corr[1]:
             corr = None
@@ -70,8 +82,13 @@ def getColocImages(d1:CellsDataset,d2:CellsDataset, partners:List[Tuple[int,int]
                      joinChannels('%s_j_%d' % (key, p1), img1, color[0], img2, color[1], normalize) #MIXED IMAGE
                      )]
         allImgsNumpy += [[img1,img2,imgMix]]
+        usedP1 += [p1]
+        usedP2 += [p2]
 
-    return allImgs,allImgsNumpy,allCorrelations
+    if numskipped > 0:
+        print('Warning: Colocalization skipped %d cells, due to closeness to border'%numskipped)
+
+    return allImgs,allImgsNumpy,allCorrelations,usedP1,usedP2
 
 
 def identifyCellPartners(d1:CellsDataset,d2:CellsDataset):

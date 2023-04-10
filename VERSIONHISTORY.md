@@ -1,6 +1,11 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.6
+
+Minor:
+- Fixed a bug in colocalization when in preprocessing step ref and fluorescence image were not the same size. Only applies to data generated prior to Harley 1.2.5.
+
 ### Version: 1.2.5
 
 Minor:

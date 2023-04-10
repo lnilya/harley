@@ -132,8 +132,10 @@ class ColocCells(ModuleBase):
                 p = identifyCellPartners(ds1, ds2)
                 p1 = [i for i, j in p]  # cellnumbers in ds1
                 p2 = [j for i, j in p]  # cellnumbers in ds2
-                self.cellContours += ds1.getSingleCellContours(p1,border)
                 colocImgs = getColocImages(ds1, ds2, p, '%s_%d' % (self.keys.outIncludedCells, dsnum), col,border,shift,norm)
+                p1 = colocImgs[3]
+                p2 = colocImgs[4]
+                self.cellContours += ds1.getSingleCellContours(p1,border)
                 dsnum += 1
                 self.cellImages += colocImgs[0]
                 self.rawImages += colocImgs[1]
