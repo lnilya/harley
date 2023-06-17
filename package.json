@@ -1,6 +1,6 @@
 {
   "name": "harley",
-  "version": "1.2.6",
+  "version": "1.2.8",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
@@ -36,8 +36,8 @@
     "build:js": "react-scripts build",
     "start:eel": "python3 index.py --develop",
     "startwin:eel": "python index.py --develop",
-    "build:eel": "python3 -m eel index.py build --name harley-1-2-6 --onefile --icon icon.icns --console",
-    "buildwin:eel": "python -m eel index.py build --onefile --name harley-1-2-6 --icon icon.ico",
+    "build:eel": "python3 -m eel index.py build --name harley-1-2-8 --onefile --icon icon.icns --console & chmod 777 ./dist/*",
+    "buildwin:eel": "python -m eel index.py build --onefile --name harley-1-2-8 --icon icon.ico",
     "clean:build": "rm -rf build dist",
     "start": "npm-run-all -p start:*",
     "build": "npm-run-all clean:build build:*",

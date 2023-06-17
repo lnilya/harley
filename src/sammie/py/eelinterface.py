@@ -1,3 +1,5 @@
+import json
+import math
 import os
 import threading
 import traceback
@@ -51,7 +53,7 @@ def startThreadInModule(m:ModuleBase, asyncKey:int, params):
         eel.asyncError(asyncKey, {'errorText':str(e)})
     else:
         print("[Eel]: Ending Thread %s"%(asyncKey))
-        eel.asyncFinished(asyncKey,res)
+        eel.asyncFinished(asyncKey, {'json':True,'res': json.dumps(res)})
 
 @eel.expose
 def loadInputFile(pipelinekey:str, path:str, loaderName:str, loaderArgs:Dict, batchPreviewIdx:int = -1):

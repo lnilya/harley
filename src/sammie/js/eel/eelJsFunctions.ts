@@ -27,6 +27,9 @@ window['__eel_js_progress'] = function(x:number,msg:string) {
 
 window['__eel_js_asyncFinished'] = function(callbackID:EelThreadKey,data) {
     if(callbacks[callbackID] === undefined) return;
+    if( data['json'] === true )
+        data = JSON.parse(data['res'])
+    
     callbacks[callbackID].resolve(data);
     delete callbacks[callbackID];
 }

@@ -1,6 +1,12 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.8
+
+Minor: 
+- Fixed a bug with a missing package version, that lead to a crash
+- Added permissions to building on MacOS. Users otherwise had to manually change permissions
+
 ### Version: 1.2.6
 
 Minor:

@@ -26,7 +26,7 @@ export async function runFociDetectionModel(curParams:self.Parameters, curStep:s
     
     //Run algorithm - this demo is for a simple image in and image out.
     var res:EelResponse<FociDetectionModelResult> =
-        await eel.runStepAsync<FociDetectionModelResult>(self.moduleName,'apply', {...curParams, portion:portion},curStep)
+        await eel.runStep<FociDetectionModelResult>(self.moduleName,'apply', {...curParams, portion:portion},curStep)
 
     //update pipeline, on error, delete the output again.
     if(res.error) deletePipelineData(curStep.outputKeys.foci);
