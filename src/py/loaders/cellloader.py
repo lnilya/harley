@@ -65,9 +65,9 @@ def loadCells(asPreview:bool, pipekey:str, filePath:str,previewGridSize:Tuple[in
     if labeledCells > 0:
         meta['Labeled Cells'] = labeledCells
     scale = [curData['data'][i].scale for i in curData['data'] if curData['data'][i].scale is not None]
-    if len(scale) > 0:
-        meta['1px'] = '%.2fnm'%scale[0]
-        data['1px'] = scale[0]
+    if len(scale) > 0 and scale[0] != '':
+        meta['1px'] = '%.2fnm'%float(scale[0])
+        data['1px'] = float(scale[0])
         if len(set(scale)) != 1:
             meta['Warning'] = 'Batches have different scales'
 
