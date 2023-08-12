@@ -92,7 +92,8 @@ def loadIntensityImage(asPreviewOnly:bool, pipekey:str, filePath:str, **normaliz
     rdr = imageio.get_reader(filePath)
     meta = rdr.get_meta_data()
     if meta is not None and 'description' in meta:
-        meta = json.loads(meta['description'])
+        try: meta = json.loads(meta['description'])
+        except: meta ={}
     else:
         meta = {}
 

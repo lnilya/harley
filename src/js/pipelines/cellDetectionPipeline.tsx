@@ -72,7 +72,7 @@ function getPipeline():Pipeline{
                 key: dataKeys.img,
                 title: 'Lightfield Microscopy Image', description: desc,
                 loaders: {
-                    'tiff,jpg,png': 'loadIntensityImage',
+                    'tif,tiff,jpg,png': 'loadIntensityImage',
                     'dv': 'loadDVIntensityImage'
                 },
                 postProcessForJS:util.postProcessForImage

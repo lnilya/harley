@@ -1,6 +1,11 @@
 # Harley - Version history
 Updates by version
 
+### Version: 1.2.9
+Minor:
+- Fixed bug with loading tif files as intensity images 
+- Bugfixes with related to loading cells files (scale conversion)
+
 ### Version: 1.2.8
 
 Minor: 
