@@ -202,8 +202,13 @@ class FociDetectionParams(ModuleBase):
     def __exportXLSX(self, key:str, path:str,**args):
 
         scale = args['1px'] if '1px' in args else 1
-
-        scale = float(scale)
+        if isinstance(scale,str):
+            try:
+                scale = float(scale)
+                if np.isnan(scale) or scale <= 0:
+                    raise ValueError('Invalid scale value: "%s". Please make sure the "1px in nm" setting is set in the Input to this pipeline.'%scale)
+            except:
+                raise ValueError('Invalid scale value: "%s". Please make sure the "1px in nm" setting is set in the Input to this pipeline.'%scale)
 
         wb = xls.Workbook(path)
 
