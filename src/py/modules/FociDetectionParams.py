@@ -203,6 +203,8 @@ class FociDetectionParams(ModuleBase):
 
         scale = args['1px'] if '1px' in args else 1
 
+        scale = float(scale)
+
         wb = xls.Workbook(path)
 
         #Will contain stats on the whole dataset
