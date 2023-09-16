@@ -213,6 +213,16 @@ class FociDetectionModel(ModuleBase):
 
         scale = args['1px'] if '1px' in args else 1
 
+        if isinstance(scale, str):
+            try:
+                scale = float(scale)
+                if np.isnan(scale) or scale <= 0:
+                    raise ValueError(
+                        'Invalid scale value: "%s". Please make sure the "1px in nm" setting is set in the Input to this pipeline.' % scale)
+            except:
+                raise ValueError(
+                    'Invalid scale value: "%s". Please make sure the "1px in nm" setting is set in the Input to this pipeline.' % scale)
+
         d = self.session.getData(self.keys.outFoci)
         adjustedFociChoices = d['foci']
         selectedChoices = d['selection']
